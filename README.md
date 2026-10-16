@@ -4,12 +4,12 @@
 
 **A camera-only mini-car concept: detect obstacles, interpret three regions, suggest movement.**
 
-![Status: design documented](https://img.shields.io/badge/status-design_documented-2563eb)
-![Planned desktop stack: Python](https://img.shields.io/badge/planned_desktop-Python-3776ab)
-![Planned detector: ESPDet-Pico](https://img.shields.io/badge/planned_detector-ESPDet--Pico-0f766e)
+![Status: desktop prototype](https://img.shields.io/badge/status-desktop_prototype-2563eb)
+![Desktop stack: Python](https://img.shields.io/badge/desktop-Python-3776ab)
+![Detector: ESPDet-Pico](https://img.shields.io/badge/detector-ESPDet--Pico-0f766e)
 ![Hardware target: ESP32-S3](https://img.shields.io/badge/hardware_target-ESP32--S3-dc2626)
 
-[The concept](#the-concept) · [Architecture](#architecture) · [Desktop implementation plan](docs/implementation-plan.md) · [Hardware implementation guide](docs/hardware-implementation.md)
+[Run the demo](docs/running-the-demo.md) · [Architecture](#architecture) · [Desktop specification](docs/implementation-plan.md) · [Hardware implementation guide](docs/hardware-implementation.md)
 
 </div>
 
@@ -27,20 +27,25 @@ This is an educational prototype for a flat, controlled indoor environment. It e
 
 ## Project status
 
-**This repository currently contains the design, implementation instructions, and original concept artwork. The detector application, trained obstacle checkpoint, and firmware are not implemented yet.**
+**The desktop application and model/data tooling are implemented.** You can run the three-region controller immediately in an explicitly labeled simulation. Real webcam/video inference uses an ESPDet-Pico checkpoint. The upstream cat model can be smoke-tested; a bottle/cup/box obstacle checkpoint still requires training. Firmware and physical-car trials remain future work.
 
 | Component | Current state |
 | --- | --- |
 | System architecture and decision specification | Documented |
 | Desktop implementation and evaluation plan | Documented |
 | Hardware implementation guide | Documented |
-| Webcam/video detection application | Planned |
+| Webcam/video detection application and ESPDet adapter | Implemented; trained obstacle checkpoint required |
+| Labeled simulation and recording | Implemented; works without ML dependencies |
+| Pure decision tests and lightweight CI | Implemented |
+| Dataset conversion and training/evaluation tools | Implemented |
 | Bottle, cup, and box training dataset | Planned |
 | Fine-tuned ESPDet-Pico obstacle model | Planned |
 | Measured accuracy, latency, and FPS | Not measured |
 | ESP32-S3 firmware and physical-car trials | Planned; hardware not selected |
 
-No demonstration recording or model-performance claim is included until it can be reproduced.
+![Actual application screenshot running synthetic controller scenarios](assets/controller-preview.png)
+
+*Actual application render in simulation mode. Boxes are synthetic; this is not a neural-detection result.*
 
 ## Architecture
 
@@ -79,6 +84,18 @@ Movement suggestions require three consecutive matching processed frames. STOP a
 
 **An unblocked region means fewer detected obstacles, not a verified drivable route.** A missed object, wall, or table edge can remain invisible to this logic. The desktop overlay must retain that distinction.
 
+## What can the current model detect?
+
+The installed pretrained checkpoint recognizes **cats only**. The controller treats an accepted cat bounding box as an obstacle and applies the same region rules. Simulation boxes do not expand the model's supported classes.
+
+| Object | Supported by the installed checkpoint? |
+| --- | --- |
+| Cats | Yes |
+| Bottles, cups, and boxes | No; these are the planned fine-tuning targets |
+| People, chairs, walls, and other everyday obstacles | No; not trained classes in this checkpoint |
+
+Misses and false positives are still possible. No detection does not establish that a path is clear. Recognizing additional object types requires a suitable model or fine-tuning; changing the movement rules alone will not add recognition classes.
+
 ## Why ESPDet-Pico?
 
 [ESP-Detection](https://github.com/espressif/esp-detection) provides an Espressif-oriented detection architecture, custom model components, and an export/deployment path through ESP-DL. Choosing it early keeps the desktop experiment connected to the intended hardware target.
@@ -87,14 +104,14 @@ The plan uses **224 × 224 input** and transfer learning from the repository's p
 
 | Responsibility | Planned technology |
 | --- | --- |
-| Training and desktop inference | ESP-Detection, PyTorch, compatible Ultralytics dependency |
+| Training and desktop inference | ESP-Detection adapter, PyTorch, compatible Ultralytics dependency |
 | Camera capture, overlays, video playback | OpenCV |
 | Region reasoning and instruction logic | Independent Python module |
-| Desktop environment | Isolated Python 3.10 environment on Windows |
+| Desktop environment | Python 3.10+; tested on Windows / Python 3.13.5 |
 | Future export and quantization | ONNX and Espressif quantization tools |
 | Future onboard inference | ESP-DL with ESP-IDF on ESP32-S3 |
 
-The upstream dependency must be recorded at an exact commit and exercised before choosing compatible package versions. No generic YOLO replacement is implied by using the Ultralytics API.
+The setup script records a pinned upstream commit and checkpoint hash. No generic YOLO replacement is implied by using the Ultralytics API. Model-environment verification is documented in the [verification report](docs/verification.md).
 
 ## Data and training approach
 
@@ -110,15 +127,44 @@ Background-only images need a label audit; an empty annotation file must not hid
 
 ## Getting started
 
-There is **no application to install or launch yet**. Start with these documents:
+Start the controller preview without installing PyTorch:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python demo.py --simulate
+```
+
+This cycles through eight synthetic scenes with region highlights and FORWARD/LEFT/RIGHT/STOP suggestions. Press Space to pause and Q/Escape to quit. For actual detection, follow [setup, training, and inference instructions](docs/running-the-demo.md).
+
+Project guides:
 
 - [Desktop implementation plan](docs/implementation-plan.md): application behavior, environment, dataset preparation, training, interfaces, and acceptance tests.
+- [Run the demo](docs/running-the-demo.md): executable commands, model setup, public-data preparation, training, recording, and troubleshooting.
 - [Hardware implementation guide](docs/hardware-implementation.md): parts selection, wiring preparation, model export, firmware responsibilities, calibration, and bring-up.
 - [Third-party notices](THIRD_PARTY_NOTICES.md): references, provenance requirements, and upstream licenses.
 
-### Planned application interface
+### Visualize how the model produces an instruction
 
-The following commands are the **future interface specification**. `demo.py` does not exist in this documentation milestone.
+On Windows, the launcher selects the local model environment and starts the actual pretrained-model viewer:
+
+```powershell
+.\run_logic_demo.cmd
+```
+
+Or use a configured model environment directly:
+
+```powershell
+.venv-model\Scripts\python logic_demo.py
+```
+
+This program uses **actual model inference**, then displays the chain **detections → blocked regions → rule candidate → final instruction** next to the camera image. It defaults explicitly to the upstream cat checkpoint downloaded during model setup; its scope is labeled on screen. Use `--source path/to/video.mp4` for a recording, or `--weights path/to/best.pt --expected-label obstacle` for your trained obstacle model. On the current development computer, use the already prepared `.venv-inference\Scripts\python` interpreter instead.
+
+The visualization shares the existing controller, including its three-observation confirmation and immediate STOP behavior. It has no physical robot drawing or hardware connection. See [the run guide](docs/running-the-demo.md#model-to-instruction-visualization) for examples.
+
+### Application interface
+
+Actual detection requires the model environment and a trained single-class `obstacle` checkpoint. The default weights location is `weights/obstacle/best.pt`:
 
 ```text
 python demo.py --source 0
@@ -127,7 +173,7 @@ python demo.py --source 0 --weights path/to/best.pt --config path/to/config.json
 python demo.py --source path/to/video.mp4 --save-video path/to/annotated.mp4
 ```
 
-The planned window shows detections, confidence, region occupancy, instruction and reason, FPS, and latency. Space pauses playback; Q or Escape exits. Setup downloads will happen before the presentation so inference can run offline.
+The window shows detections, confidence, region occupancy, instruction and reason, processed FPS, and latency. Space pauses playback; Q or Escape exits. No model download occurs during inference. Optional recording creates an annotated MP4 plus a JSONL decision/timestamp log.
 
 ## Evaluation
 
@@ -135,7 +181,7 @@ The planned window shows detections, confidence, region occupancy, instruction a
 | --- | --- |
 | Detection precision, recall, mAP@0.5, mAP@0.5:0.95 | Not measured; report on held-out data |
 | Recall for bottles, cups, and boxes | Not measured; retain original object-type metadata |
-| Instruction correctness | Not measured; staged and synthetic region scenarios |
+| Instruction correctness | Automated synthetic rule/worker tests; see verification report |
 | Desktop throughput | Not measured; target at least 10 processed FPS on the development laptop |
 | Capture-to-decision latency | Not measured; report distribution and test conditions |
 | Quantized-model accuracy | Not measured; compare with desktop predictions before deployment |
@@ -147,9 +193,11 @@ Published upstream benchmarks describe upstream models and equipment. They are n
 
 - [x] Document the camera-only architecture and decision rules.
 - [x] Prepare the desktop and hardware implementation guides.
-- [ ] Implement model-independent decision logic and tests.
+- [x] Implement model-independent decision logic and tests.
+- [x] Add explicit simulation, recording, and headless verification.
+- [x] Add webcam/video inference adapter and presentation overlay.
+- [x] Add provenance-aware dataset conversion and training tools.
 - [ ] Prepare the public dataset and fine-tune ESPDet-Pico.
-- [ ] Add webcam/video inference and a presentation overlay.
 - [ ] Publish an annotated demo recording and measured evaluation.
 - [ ] Select the hardware and validate INT8 export.
 - [ ] Port decision logic and implement bounded motor control.
@@ -168,7 +216,7 @@ Published upstream benchmarks describe upstream models and equipment. They are n
 
 VisionDrive's contribution is the proposed integration: a three-region controller, explainable instruction display, evaluation workflow, and a documented path from desktop to embedded implementation. ESPDet-Pico and its training/deployment components originate with Espressif and their respective upstream contributors.
 
-No third-party source code, model weights, or dataset images are bundled in this documentation milestone. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before adding or redistributing them. A project-wide redistribution license has not been selected; upstream components retain their own licenses.
+No third-party source code, model weights, or dataset images are bundled in Git. Setup places the upstream checkout and weights in ignored directories. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistributing them. A project-wide redistribution license has not been selected; upstream components retain their own licenses.
 
 ## References
 
@@ -180,4 +228,4 @@ No third-party source code, model weights, or dataset images are bundled in this
 
 ---
 
-**Current milestone:** portfolio documentation and implementation design. Live detection, trained weights, and physical-car validation are future milestones.
+**Current milestone:** desktop prototype with an explainable controller and ESPDet integration. Training the obstacle checkpoint, measuring presentation performance, and physical-car validation remain future milestones.

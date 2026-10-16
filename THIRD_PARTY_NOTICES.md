@@ -1,8 +1,8 @@
 # Third-party notices and provenance
 
-This milestone contains original project documentation and a concept illustration. It does not bundle third-party source code, checkpoints, or datasets. Links identify planned dependencies; they do not transfer their ownership to VisionDrive.
+This repository contains project documentation, original application and tooling code, tests, and concept/application artwork. It does not bundle third-party source code, checkpoints, or datasets in Git. Setup downloads the upstream checkout and checkpoint into ignored directories. Links identify dependencies; they do not transfer their ownership to VisionDrive.
 
-## Planned upstream components
+## Upstream components
 
 | Component | Intended use | Source / license reference |
 | --- | --- | --- |
@@ -29,6 +29,10 @@ For every dataset image, retain:
 - Retrieval date and file hash for reproducibility.
 
 Dataset annotation terms and individual image terms can differ. Preserve attribution and validate redistribution rights before publishing images or presentation recordings. Prefer manifests and download instructions over committing the dataset.
+
+## Model setup provenance
+
+`scripts/setup_model.py` pins ESP-Detection revision `28de5902a357d99dd9a5db0f52905255641c5a78`. The upstream 224 × 224 cat checkpoint has SHA-256 `7afca1564f45c3087e39758049412337ff4cec6f63a8f7a5380d50999e4924c5`; setup calculates and records its actual hash. It is an initialization/smoke-test model, not a bottle/cup/box detector. The adapter uses the upstream registration interface without copying its model implementation into this repository.
 
 ## Project licensing
 

@@ -1,0 +1,11 @@
+{
+  "confidence_threshold": 0.5,
+  "nms_iou_threshold": 0.45,
+  "left_boundary": 0.3333333333333333,
+  "right_boundary": 0.6666666666666666,
+  "decision_top": 0.4,
+  "near_top": 0.8,
+  "overlap_threshold": 0.1,
+  "stable_frames": 3,
+  "stale_after_ms": 1000
+}

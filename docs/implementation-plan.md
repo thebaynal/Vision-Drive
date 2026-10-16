@@ -1,6 +1,6 @@
 # Desktop implementation plan
 
-> Status: implementation specification. The application, training scripts, configuration files, and tests described here have not been created in this milestone.
+> Status: desktop specification with an initial implementation. See [run instructions](running-the-demo.md) and [verification](verification.md) for actual capabilities and checks. Trained-obstacle evaluation and hardware deployment remain outstanding.
 
 ## 1. Outcome and boundaries
 
@@ -10,7 +10,7 @@ The initial obstacle set is bottles, cups, and boxes, merged into a single `obst
 
 ## 2. Environment and dependency management
 
-1. Use an isolated Python 3.10 environment; do not modify the system Python installation.
+1. Use an isolated environment; do not modify the system Python installation. Python 3.13.5 was exercised for the initial desktop prototype; see the verification report for exact versions.
 2. Retrieve [ESP-Detection](https://github.com/espressif/esp-detection) as an external dependency under an ignored directory. Record the exact commit. Follow any instructions shipped with that checkout before changing its files.
 3. Resolve and pin a compatible desktop set of PyTorch, torchvision, Ultralytics, OpenCV, and NumPy. Upstream requirements are a starting point; establish compatibility with an import, checkpoint-load, and inference smoke test before training.
 4. Keep ONNX/ESP-PPQ/ESP-DL export dependencies in a separate later environment. Do not run the upstream all-in-one deployment script just to start the desktop demo.
@@ -61,9 +61,9 @@ Evaluate staged presentation footage separately. If a bottle/cup/box is repeated
 
 Separate capture, detector adapter, pure geometry/decision logic, stabilization, and rendering. The decision module must accept synthetic detections without importing PyTorch or opening a camera. Load the upstream custom modules before loading trusted ESPDet checkpoints; loading arbitrary untrusted checkpoints is outside the intended workflow.
 
-### Planned CLI
+### CLI
 
-These are future interfaces, not currently runnable commands:
+These interfaces are implemented; actual detection needs model dependencies and matching trained weights:
 
 ```text
 python demo.py --source 0

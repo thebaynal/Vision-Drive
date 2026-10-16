@@ -1,0 +1,9 @@
+[project]
+name = "visiondrive-esp32"
+version = "0.1.0"
+description = "Camera-only obstacle detection and three-region movement suggestions"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
