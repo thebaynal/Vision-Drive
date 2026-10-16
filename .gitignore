@@ -1,0 +1,64 @@
+# Python environments and generated files
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Downloaded source and data: retain manifests/configuration separately
+external/
+vendor/
+datasets/
+data/raw/
+data/processed/
+data/cache/
+weights/
+checkpoints/
+models/
+*.pt
+*.pth
+*.onnx
+*.espdl
+*.tflite
+
+# Training, recordings, logs, and temporary verification output
+runs/
+outputs/
+recordings/
+.verification/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.log
+*.tmp
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+secrets*.json
+config.local.json
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Future ESP-IDF local build state
+managed_components/
+sdkconfig
+sdkconfig.old
