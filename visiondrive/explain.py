@@ -74,10 +74,14 @@ def render_explanation(image, decision, config, model_name, metrics, label="obst
     text(canvas, decision.action.value, 990, 533, .98, color, 2)
     reason = decision.reason
     if trace.stabilizing:
-        reason += " / STOP until turn confirmed"
+        reason += " / STOP until movement confirmed"
     for i, line in enumerate(textwrap.wrap(reason, width=37)[:2]):
         text(canvas, line, 990, 559 + i * 18, .37, TEXT)
     # Explain the stabilizer in context; the output still comes from Controller.
     if not trace.stabilizing:
-        text(canvas, "STOP immediate / movement confirmed", 990, 602, .34, MUTED)
+        if not trace.input_available:
+            text(canvas, f"Frame age {metrics.get('age_ms', 0):.0f} / {config.stale_after_ms} ms limit",
+                 990, 602, .34, AMBER)
+        else:
+            text(canvas, "STOP immediate / movement confirmed", 990, 602, .34, MUTED)
     return canvas

@@ -139,9 +139,10 @@ class Controller:
         self.pending = None
         self.current = Decision(Action.STOP, reason, EMPTY)
 
-    def stop(self, reason):
-        self.streak = 0
-        self.pending = None
+    def stop(self, reason, reset_evidence=True):
+        if reset_evidence:
+            self.streak = 0
+            self.pending = None
         self.current = Decision(Action.STOP, reason, self.current.observation,
                                 self.current.frame_id, self.current.captured_at)
         return self.current
@@ -149,8 +150,16 @@ class Controller:
     def tick(self, now, status="running"):
         if status != "running":
             return self.stop(status)
-        if self.current.frame_id < 0 or now - self.current.captured_at >= self.config.stale_after_ms / 1000:
+        if self.current.frame_id < 0:
             return self.stop("Input unavailable or stale")
+        if now - self.current.captured_at >= self.config.stale_after_ms / 1000:
+            # Output expiry and observation continuity are separate. At 600 ms
+            # inference with a 1 s deadline, the previous output expires before
+            # each new result. Clearing evidence here strands confirmation at
+            # 1/N forever, even though successive capture timestamps are close.
+            # Fresh updates still enforce their own age, capture-gap, hazard,
+            # direction-change and unique-frame checks before authorizing motion.
+            return self.stop("Input unavailable or stale", reset_evidence=False)
         return self.current
 
     def update(self, detections, frame_id, captured_at, now):

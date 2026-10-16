@@ -147,3 +147,56 @@ def test_new_center_obstacle_stops_forward_while_confirming_a_turn():
     assert ctl.current.action == Action.FORWARD
     decision = ctl.update([CENTER],3,100.3,100.3)
     assert decision.action == Action.STOP and "Stabilizing LEFT" in decision.reason
+
+
+@pytest.mark.parametrize("detections,expected", [([],Action.FORWARD),([CENTER],Action.LEFT),
+    ([CENTER,LEFT],Action.RIGHT)])
+def test_slow_but_fresh_results_can_confirm_movement_after_output_expiry(detections,expected):
+    ctl = Controller(Config(stable_frames=3,stale_after_ms=1000))
+    for index in range(3):
+        captured = 100 + index*.6
+        decision = ctl.update(detections,index,captured,captured+.6)
+        assert decision.action == (expected if index==2 else Action.STOP)
+        # Between results the old output must STOP, but a short capture gap
+        # must not erase the evidence from genuinely distinct observations.
+        assert ctl.tick(captured+1.05).action == Action.STOP
+        assert ctl.streak == index+1
+    assert ctl.update(detections,3,101.8,102.4).action == expected
+
+
+def test_preserved_evidence_cannot_restart_after_a_real_capture_outage():
+    ctl = Controller()
+    ctl.update([],0,100.,100.6)
+    ctl.update([],1,100.6,101.2)
+    ctl.tick(101.7)
+    assert ctl.streak == 2
+    result = ctl.update([],2,103.,103.6)
+    assert result.action == Action.STOP and ctl.streak == 1
+
+
+def test_expiry_never_accepts_an_already_stale_result():
+    ctl = Controller()
+    ctl.update([],0,100.,100.6)
+    ctl.update([],1,100.6,101.2)
+    ctl.tick(101.7)
+    assert ctl.update([],2,101.2,102.3).action == Action.STOP
+    assert ctl.streak == 0
+
+
+def test_pause_resets_evidence_even_after_output_expiry():
+    ctl = Controller()
+    ctl.update([],0,100.,100.6)
+    ctl.update([],1,100.6,101.2)
+    ctl.tick(101.7)
+    ctl.tick(101.8,"PAUSED")
+    assert ctl.streak == 0 and ctl.pending is None
+    assert ctl.update([],2,101.2,101.85).action == Action.STOP
+
+
+def test_changed_rule_cannot_reuse_the_previous_confirmation_streak():
+    ctl = Controller()
+    ctl.update([],0,100.,100.6)
+    ctl.update([],1,100.6,101.2)
+    ctl.tick(101.7)
+    assert ctl.update([CENTER],2,101.2,101.8).action == Action.STOP
+    assert ctl.streak == 1 and ctl.pending == Action.LEFT

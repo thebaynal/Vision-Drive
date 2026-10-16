@@ -4,7 +4,7 @@ Recorded on **2026-10-16** for the laptop-vision / ESP32-controller prototype.
 
 ## Automated checks
 
-**95 Python tests passed** on Windows / Python 3.13.5. Checks cover region
+**102 Python tests passed** on Windows / Python 3.13.5. Checks cover region
 overlap, near/far gating, clearer-side selection, emergency stop, unique-frame
 confirmation, stopping forward motion while confirming a turn, invalid/stale
 observations, capture/pause/EOF, data conversion, split/hash integrity, preserved
@@ -15,6 +15,12 @@ near/far walls, emergency obstacles, and invalid-map failure. These test the
 depth-processing algorithm using controlled arrays; they are not a neural
 depth-accuracy benchmark. Broad-detector adapter tests verify that a far object
 does not stop solely because its box reaches the lower image edge.
+
+Timing regressions reproduce 600 ms inference under the 1,000 ms freshness
+deadline. Expired outputs still STOP, but fresh, distinct observations within
+the allowed capture gap can confirm FORWARD/LEFT/RIGHT instead of restarting
+the confirmation count at 1/3 forever. True capture outages, already-stale
+results, pause, hazards, and changed candidates still gate or reset movement.
 
 Actual localhost UDP tests cover initial STOP acknowledgement, command sending,
 perception expiry, acknowledgement loss/replay, and final STOP. Windows sandbox

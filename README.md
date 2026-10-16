@@ -258,6 +258,7 @@ See [the measured report](docs/model-report.md) and
 
 ## Required project materials
 
+- [Documentation and research-paper writing guide](docs/documentation-and-paper-guide.md)
 - [Midterm report and requirement mapping](docs/midterm-report.md)
 - [Dataset card](data/public/README.md) and [fixed split/annotation manifest](data/public/bottle-cup-box-manifest.jsonl)
 - [Original training notebook](notebooks/train_bottle_cup_box.ipynb) and [current model walkthrough](notebooks/laptop_esp32_demo.ipynb)
