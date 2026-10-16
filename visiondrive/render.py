@@ -82,6 +82,8 @@ def render(image, decision, config, model_name, metrics, label="obstacle", simul
         text(canvas, line, 24, header + height + 25 + j * 19, .44, MUTED)
     link_status = metrics.get("esp_link", "Visualization only / ESP32 not connected")
     text(canvas, link_status, 24, header + height + 76, .44, AMBER)
+    if metrics.get("analyzing"):
+        text(canvas, "ANALYZING NEXT FRAME - last visual result held", 550, header + height + 25, .36, AMBER)
     text(canvas, "SPACE pause / resume    Q or ESC quit", 860, header + height + 76, .44, MUTED)
     if simulated and scene:
         text(canvas, scene, 550, header + height + 25, .44, AMBER)

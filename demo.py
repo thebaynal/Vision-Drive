@@ -10,7 +10,8 @@ import sys
 import time
 
 from visiondrive.config import Config
-from visiondrive.decision import Controller, EMPTY
+from visiondrive.decision import EMPTY
+from visiondrive.instructions import Instructions
 
 
 ROOT = Path(__file__).resolve().parent
@@ -30,6 +31,8 @@ def parser():
     cli.add_argument("--esp-host", help="ESP32 Wi-Fi IP; omit for visualization without hardware")
     cli.add_argument("--esp-port", type=int, default=4210)
     cli.add_argument("--command-ttl-ms", type=int, default=350)
+    cli.add_argument("--preview-timeout-ms", type=int, default=5000,
+                     help="Hold the visual interpretation for up to this frame age while analyzing (1000-10000 ms); motor expiry is unchanged")
     cli.add_argument("--esp-repo", type=Path, default=ROOT / "external/esp-detection")
     cli.add_argument("--config", type=Path, default=ROOT / "config/default.json")
     cli.add_argument("--device", default="cpu", help="cpu or CUDA device, e.g. 0")
@@ -69,7 +72,8 @@ def run(args):
     writer = record = None
     canvas = None
     model_name, label = "Synthetic boxes / no neural network", "simulated obstacle"
-    controller = Controller(config)
+    instructions = Instructions(config, args.preview_timeout_ms)
+    preview_config = instructions.preview_config
     paused, count, generation, latest_id = False, 0, 0, -1
     elapsed, sim_id = 0., 0
     history = deque(maxlen=90)
@@ -109,6 +113,7 @@ def run(args):
                                args.esp_port, args.command_ttl_ms)
         print(f"VisionDrive: {model_name}")
         print("SPACE pause/resume; Q/ESC quit. Movement is a visual suggestion only.")
+        print(f"Visual-result hold: {args.preview_timeout_ms} ms; separate motor freshness: {config.stale_after_ms} ms.")
         while True:
             now = time.monotonic()
             scene, status = "", "running"
@@ -117,10 +122,10 @@ def run(args):
                 if not paused:
                     elapsed += 1 / 30 if args.headless else now - previous
                     current_frame, detections, scene = make_frame(elapsed)
-                    controller.update(detections, sim_id, now, now)
+                    instructions.update(detections, sim_id, now, now)
                     sim_id += 1
                 status = "PAUSED" if paused else "running"
-                decision = controller.tick(now, status)
+                decision, control_decision = instructions.tick(now, status)
                 metrics["fps"] = 30. if not paused else 0.
             else:
                 status, result, raw, processed = pipeline.snapshot()
@@ -131,11 +136,11 @@ def run(args):
                     last_result = result
                     current_frame = result.packet.image
                     if not paused and status == "running":
-                        controller.update(result.detections, latest_id, result.packet.captured_at, now)
+                        instructions.update(result.detections, latest_id, result.packet.captured_at, now)
                     history.append(result.completed_at)
                 elif result is None and raw is not None and last_result is None:
                     current_frame = raw.image
-                decision = controller.tick(now, status)
+                decision, control_decision = instructions.tick(now, status)
                 if last_result is not None:
                     metrics.update(latency_ms=(last_result.completed_at - last_result.packet.captured_at) * 1000,
                                    inference_ms=last_result.inference_ms,
@@ -148,12 +153,18 @@ def run(args):
                 # Never leave a stale box overlay attached to a different frame.
                 decision = replace(decision, observation=EMPTY)
             metrics["status"] = status
+            metrics["preview_timeout_ms"] = args.preview_timeout_ms
+            metrics["motor_freshness_ms"] = config.stale_after_ms
+            metrics["analyzing"] = (not args.simulate and status == "running" and
+                (last_result is None or now-last_result.completed_at > .15))
+            metrics["control_action"] = control_decision.action.value
+            metrics["control_reason"] = control_decision.reason
             if esp_link:
-                esp_link.send(decision, config.stale_after_ms)
+                # Only the strict controller can supply motor commands.
+                # Never send the longer-lived visualization decision.
+                esp_link.send(control_decision, config.stale_after_ms)
                 metrics["esp_link"] = esp_link.status
-                if esp_link.last_action != decision.action:
-                    decision = replace(decision, action=esp_link.last_action,
-                                       reason="ESP32 link/freshness gate; STOP sent")
+                metrics["esp_command"] = esp_link.last_action.value
             metrics["metric_depth"] = not args.simulate and args.detector == "hybrid"
             metrics["avoid_distance_m"] = config.avoid_distance_m
             metrics["stop_distance_m"] = config.stop_distance_m
@@ -161,7 +172,7 @@ def run(args):
             if args.explain:
                 from visiondrive.explain import render_explanation
                 renderer = render_explanation
-            canvas = renderer(current_frame, decision, config, model_name, metrics, label, args.simulate, scene)
+            canvas = renderer(current_frame, decision, preview_config, model_name, metrics, label, args.simulate, scene)
             if args.save_video:
                 if writer is None:
                     args.save_video.parent.mkdir(parents=True, exist_ok=True)
@@ -191,7 +202,7 @@ def run(args):
                     break
                 if key == ord(" "):
                     paused = not paused
-                    controller.reset("PAUSED" if paused else "Waiting for fresh observations")
+                    instructions.reset("PAUSED" if paused else "Waiting for fresh observations")
                     latest_id = -1
                     if pipeline:
                         pipeline.set_paused(paused)

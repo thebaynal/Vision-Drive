@@ -52,6 +52,10 @@ Wi-Fi state, and command expiry independently of the laptop. Command expiry is
 underlying observation remains fresh. Expiry requires a new STOP before motion
 resumes. Motor-power removal must remain available during physical trials.
 
+The longer (five-second default) visual-result hold is for the desktop preview
+only. A separate controller enforces the motor freshness limit; the sender
+cannot use the held preview action to extend a movement command.
+
 ## Validation status
 
 The shared C++ command parser/watchdog has native host tests, including timeout,

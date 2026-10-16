@@ -93,6 +93,20 @@ twice. Movement requires three matching **processed observations**; a newly
 blocked center stops forward movement while a turn is being confirmed. This
 is reactive steering, not target following, mapping, or destination navigation.
 
+The visualization and motor commands have **independent freshness limits**.
+The viewer retains the last visual instruction while analyzing the next frame,
+up to a default five-second frame age, and labels that hold explicitly. It does
+not emit alternating FORWARD/STOP merely because normal CPU inference takes
+longer than the motor deadline. Camera/inference failure, pause, end of input,
+or exceeding the display deadline still stops the preview. Set the bounded
+display deadline with `--preview-timeout-ms 5000` (1,000–10,000 ms allowed).
+
+The separate motor controller keeps `stale_after_ms` from the configuration
+(default 1,000 ms). Only its decision reaches the Wi-Fi sender. The footer
+shows the sent ESP32 command independently of the visual instruction. Recorded
+JSONL includes `control_action`, `control_reason`, and, when connected,
+`esp_command`. A clear-looking preview never authorizes motors using stale data.
+
 The side regions are image-space approximations, not proof that the car's full
 width or turning arc fits. Mark a measured driving corridor after final camera
 mounting and test it with the actual chassis dimensions.

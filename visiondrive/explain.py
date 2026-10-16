@@ -58,18 +58,20 @@ def render_explanation(image, decision, config, model_name, metrics, label="obst
     arrow(333)
 
     card(352, 450, "03  RULE CANDIDATE")
-    text(canvas, trace.candidate_action.value if trace.input_available else "INPUT GATE", 990, 403, .67,
+    unavailable_heading = "ANALYZING" if decision.frame_id < 0 and metrics.get("status", "running") == "running" else "INPUT GATE"
+    text(canvas, trace.candidate_action.value if trace.input_available else unavailable_heading, 990, 403, .67,
          RED if trace.candidate_action == Action.STOP else AMBER, 2)
     short_reason = {Action.FORWARD: "No nearby center obstacle detected",
                     Action.LEFT: "Center blocked; use clearer left",
                     Action.RIGHT: "Center blocked; use clearer right",
                     Action.STOP: trace.candidate_reason}[trace.candidate_action]
     if not trace.input_available:
-        short_reason = "Fresh model observations required"
+        short_reason = ("Waiting for first model result" if decision.frame_id < 0 and metrics.get("status", "running") == "running"
+                        else "Model stalled or input unavailable")
     text(canvas, short_reason, 990, 430, .37, MUTED)
     arrow(456)
 
-    card(475, 614, "04  FINAL INSTRUCTION")
+    card(475, 614, "04  VISUAL INSTRUCTION")
     color = RED if decision.action == Action.STOP else TEAL
     text(canvas, decision.action.value, 990, 533, .98, color, 2)
     reason = decision.reason
@@ -82,6 +84,8 @@ def render_explanation(image, decision, config, model_name, metrics, label="obst
         if not trace.input_available:
             text(canvas, f"Frame age {metrics.get('age_ms', 0):.0f} / {config.stale_after_ms} ms limit",
                  990, 602, .34, AMBER)
+        elif metrics.get("analyzing"):
+            text(canvas, "Analyzing next frame / holding result", 990, 602, .34, AMBER)
         else:
             text(canvas, "STOP immediate / movement confirmed", 990, 602, .34, MUTED)
     return canvas

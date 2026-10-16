@@ -117,11 +117,17 @@ Describe the implemented workflow in order:
 
 Copy actual settings from [the config](../config/default.json). Initial defaults
 are estimated 1.5 m approach distance, estimated 0.45 m emergency center distance,
-three matching processed observations, and a 1,000 ms freshness limit. These are
+three matching processed observations, and a 1,000 ms motor freshness limit. These are
 demo values, not calibrated stopping distances. Expired outputs stop immediately;
 fresh observations within the allowed capture gap can continue confirmation.
 True outages, hazards, invalid input, and changed directions interrupt confirmation
 as applicable. This avoids confusing a display timeout with a new observation.
+
+The display now has a separate, bounded five-second hold for the last visual
+instruction while the next frame is analyzed. It explicitly labels that state;
+input failure or a stalled model still stops the preview. Only the stricter
+motor controller supplies ESP32 commands. Describe these as separate outputs,
+not as a five-second permission for a physical car to move on an old observation.
 
 If describing hardware, explain STOP handshakes, sequence checking, command
 expiry, and the receiver's independent watchdog. Separate native C++ tests from
@@ -181,7 +187,7 @@ was about 477 ms on the development CPU, excluding capture/rendering. Display
 frames are not inference FPS. This clip showed FORWARD and STOP; controller
 tests cover LEFT/RIGHT, but there is no measured physical-turn success rate.
 
-The current suite has 102 Python tests plus native C++ watchdog/protocol
+The current suite has 123 Python tests plus native C++ watchdog/protocol
 assertions. These measure software behavior, not model accuracy. Recheck the
 [verification report](verification.md) before freezing test counts in the paper.
 
@@ -221,7 +227,7 @@ images into slides or the paper.
 | Unnamed nearby surfaces can influence steering | The system detects everything |
 | Learned distance estimates need calibration | The camera measures exact distance |
 | The baseline achieved the reported test metrics | The hybrid has the baseline's measured accuracy |
-| Tests verify software behavior | 102 tests are 102 successful driving trials |
+| Tests verify software behavior | 123 tests are 123 successful driving trials |
 | Receiver/watchdog code is native-tested | A physical car is proven to stop safely |
 | Image-hash-disjoint splits were prepared | All test scenes and pretraining sources are independent |
 | Image occupancy guides a suggestion | The turning path is proven collision-free |

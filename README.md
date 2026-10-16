@@ -115,6 +115,14 @@ Run `run_logic_demo.cmd` for a live camera, add `--source path/to/video.mp4` for
 a recording, or use `--esp-host IP` after configuring the board. Space pauses;
 Q/Escape exits. With no board address, the program only visualizes instructions.
 
+The viewer holds its last visual instruction while the next model result is
+being computed, for at most five seconds of frame age. It labels this state
+**Analyzing next frame** instead of alternating FORWARD/STOP between normal
+updates. Input failure or exceeding that display deadline still stops the
+preview. Use `--preview-timeout-ms` to set a 1,000–10,000 ms display deadline.
+Actual ESP32 commands use a separate controller with the original **1,000 ms**
+freshness limit; a held visual instruction cannot extend motor movement.
+
 For a synthetic controller presentation without ML dependencies:
 
 ```powershell

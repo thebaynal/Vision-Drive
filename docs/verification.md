@@ -4,7 +4,7 @@ Recorded on **2026-10-16** for the laptop-vision / ESP32-controller prototype.
 
 ## Automated checks
 
-**102 Python tests passed** on Windows / Python 3.13.5. Checks cover region
+**123 Python tests passed** on Windows / Python 3.13.5. Checks cover region
 overlap, near/far gating, clearer-side selection, emergency stop, unique-frame
 confirmation, stopping forward motion while confirming a turn, invalid/stale
 observations, capture/pause/EOF, data conversion, split/hash integrity, preserved
@@ -21,6 +21,21 @@ deadline. Expired outputs still STOP, but fresh, distinct observations within
 the allowed capture gap can confirm FORWARD/LEFT/RIGHT instead of restarting
 the confirmation count at 1/3 forever. True capture outages, already-stale
 results, pause, hazards, and changed candidates still gate or reset movement.
+
+The viewer now has a bounded five-second visual-result hold, independent of
+the one-second motor controller. Tests verify continuous preview FORWARD/LEFT/
+RIGHT with 600, 1,200, and 2,000 ms inference cadences, immediate failure/hazard
+stops, eventual preview expiry, and that the application sends STOP to the motor
+link even when its held visual instruction remains FORWARD. Both controllers
+receive identical observations, including one-shot input iterators.
+
+An actual-model integration check added an artificial 800 ms delay after each
+prediction on a repeated real-image clip. Recorded inference was at least
+1,270 ms. After initial confirmation, the viewer held FORWARD for 179 consecutive
+display frames without STOP flicker; across all 300 display frames the separate
+motor controller remained STOP because the observations exceeded its one-second
+deadline. The maximum held frame age was about 2,775 ms. This deliberately
+slowed test verifies output separation, not model accuracy or physical driving.
 
 Actual localhost UDP tests cover initial STOP acknowledgement, command sending,
 perception expiry, acknowledgement loss/replay, and final STOP. Windows sandbox
