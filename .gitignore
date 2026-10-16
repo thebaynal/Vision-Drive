@@ -31,6 +31,16 @@ models/
 *.espdl
 *.tflite
 
+# Include only the compact, selected demo model and its provenance/license.
+# Datasets, initialization weights, and full training runs stay ignored.
+!weights/
+weights/*
+!weights/obstacle/
+weights/obstacle/*
+!weights/obstacle/best.pt
+!weights/obstacle/model.json
+!weights/obstacle/LICENSE
+
 # Training, recordings, logs, and temporary verification output
 runs/
 outputs/

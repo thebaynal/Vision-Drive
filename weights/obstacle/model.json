@@ -1,0 +1,110 @@
+{
+  "model": "ESPDet-Pico",
+  "classes": [
+    "bottle",
+    "cup",
+    "box"
+  ],
+  "input_size": [
+    224,
+    224
+  ],
+  "sha256": "e5075b5a8fba62ab40c6580225451820006f9dc4f7463629dbe1c34d024de39c",
+  "size_bytes": 991893,
+  "parameters": 361365,
+  "confidence_threshold": 0.35,
+  "upstream_repository": "https://github.com/espressif/esp-detection",
+  "upstream_revision": "28de5902a357d99dd9a5db0f52905255641c5a78",
+  "initialization_sha256": "7afca1564f45c3087e39758049412337ff4cec6f63a8f7a5380d50999e4924c5",
+  "license": "AGPL-3.0; see accompanying LICENSE and upstream notices",
+  "training": {
+    "epochs_completed": 55,
+    "best_epoch": 40,
+    "seed": 42,
+    "batch": 16,
+    "device": "cpu",
+    "patience": 15,
+    "elapsed_seconds": 695.683
+  },
+  "dataset": {
+    "source": "Open Images official validation pool",
+    "project_splits": {
+      "train": {
+        "images": 280,
+        "instances": {
+          "bottle": 294,
+          "box": 73,
+          "cup": 136
+        }
+      },
+      "val": {
+        "images": 60,
+        "instances": {
+          "bottle": 48,
+          "box": 15,
+          "cup": 28
+        }
+      },
+      "test": {
+        "images": 62,
+        "instances": {
+          "bottle": 43,
+          "box": 26,
+          "cup": 25
+        }
+      }
+    },
+    "note": "New project partitions; not official benchmark scores",
+    "manifest_sha256": "ae542b0556489f9b44b97c28183fc7bc32314827cc64c2d0ffe9380353e2405d"
+  },
+  "evaluation": {
+    "mAP": {
+      "aggregate": {
+        "metrics/precision(B)": 0.5800287077433718,
+        "metrics/recall(B)": 0.4308169350029815,
+        "metrics/mAP50(B)": 0.4686658196954429,
+        "metrics/mAP50-95(B)": 0.35741383193792736,
+        "fitness": 0.36853903071367894
+      },
+      "per_class": {
+        "bottle": 0.33278331623395324,
+        "cup": 0.6346600520184773,
+        "box": 0.10479812756135157
+      }
+    },
+    "at_configured_threshold": {
+      "per_class": {
+        "bottle": {
+          "tp": 19,
+          "fp": 15,
+          "fn": 24,
+          "precision": 0.5588235294117647,
+          "recall": 0.4418604651162791,
+          "f1": 0.4935064935064935
+        },
+        "cup": {
+          "tp": 19,
+          "fp": 6,
+          "fn": 6,
+          "precision": 0.76,
+          "recall": 0.76,
+          "f1": 0.76
+        },
+        "box": {
+          "tp": 4,
+          "fp": 14,
+          "fn": 22,
+          "precision": 0.2222222222222222,
+          "recall": 0.15384615384615385,
+          "f1": 0.18181818181818182
+        }
+      },
+      "macro_f1": 0.47844155844155845
+    }
+  },
+  "limitations": [
+    "Initial small public-image prototype",
+    "Box recall is low; needs more representative data",
+    "No independent camera-course, ESP32, or physical-driving validation"
+  ]
+}

@@ -129,6 +129,8 @@ Compare original, ONNX, quantized-reference outputs where supported by the tools
 
 Model package contents should include weights/artifact hash, source checkpoint, export settings, calibration manifest, class mapping, preprocessing specification, test results, and compatible component revisions. Store large artifacts outside Git.
 
+The current checkpoint has three score channels per detection location. Configure the generated ESP-DL decoder and name mapping for bottle/cup/box; do not retain single-class example settings. Other categories are excluded from the active model.
+
 ## 7. Firmware modules and data contracts
 
 | Module | Responsibility |
@@ -151,7 +153,7 @@ These are implementation contracts, not existing firmware declarations:
 Detection:
   x1, y1, x2, y2   normalized original-frame coordinates
   confidence       finite value in [0, 1]
-  class_id         0 = obstacle
+  class_id         0 = bottle | 1 = cup | 2 = box
 
 PerceptionResult:
   frame_id

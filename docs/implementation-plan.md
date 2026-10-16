@@ -1,12 +1,12 @@
 # Desktop implementation plan
 
-> Status: desktop specification with an initial implementation. See [run instructions](running-the-demo.md) and [verification](verification.md) for actual capabilities and checks. Trained-obstacle evaluation and hardware deployment remain outstanding.
+> Status: implemented desktop specification. See [run instructions](running-the-demo.md), [model results](model-report.md), and [verification](verification.md). Independent camera-course and hardware validation remain outstanding.
 
 ## 1. Outcome and boundaries
 
 Build a local Windows desktop presentation that accepts webcam or recorded-video frames, detects supported obstacles with ESPDet-Pico, and displays stable movement suggestions derived from left/middle/right occupancy. The application must run offline after setup. It does not connect to motors, estimate metric depth, map a room, or navigate to a destination.
 
-The initial obstacle set is bottles, cups, and boxes, merged into a single `obstacle` class. A label in the presentation must state: **Visual suggestion only — unrecognized obstacles may be missed.**
+The active detector has exactly three classes: `0 = bottle`, `1 = cup`, `2 = box`. Other categories are excluded. Display: **Visual suggestion only — unrecognized obstacles may be missed.**
 
 ## 2. Environment and dependency management
 
@@ -25,9 +25,9 @@ Use a bounded public-image subset from [Open Images](https://storage.googleapis.
 
 Select bottle and cup equivalents. Include suitable box annotations when present; otherwise manually annotate public box images with retained source/license metadata. Do not substitute image-level labels for bounding boxes. Reject group-of, depiction, or ambiguous annotations that do not represent individual physical target objects for this demo.
 
-Target 1,500 training, 300 validation, and 300 test images, balancing the three original object types as closely as available data permits. Keep original dataset split boundaries and deduplicate by image ID and content hash. If source counts cannot meet the target, report actual counts and the gap; do not reuse evaluation images as training data.
+The bounded initial run uses 402 images from the official Open Images validation pool, repartitioned into new project splits: 280 train, 60 validation, 62 test. Content is deduplicated before splitting. These are not official benchmark scores. Larger future runs should use more varied data, especially for boxes.
 
-Convert the selected boxes to YOLO detection annotations: class ID `0`, followed by normalized center x, center y, width, and height. Clamp to valid image bounds, reject zero-area boxes, and retain all supported target boxes in each image. Merge labels to `obstacle`, retaining original type metadata for separate evaluation.
+Convert selected boxes to class IDs 0/1/2 followed by normalized center x, center y, width, height. Reject invalid boxes and retain all supported target boxes in each image. Preserve labels and source metadata for per-class evaluation.
 
 ### Quality and provenance
 
@@ -46,7 +46,7 @@ Initial training settings:
 | Setting | Initial value |
 | --- | --- |
 | Input | 224 × 224, aspect-ratio-preserving preprocessing |
-| Class count | 1: `obstacle` |
+| Class count | 3: bottle, cup, box |
 | Maximum epochs | 100 |
 | Batch size | 16; reduce to 8, then 4 only if GPU memory is exhausted |
 | Early stopping patience | 20 epochs |
@@ -79,7 +79,7 @@ The optional JSON configuration overrides validated built-in defaults. Reject un
 ### Internal contracts
 
 - **Frame:** original unmirrored image, sequence ID, and monotonic capture timestamp. Recorded video also retains source presentation time.
-- **Detection:** `xyxy` box normalized to the original frame, confidence in `[0,1]`, class ID `0`.
+- **Detection:** `xyxy` box normalized to the original frame, confidence in `[0,1]`, class ID 0/1/2 and its bottle/cup/box label.
 - **Decision:** `STOP`, `FORWARD`, `LEFT`, or `RIGHT`; reason; source frame ID/timestamp; three region flags; and near-center status.
 - **Controller status:** starting, running, paused, source ended, or error. Non-running states produce STOP internally.
 

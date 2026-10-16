@@ -29,7 +29,8 @@ class Detection:
         return (all(math.isfinite(x) for x in values)
                 and 0 <= self.x1 < self.x2 <= 1
                 and 0 <= self.y1 < self.y2 <= 1
-                and 0 <= self.confidence <= 1 and type(self.class_id) is int and 0 <= self.class_id <= 2)
+                and 0 <= self.confidence <= 1 and type(self.class_id) is int and 0 <= self.class_id <= 2
+                and self.label in ("", "bottle", "cup", "box"))
 
 
 @dataclass(frozen=True)

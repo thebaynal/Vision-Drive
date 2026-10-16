@@ -20,7 +20,7 @@ def parser():
     cli.add_argument("--source", default="0", help="Camera index or video file")
     cli.add_argument("--weights", type=Path, default=ROOT / "weights/obstacle/best.pt")
     cli.add_argument("--esp-repo", type=Path, default=ROOT / "external/esp-detection")
-    cli.add_argument("--config", type=Path)
+    cli.add_argument("--config", type=Path, default=ROOT / "config/default.json")
     cli.add_argument("--device", default="cpu", help="cpu or CUDA device, e.g. 0")
     cli.add_argument("--cpu-threads", type=int, default=2, help="CPU inference threads; default 2")
     cli.add_argument("--expected-label", default="obstacle", choices=["obstacle"], help="Legacy merged-class label; bottle/cup/box models are recognized automatically")

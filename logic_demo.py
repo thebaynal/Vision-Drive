@@ -4,10 +4,7 @@ Uses the trained bottle/cup/box checkpoint. There is no cat-model fallback.
 """
 
 import sys
-from pathlib import Path
 from demo import main as demo_main
-
-ROOT = Path(__file__).resolve().parent
 
 
 def main(argv=None):

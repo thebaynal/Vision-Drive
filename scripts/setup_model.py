@@ -16,6 +16,7 @@ CHECKPOINT_SHA256 = "7afca1564f45c3087e39758049412337ff4cec6f63a8f7a5380d50999e4
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=ROOT / "external/esp-detection")
+    parser.add_argument("--source-only", action="store_true", help="Prepare runtime source without copying training initialization weights")
     args = parser.parse_args()
     repo = args.repo.resolve()
     if not repo.exists():
@@ -25,6 +26,9 @@ def main():
     revision = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
     if revision != REVISION:
         raise ValueError(f"Upstream is {revision}; expected {REVISION}. Use a separate clean checkout; existing files were not changed.")
+    if args.source_only:
+        print(f"Runtime source ready at {repo}; revision {revision}. No initialization model was copied.")
+        return
     source = repo / "examples/cat_detection/espdet_pico_224_224_cat.pt"
     digest = hashlib.sha256(source.read_bytes()).hexdigest()
     if digest != CHECKPOINT_SHA256:

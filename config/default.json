@@ -1,5 +1,5 @@
 {
-  "confidence_threshold": 0.5,
+  "confidence_threshold": 0.35,
   "nms_iou_threshold": 0.45,
   "left_boundary": 0.3333333333333333,
   "right_boundary": 0.6666666666666666,

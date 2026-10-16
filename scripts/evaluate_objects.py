@@ -89,6 +89,7 @@ def main():
               "limitations": "Small public subset; original annotations may be incomplete for other present target classes; no real course validation"}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    args.output.with_suffix(".predictions.json").write_text(json.dumps(cached), encoding="utf-8")
     if args.calibrate_config:
         updated = replace(Config.load(args.calibrate_config), confidence_threshold=threshold)
         args.calibrate_config.write_text(json.dumps(updated.to_dict(), indent=2)+"\n", encoding="utf-8")

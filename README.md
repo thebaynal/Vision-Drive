@@ -27,20 +27,21 @@ This is an educational prototype for a flat, controlled indoor environment. It e
 
 ## Project status
 
-**The desktop application and model/data tooling are implemented.** You can run the three-region controller immediately in an explicitly labeled simulation. Real webcam/video inference uses an ESPDet-Pico checkpoint. The upstream cat model can be smoke-tested; a bottle/cup/box obstacle checkpoint still requires training. Firmware and physical-car trials remain future work.
+**The desktop application uses a fine-tuned, three-class ESPDet-Pico detector: bottle, cup, and box.** The logic viewer traces real detections through region overlap and decision rules to a movement suggestion. This is an initial prototype: box recall is only 15% on the small held-out set. Cats, people, chairs, and walls are excluded. See the [model report](docs/model-report.md) for measured results; firmware and physical-car trials remain future work.
 
 | Component | Current state |
 | --- | --- |
 | System architecture and decision specification | Documented |
 | Desktop implementation and evaluation plan | Documented |
 | Hardware implementation guide | Documented |
-| Webcam/video detection application and ESPDet adapter | Implemented; trained obstacle checkpoint required |
+| Webcam/video detection application and ESPDet adapter | Implemented; named bottle/cup/box detections |
 | Labeled simulation and recording | Implemented; works without ML dependencies |
 | Pure decision tests and lightweight CI | Implemented |
 | Dataset conversion and training/evaluation tools | Implemented |
-| Bottle, cup, and box training dataset | Planned |
-| Fine-tuned ESPDet-Pico obstacle model | Planned |
-| Measured accuracy, latency, and FPS | Not measured |
+| Bottle, cup, and box training dataset | Prepared: 280 train / 60 validation / 62 test images |
+| Fine-tuned ESPDet-Pico obstacle model | Included with provenance and upstream license |
+| Training notebook | [Dataset, fine-tuning, curves, evaluation, and predictions](notebooks/train_bottle_cup_box.ipynb) |
+| Measured detector results | [Model report](docs/model-report.md); course/hardware evaluation outstanding |
 | ESP32-S3 firmware and physical-car trials | Planned; hardware not selected |
 
 ![Actual application screenshot running synthetic controller scenarios](assets/controller-preview.png)
@@ -86,13 +87,14 @@ Movement suggestions require three consecutive matching processed frames. STOP a
 
 ## What can the current model detect?
 
-The installed pretrained checkpoint recognizes **cats only**. The controller treats an accepted cat bounding box as an obstacle and applies the same region rules. Simulation boxes do not expand the model's supported classes.
+The active checkpoint has exactly three named output classes. Each accepted detection is treated as an obstacle according to its image position and overlap with the three regions.
 
 | Object | Supported by the installed checkpoint? |
 | --- | --- |
-| Cats | Yes |
-| Bottles, cups, and boxes | No; these are the planned fine-tuning targets |
-| People, chairs, walls, and other everyday obstacles | No; not trained classes in this checkpoint |
+| Bottles | Trained class `bottle` |
+| Cups | Trained class `cup`; source annotations use Coffee cup |
+| Boxes | Trained class `box`; the smallest source-image group |
+| Cats, people, chairs, walls, and other objects | Excluded from the active detector's classes |
 
 Misses and false positives are still possible. No detection does not establish that a path is clear. Recognizing additional object types requires a suitable model or fine-tuning; changing the movement rules alone will not add recognition classes.
 
@@ -100,7 +102,7 @@ Misses and false positives are still possible. No detection does not establish t
 
 [ESP-Detection](https://github.com/espressif/esp-detection) provides an Espressif-oriented detection architecture, custom model components, and an export/deployment path through ESP-DL. Choosing it early keeps the desktop experiment connected to the intended hardware target.
 
-The plan uses **224 × 224 input** and transfer learning from the repository's published ESPDet-Pico checkpoint. Its documented cat checkpoint is an initialization source, not an already trained bottle/cup/box detector. Fine-tuning and independent evaluation are required.
+The model uses **224 × 224 input** and transfer learning from the repository's published checkpoint. The original checkpoint supplies initialization weights only; the architecture is rebuilt with a three-class head before fine-tuning. The original checkpoint is rejected by the active viewer.
 
 | Responsibility | Planned technology |
 | --- | --- |
@@ -115,13 +117,13 @@ The setup script records a pinned upstream commit and checkpoint hash. No generi
 
 ## Data and training approach
 
-The first model will merge **bottles, cups, and boxes** into one class, `obstacle`. The demo does not need to distinguish their names to evaluate blocked regions.
+The model preserves **three classes**: `0 = bottle`, `1 = cup`, `2 = box`. The movement controller applies the same obstacle rules to all three while the overlay shows the recognized name.
 
 1. Audit [Open Images](https://storage.googleapis.com/openimages/web/download_v7.html) class availability and annotation quality.
-2. Prepare a bounded public-image subset targeting 1,500 training, 300 validation, and 300 test images, with each object type represented.
+2. Prepare a bounded public-image subset. The initial run uses 402 images from the official validation source, partitioned into new project train/validation/test sets.
 3. Convert annotations to YOLO detection format, retain image provenance, and inspect missing or invalid boxes. Public box images require manual labeling if suitable annotations are unavailable.
-4. Fine-tune ESPDet-Pico, saving the best validation checkpoint.
-5. Evaluate on held-out public images and independent staged webcam/video scenes.
+4. Fine-tune ESPDet-Pico and select the best validation checkpoint.
+5. Select confidence on validation only, then evaluate the untouched project test set. Independent course/webcam evaluation remains outstanding.
 
 Background-only images need a label audit; an empty annotation file must not hide an unlabeled target object. The public subset is a starting point, not proof of performance in the presentation environment.
 
@@ -158,13 +160,13 @@ Or use a configured model environment directly:
 .venv-model\Scripts\python logic_demo.py
 ```
 
-This program uses **actual model inference**, then displays the chain **detections → blocked regions → rule candidate → final instruction** next to the camera image. It defaults explicitly to the upstream cat checkpoint downloaded during model setup; its scope is labeled on screen. Use `--source path/to/video.mp4` for a recording, or `--weights path/to/best.pt --expected-label obstacle` for your trained obstacle model. On the current development computer, use the already prepared `.venv-inference\Scripts\python` interpreter instead.
+This program uses **actual bottle/cup/box inference**, then displays **detections → blocked regions → rule candidate → final instruction** next to the camera image. It loads `weights/obstacle/best.pt` with no fallback to the original checkpoint. Use `--source path/to/video.mp4` for a recording. On the current development computer, the launcher selects the prepared `.venv-inference` environment.
 
-The visualization shares the existing controller, including its three-observation confirmation and immediate STOP behavior. It has no physical robot drawing or hardware connection. See [the run guide](docs/running-the-demo.md#model-to-instruction-visualization) for examples.
+The visualization shares the existing controller, including its three-observation confirmation and immediate STOP behavior. It has no physical robot drawing or hardware connection. See [the run guide](docs/running-the-demo.md) for examples.
 
 ### Application interface
 
-Actual detection requires the model environment and a trained single-class `obstacle` checkpoint. The default weights location is `weights/obstacle/best.pt`:
+Actual detection requires the model environment and the included three-class checkpoint. The default weights location is `weights/obstacle/best.pt`:
 
 ```text
 python demo.py --source 0
@@ -179,8 +181,8 @@ The window shows detections, confidence, region occupancy, instruction and reaso
 
 | Measure | Status / intended evidence |
 | --- | --- |
-| Detection precision, recall, mAP@0.5, mAP@0.5:0.95 | Not measured; report on held-out data |
-| Recall for bottles, cups, and boxes | Not measured; retain original object-type metadata |
+| Detection precision, recall, mAP@0.5, mAP@0.5:0.95 | See [model report](docs/model-report.md) |
+| Recall for bottles, cups, and boxes | Measured separately on project-held-out images |
 | Instruction correctness | Automated synthetic rule/worker tests; see verification report |
 | Desktop throughput | Not measured; target at least 10 processed FPS on the development laptop |
 | Capture-to-decision latency | Not measured; report distribution and test conditions |
@@ -197,7 +199,8 @@ Published upstream benchmarks describe upstream models and equipment. They are n
 - [x] Add explicit simulation, recording, and headless verification.
 - [x] Add webcam/video inference adapter and presentation overlay.
 - [x] Add provenance-aware dataset conversion and training tools.
-- [ ] Prepare the public dataset and fine-tune ESPDet-Pico.
+- [x] Prepare the public dataset and fine-tune ESPDet-Pico.
+- [x] Add a reproducible [training notebook](notebooks/train_bottle_cup_box.ipynb).
 - [ ] Publish an annotated demo recording and measured evaluation.
 - [ ] Select the hardware and validate INT8 export.
 - [ ] Port decision logic and implement bounded motor control.
@@ -216,7 +219,7 @@ Published upstream benchmarks describe upstream models and equipment. They are n
 
 VisionDrive's contribution is the proposed integration: a three-region controller, explainable instruction display, evaluation workflow, and a documented path from desktop to embedded implementation. ESPDet-Pico and its training/deployment components originate with Espressif and their respective upstream contributors.
 
-No third-party source code, model weights, or dataset images are bundled in Git. Setup places the upstream checkout and weights in ignored directories. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistributing them. A project-wide redistribution license has not been selected; upstream components retain their own licenses.
+The compact fine-tuned checkpoint is included with its provenance and upstream license. Original initialization weights, external source, datasets, full training runs, and local environments remain ignored. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for dependency and model attribution. Upstream components retain their own licenses.
 
 ## References
 
@@ -228,4 +231,4 @@ No third-party source code, model weights, or dataset images are bundled in Git.
 
 ---
 
-**Current milestone:** desktop prototype with an explainable controller and ESPDet integration. Training the obstacle checkpoint, measuring presentation performance, and physical-car validation remain future milestones.
+**Current milestone:** fine-tuned bottle/cup/box detection with an explainable desktop controller. Independent course testing, embedded optimization, and physical-car validation remain future milestones.

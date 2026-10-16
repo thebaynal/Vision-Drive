@@ -1,6 +1,6 @@
 # Third-party notices and provenance
 
-This repository contains project documentation, original application and tooling code, tests, and concept/application artwork. It does not bundle third-party source code, checkpoints, or datasets in Git. Setup downloads the upstream checkout and checkpoint into ignored directories. Links identify dependencies; they do not transfer their ownership to VisionDrive.
+This repository contains documentation, application/tooling code, tests, artwork, and the compact fine-tuned bottle/cup/box checkpoint. External source, initialization checkpoints, datasets, and full training runs remain ignored. Links identify dependencies; they do not transfer ownership to VisionDrive.
 
 ## Upstream components
 
@@ -33,6 +33,12 @@ Dataset annotation terms and individual image terms can differ. Preserve attribu
 ## Model setup provenance
 
 `scripts/setup_model.py` pins ESP-Detection revision `28de5902a357d99dd9a5db0f52905255641c5a78`. The upstream 224 × 224 cat checkpoint has SHA-256 `7afca1564f45c3087e39758049412337ff4cec6f63a8f7a5380d50999e4924c5`; setup calculates and records its actual hash. It is an initialization/smoke-test model, not a bottle/cup/box detector. The adapter uses the upstream registration interface without copying its model implementation into this repository.
+
+## Packaged fine-tuned model
+
+`weights/obstacle/best.pt` is the selected three-class fine-tuned checkpoint. Its class mapping, initialization hash, dataset/split summary, validation-selected confidence, measured results, and artifact hash are recorded in `weights/obstacle/model.json`. The upstream AGPL-3.0 license is preserved as `weights/obstacle/LICENSE`. The upstream architecture and initialization are not original VisionDrive inventions.
+
+The model report describes the limited public-data run and weak box performance. No raw dataset images or original pretrained weights are bundled in Git. The original cat checkpoint is training initialization only and is rejected by the active demo.
 
 ## Project licensing
 

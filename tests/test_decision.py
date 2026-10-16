@@ -45,6 +45,19 @@ def test_invalid_boxes_ignored(det):
     assert obs.ignored == 1 and not obs.accepted
 
 
+@pytest.mark.parametrize("label", ["cat", "person", "chair", "wall"])
+def test_removed_object_categories_do_not_block_regions(label):
+    obs = observe([Detection(.4, .5, .6, .95, 1., 0, label)], Config())
+    assert obs.blocked == (False, False, False)
+    assert obs.ignored == 1
+
+
+@pytest.mark.parametrize("class_id,label", [(0, "bottle"), (1, "cup"), (2, "box")])
+def test_target_object_categories_can_block_regions(class_id, label):
+    obs = observe([Detection(.4, .5, .6, .7, 1., class_id, label)], Config())
+    assert obs.blocked == (False, True, False)
+
+
 def test_exact_overlap_threshold_is_inclusive():
     # Binary fractions avoid a decimal-rounding ambiguity at the boundary.
     cfg = Config(left_boundary=.25, right_boundary=.75, overlap_threshold=.5)
