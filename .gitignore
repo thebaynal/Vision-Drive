@@ -62,6 +62,7 @@ recordings/
 credentials*.json
 secrets*.json
 config.local.json
+firmware/visiondrive_receiver/config.h
 
 # Editors / OS
 .idea/

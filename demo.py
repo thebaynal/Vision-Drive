@@ -4,6 +4,7 @@ import argparse
 from collections import deque
 from dataclasses import replace
 import json
+import os
 from pathlib import Path
 import sys
 import time
@@ -18,7 +19,17 @@ ROOT = Path(__file__).resolve().parent
 def parser():
     cli = argparse.ArgumentParser(description=__doc__)
     cli.add_argument("--source", default="0", help="Camera index or video file")
-    cli.add_argument("--weights", type=Path, default=ROOT / "weights/obstacle/best.pt")
+    cli.add_argument("--detector", choices=["hybrid", "coco", "esp"], default="hybrid",
+                     help="hybrid: laptop YOLO + depth; coco: YOLO only; esp: original tiny three-class model")
+    cli.add_argument("--weights", type=Path, help="Override checkpoint for the selected detector")
+    cli.add_argument("--depth-model", type=Path, default=ROOT / "weights/laptop/depth-indoor")
+    cli.add_argument("--depth-size", type=int, default=392, help="Depth input size, divisible by 14")
+    cli.add_argument("--depth-scale", type=float, default=1., help="Measured-distance / predicted-distance calibration factor")
+    cli.add_argument("--avoid-distance", type=float, help="Start avoiding at this estimated distance (meters)")
+    cli.add_argument("--stop-distance", type=float, help="Emergency center stop distance (meters)")
+    cli.add_argument("--esp-host", help="ESP32 Wi-Fi IP; omit for visualization without hardware")
+    cli.add_argument("--esp-port", type=int, default=4210)
+    cli.add_argument("--command-ttl-ms", type=int, default=350)
     cli.add_argument("--esp-repo", type=Path, default=ROOT / "external/esp-detection")
     cli.add_argument("--config", type=Path, default=ROOT / "config/default.json")
     cli.add_argument("--device", default="cpu", help="cpu or CUDA device, e.g. 0")
@@ -41,6 +52,8 @@ def run(args):
     from visiondrive.simulation import make_frame
 
     config = Config.load(args.config)
+    config = replace(config, **{name: value for name, value in
+        (("avoid_distance_m", args.avoid_distance), ("stop_distance_m", args.stop_distance)) if value is not None})
     if args.max_frames < 0:
         raise ValueError("--max-frames cannot be negative")
     camera = args.source.isdecimal()
@@ -52,6 +65,7 @@ def run(args):
     if args.save_video and args.save_video.with_suffix(".jsonl").exists():
         raise ValueError("Recording JSONL already exists; choose a new output filename")
     pipeline = None
+    esp_link = None
     writer = record = None
     canvas = None
     model_name, label = "Synthetic boxes / no neural network", "simulated obstacle"
@@ -64,13 +78,20 @@ def run(args):
     started = previous = time.monotonic()
     try:
         if not args.simulate:
-            from visiondrive.detector import ESPDetector
             # Fail model preflight before opening a camera.
-            detector = ESPDetector(args.weights, args.esp_repo, config, args.device, args.expected_label, args.cpu_threads)
+            if args.detector == "esp":
+                from visiondrive.detector import ESPDetector
+                detector = ESPDetector(args.weights or ROOT / "weights/obstacle/best.pt", args.esp_repo,
+                                       config, args.device, args.expected_label, args.cpu_threads)
+            else:
+                from visiondrive.laptop_detector import LaptopDetector
+                detector = LaptopDetector(args.weights or ROOT / "weights/laptop/yolo11n.pt", config,
+                    args.depth_model if args.detector == "hybrid" else None, args.device,
+                    args.cpu_threads, args.depth_size, args.depth_scale)
             model_name, label = detector.name, detector.label
             if not camera and not Path(args.source).is_file():
                 raise ValueError(f"Video not found: {args.source}")
-            print("Warming up ESPDet before opening the camera/video...", flush=True)
+            print("Warming up vision models before opening the camera/video...", flush=True)
             detector.warmup()
             capture = cv2.VideoCapture(int(args.source) if camera else args.source)
             if not capture.isOpened():
@@ -80,6 +101,12 @@ def run(args):
             fps = raw_fps if 0 < raw_fps <= 240 else 30
             pipeline = Pipeline(capture, detector, camera, fps)
             pipeline.start()
+        if args.esp_host:
+            if args.simulate or not camera:
+                raise ValueError("ESP32 commands require a live camera; recordings and simulation are visualization-only")
+            from visiondrive.esp_link import ESPLink
+            esp_link = ESPLink(args.esp_host, os.environ.get("VISIONDRIVE_ESP_TOKEN", ""),
+                               args.esp_port, args.command_ttl_ms)
         print(f"VisionDrive: {model_name}")
         print("SPACE pause/resume; Q/ESC quit. Movement is a visual suggestion only.")
         while True:
@@ -121,6 +148,15 @@ def run(args):
                 # Never leave a stale box overlay attached to a different frame.
                 decision = replace(decision, observation=EMPTY)
             metrics["status"] = status
+            if esp_link:
+                esp_link.send(decision, config.stale_after_ms)
+                metrics["esp_link"] = esp_link.status
+                if esp_link.last_action != decision.action:
+                    decision = replace(decision, action=esp_link.last_action,
+                                       reason="ESP32 link/freshness gate; STOP sent")
+            metrics["metric_depth"] = not args.simulate and args.detector == "hybrid"
+            metrics["avoid_distance_m"] = config.avoid_distance_m
+            metrics["stop_distance_m"] = config.stop_distance_m
             renderer = render
             if args.explain:
                 from visiondrive.explain import render_explanation
@@ -140,6 +176,8 @@ def run(args):
                     "simulated": args.simulate, "status": status, "action": decision.action.value,
                     "presentation": "logic" if args.explain else "detection",
                     "reason": decision.reason, "blocked": decision.observation.blocked,
+                    "occupancy": decision.observation.occupancy, "distant": decision.observation.distant,
+                    "detector": args.detector if not args.simulate else "simulation",
                     "detections": [vars(d) for d in decision.observation.accepted],
                     "source_time_s": last_result.packet.source_time if last_result else None,
                     **metrics}) + "\n")
@@ -170,6 +208,8 @@ def run(args):
         print(f"Finished: {count} display frames; last instruction {decision.action.value} ({decision.reason})")
         return 0
     finally:
+        if esp_link:
+            esp_link.close()
         if pipeline:
             pipeline.close()
         if writer:

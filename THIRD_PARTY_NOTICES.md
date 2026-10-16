@@ -10,7 +10,10 @@ This repository contains documentation, application/tooling code, tests, artwork
 | ESP-DL | Future ESP32-S3 inference | [Repository and applicable notices](https://github.com/espressif/esp-dl) |
 | ESP-IDF | Future firmware and board integration | [Repository and applicable notices](https://github.com/espressif/esp-idf) |
 | PyTorch and torchvision | Training and desktop inference | [PyTorch](https://github.com/pytorch/pytorch), [torchvision](https://github.com/pytorch/vision) |
-| Ultralytics | API used by ESP-Detection | [Repository and licensing information](https://github.com/ultralytics/ultralytics) |
+| Ultralytics / YOLO11n | Pretrained laptop detector and API used by ESP-Detection | [Repository and licensing information](https://github.com/ultralytics/ultralytics) |
+| Depth Anything V2 Metric Indoor Small | Pretrained laptop depth model; Apache-2.0 | [Model and license](https://huggingface.co/depth-anything/Depth-Anything-V2-Metric-Indoor-Small-hf) |
+| Hugging Face Transformers | Depth preprocessing and model implementation | [Repository and license](https://github.com/huggingface/transformers) |
+| Arduino-ESP32 | Wi-Fi motor receiver firmware platform | [Repository and license](https://github.com/espressif/arduino-esp32) |
 | OpenCV | Image capture, video, and presentation overlay | [Repository and license](https://github.com/opencv/opencv) |
 | Open Images | Initial training and evaluation image sources | [Download and attribution information](https://storage.googleapis.com/openimages/web/download_v7.html) |
 | Shields.io | Remote README status badges | [Service](https://shields.io/) |
@@ -43,3 +46,20 @@ The model report describes the limited public-data run and weak box performance.
 ## Project licensing
 
 No project-wide redistribution license is declared in this documentation milestone. This file is an attribution inventory, not a replacement for an upstream license. Add a project license deliberately when the implementation and incorporated dependencies are known, and keep third-party notices intact.
+
+## Laptop models and sample images
+
+`scripts/setup_laptop_models.py` downloads YOLO11n from the official Ultralytics
+v8.3.0 assets release and metric indoor depth from Hugging Face revision
+`8078d68a9c75a972131914f6afd0c1723be0da7f`. Both checkpoints are SHA-256 checked.
+Downloaded weights/configuration and their generated source manifest remain
+ignored in `weights/laptop/`. The YOLO checkpoint retains upstream AGPL-3.0
+terms; the small depth model is Apache-2.0. These are upstream pretrained models,
+not trained from scratch by the group.
+
+The actual model-output screenshots in `assets/laptop-demo.png` and
+`assets/unknown-obstacle-demo.png` include modified public images. Authors,
+original image URLs, CC BY 2.0 license links, source IDs, and modifications
+are recorded in [sample-result attribution](docs/sample-results.md).
+The group's fixed dataset annotations/splits and individual attribution records
+are published in [the manifest](data/public/bottle-cup-box-manifest.jsonl).

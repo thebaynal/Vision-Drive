@@ -22,6 +22,7 @@ class Detection:
     confidence: float = 1.0
     class_id: int = 0
     label: str = ""
+    distance_m: float | None = None
 
     @property
     def valid(self):
@@ -29,8 +30,9 @@ class Detection:
         return (all(math.isfinite(x) for x in values)
                 and 0 <= self.x1 < self.x2 <= 1
                 and 0 <= self.y1 < self.y2 <= 1
-                and 0 <= self.confidence <= 1 and type(self.class_id) is int and 0 <= self.class_id <= 2
-                and self.label in ("", "bottle", "cup", "box"))
+                and 0 <= self.confidence <= 1 and type(self.class_id) is int and self.class_id >= 0
+                and isinstance(self.label, str)
+                and (self.distance_m is None or (math.isfinite(self.distance_m) and self.distance_m > 0)))
 
 
 @dataclass(frozen=True)
@@ -39,6 +41,8 @@ class Observation:
     near_center: bool
     accepted: tuple[Detection, ...]
     ignored: int = 0
+    occupancy: tuple[float, float, float] = (0., 0., 0.)
+    distant: int = 0
 
 
 @dataclass(frozen=True)
@@ -61,31 +65,66 @@ def intersection(a, b):
 def observe(detections, config):
     edges = (0.0, config.left_boundary, config.right_boundary, 1.0)
     regions = [(edges[i], config.decision_top, edges[i + 1], 1.0) for i in range(3)]
-    near = (edges[1], config.near_top, edges[2], 1.0)
     blocked, accepted, ignored, hazard = [False] * 3, [], 0, False
+    occupied, distant = [[], [], []], 0
     for det in detections:
         if not det.valid or det.confidence < config.confidence_threshold:
             ignored += 1
             continue
         box = (det.x1, det.y1, det.x2, det.y2)
         area = (det.x2 - det.x1) * (det.y2 - det.y1)
+        accepted.append(det)
+        # Metric depth takes priority when supplied. ESPDet alone uses a fixed
+        # camera's ground-contact position as a calibrated proximity proxy.
+        far = (det.distance_m > config.avoid_distance_m if det.distance_m is not None
+               else det.y2 < config.approach_top)
+        if far:
+            distant += 1
+            continue
         hits = [intersection(box, region) / area >= config.overlap_threshold for region in regions]
         blocked = [a or b for a, b in zip(blocked, hits)]
-        hazard |= hits[1] and intersection(box, near) > 0
-        accepted.append(det)
-    return Observation(tuple(blocked), hazard, tuple(accepted), ignored)
+        emergency = (det.distance_m <= config.stop_distance_m if det.distance_m is not None
+                     else det.y2 > config.near_top and area >= config.stop_min_area)
+        hazard |= hits[1] and emergency
+        for i, region in enumerate(regions):
+            clipped = (max(box[0], region[0]), max(box[1], region[1]),
+                       min(box[2], region[2]), min(box[3], region[3]))
+            if clipped[0] < clipped[2] and clipped[1] < clipped[3]:
+                occupied[i].append(clipped)
+    occupancy = tuple(union_area(boxes) / ((region[2]-region[0]) * (region[3]-region[1]))
+                      for boxes, region in zip(occupied, regions))
+    return Observation(tuple(blocked), hazard, tuple(accepted), ignored, occupancy, distant)
+
+
+def union_area(boxes):
+    """Small rectangle sweep; overlapping boxes must not double-count space."""
+    edges = sorted({x for box in boxes for x in (box[0], box[2])})
+    total = 0.
+    for left, right in zip(edges, edges[1:]):
+        intervals = sorted((b[1], b[3]) for b in boxes if b[0] < right and b[2] > left)
+        end, height = -1., 0.
+        for low, high in intervals:
+            height += max(0., high - max(low, end))
+            end = max(end, high)
+        total += (right-left) * height
+    return total
 
 
 def candidate(obs):
     left, middle, right = obs.blocked
     if obs.near_center:
-        return Action.STOP, "Near-center obstacle"
+        return Action.STOP, "Emergency center clearance"
     if not middle:
-        return Action.FORWARD, "No center obstacle detected"
+        return Action.FORWARD, "No nearby center obstacle detected"
+    if not left and not right:
+        if obs.occupancy[2] + 1e-6 < obs.occupancy[0]:
+            return Action.RIGHT, "Center blocked; more free image space on right"
+        return Action.LEFT, ("Center blocked; more free image space on left" if obs.occupancy[0] + 1e-6 < obs.occupancy[2]
+                             else "Center blocked; equal side clearance (left tie-break)")
     if not left:
-        return Action.LEFT, "Center blocked; left has no detected obstacle" + (" (tie-break)" if not right else "")
+        return Action.LEFT, "Center blocked; left has no nearby obstacle"
     if not right:
-        return Action.RIGHT, "Center and left blocked; right has no detected obstacle"
+        return Action.RIGHT, "Center and left blocked; right has no nearby obstacle"
     return Action.STOP, "All three regions blocked"
 
 
@@ -134,7 +173,9 @@ class Controller:
         self.streak = self.streak + 1 if self.pending == action else 1
         self.pending = action
         if self.streak < self.config.stable_frames:
-            action = self.current.action
+            # Do not keep driving forward into a newly blocked center while
+            # waiting for enough evidence to authorize a turn.
+            action = self.current.action if self.current.action == action else Action.STOP
             reason = f"Stabilizing {self.pending.value}: {self.streak}/{self.config.stable_frames}"
         self.current = Decision(action, reason, obs, frame_id, captured_at)
         return self.current

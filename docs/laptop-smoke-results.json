@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-16",
+  "mode": "actual laptop YOLO11n 640 + metric indoor depth",
+  "display_frames": 179,
+  "unique_processed_frames": 11,
+  "actions": {
+    "STOP": 137,
+    "FORWARD": 42
+  },
+  "detected_labels": [
+    "bottle",
+    "bowl",
+    "cup",
+    "depth obstacle",
+    "dining table",
+    "near surface",
+    "spoon",
+    "wine glass"
+  ],
+  "median_inference_ms": 477.04890000022715,
+  "final_instruction": "STOP",
+  "final_status": "VIDEO ENDED",
+  "simulated": false,
+  "esp32_connected": false,
+  "limitations": "Six-second clip of previously used public test images; integration check, not an independent accuracy, range, live-camera, or physical-driving benchmark"
+}

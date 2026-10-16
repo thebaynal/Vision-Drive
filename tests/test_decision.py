@@ -14,6 +14,8 @@ RIGHT = Detection(.74, .45, .94, .72)
     ([CENTER], Action.LEFT), ([CENTER, LEFT], Action.RIGHT),
     ([CENTER, RIGHT], Action.LEFT), ([LEFT, CENTER, RIGHT], Action.STOP),
     ([Detection(.4, .7, .6, .95)], Action.STOP),
+    ([Detection(.4, .2, .6, .5)], Action.FORWARD),
+    ([Detection(.4, .5, .6, .88)], Action.LEFT),
     ([Detection(.1, .45, .9, .7)], Action.STOP),
 ])
 def test_rule_table(boxes, expected):
@@ -33,23 +35,23 @@ def test_top_objects_and_confidence_filtered():
 
 
 def test_near_boundary_requires_positive_area():
-    assert not observe([Detection(.4, .5, .6, .8)], Config()).near_center
-    assert observe([Detection(.4, .5, .6, .8001)], Config()).near_center
+    assert not observe([Detection(.4, .5, .6, .92)], Config()).near_center
+    assert observe([Detection(.4, .5, .6, .9201)], Config()).near_center
     assert not observe([Detection(.05, .7, .2, .95)], Config()).near_center
 
 
 @pytest.mark.parametrize("det", [Detection(.5, .5, .5, .8), Detection(-.1, .4, .3, .6),
-    Detection(.4, math.nan, .6, .7), Detection(.4, .5, .6, .7, 1.1), Detection(.4, .5, .6, .7, 1, 3)])
+    Detection(.4, math.nan, .6, .7), Detection(.4, .5, .6, .7, 1.1), Detection(.4, .5, .6, .7, 1, -1)])
 def test_invalid_boxes_ignored(det):
     obs = observe([det], Config())
     assert obs.ignored == 1 and not obs.accepted
 
 
 @pytest.mark.parametrize("label", ["cat", "person", "chair", "wall"])
-def test_removed_object_categories_do_not_block_regions(label):
+def test_controller_accepts_any_object_category(label):
     obs = observe([Detection(.4, .5, .6, .95, 1., 0, label)], Config())
-    assert obs.blocked == (False, False, False)
-    assert obs.ignored == 1
+    assert obs.blocked == (False, True, False)
+    assert obs.ignored == 0
 
 
 @pytest.mark.parametrize("class_id,label", [(0, "bottle"), (1, "cup"), (2, "box")])
@@ -110,3 +112,38 @@ def test_pause_and_reset():
 @pytest.mark.parametrize("timestamp", [math.nan, math.inf, 101])
 def test_invalid_timestamps_stop(timestamp):
     assert Controller().update([], 0, timestamp, 100).action == Action.STOP
+
+
+def test_estimated_distance_overrides_bottom_edge_for_near_and_far():
+    far = Detection(.4, .4, .6, .99, distance_m=4.)
+    obs = observe([far], Config())
+    assert obs.distant == 1 and candidate(obs)[0] == Action.FORWARD
+    nearby = Detection(.4, .4, .6, .99, distance_m=.8)
+    assert candidate(observe([nearby], Config()))[0] == Action.LEFT
+    emergency = Detection(.4, .4, .6, .7, distance_m=.3)
+    assert candidate(observe([emergency], Config()))[0] == Action.STOP
+
+
+def test_choose_side_with_more_free_space_when_both_are_unblocked():
+    # A very wide upper box clips only a small part of the left decision area;
+    # no single-region overlap passes the hit threshold, but occupancy differs.
+    left_clutter = Detection(.01, .01, .32, .41, distance_m=.8)
+    obs = observe([CENTER, left_clutter], Config())
+    assert obs.blocked == (False, True, False)
+    assert obs.occupancy[0] > obs.occupancy[2]
+    assert candidate(obs)[0] == Action.RIGHT
+
+
+def test_overlapping_boxes_do_not_inflate_side_occupancy():
+    a = observe([LEFT], Config()).occupancy
+    b = observe([LEFT, LEFT], Config()).occupancy
+    assert a == b
+
+
+def test_new_center_obstacle_stops_forward_while_confirming_a_turn():
+    ctl = Controller()
+    for i in range(3):
+        ctl.update([],i,100+i*.1,100+i*.1)
+    assert ctl.current.action == Action.FORWARD
+    decision = ctl.update([CENTER],3,100.3,100.3)
+    assert decision.action == Action.STOP and "Stabilizing LEFT" in decision.reason

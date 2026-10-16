@@ -1,0 +1,4 @@
+# Laptop perception; these models do not execute on the ESP32.
+-r requirements-model.txt
+transformers==4.57.6
+safetensors>=0.4.3,<1

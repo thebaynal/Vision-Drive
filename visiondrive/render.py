@@ -49,10 +49,19 @@ def render(image, decision, config, model_name, metrics, label="obstacle", simul
         a = (dx + int(det.x1 * rw), dy + int(det.y1 * rh))
         b = (dx + int(det.x2 * rw), dy + int(det.y2 * rh))
         cv2.rectangle(canvas, a, b, AMBER, 2)
-        text(canvas, f"{det.label or label} {det.confidence:.2f}", a[0], max(dy + 45, a[1] - 8), .50, AMBER)
-    near_y = dy + round(config.near_top * rh)
-    cv2.line(canvas, (dx, near_y), (dx + rw - 1, near_y), RED, 2)
-    text(canvas, "NEAR / STOP AREA", dx + 16, near_y + 24, .47, RED)
+        distance = f" ~{det.distance_m:.2f}m" if det.distance_m is not None else ""
+        score = "" if det.label in ("depth obstacle", "near surface") else f" {det.confidence:.2f}"
+        text(canvas, f"{det.label or label}{score}{distance}", a[0], max(dy + 45, a[1] - 8), .50, AMBER)
+    if metrics.get("metric_depth"):
+        text(canvas, f"Depth estimate: avoid <= {config.avoid_distance_m:g}m / stop <= {config.stop_distance_m:g}m",
+             dx + 16, dy + rh - 16, .48, AMBER)
+    else:
+        approach_y = dy + round(config.approach_top * rh)
+        cv2.line(canvas, (dx, approach_y), (dx + rw - 1, approach_y), AMBER, 1)
+        text(canvas, "APPROACH / STEER (image proxy)", dx + 16, approach_y - 8, .42, AMBER)
+        near_y = dy + round(config.near_top * rh)
+        cv2.line(canvas, (dx, near_y), (dx + rw - 1, near_y), RED, 2)
+        text(canvas, "EMERGENCY (image proxy)", dx + 16, min(dy + rh - 7, near_y + 24), .42, RED)
     px = width + 22
     text(canvas, "SUGGESTED ACTION", px, header + 30, .55, MUTED)
     color = RED if decision.action == Action.STOP else TEAL
@@ -71,7 +80,8 @@ def render(image, decision, config, model_name, metrics, label="obstacle", simul
     text(canvas, f"Result age        {metrics.get('age_ms', 0):.0f} ms", px, header + 470, .48)
     for j, line in enumerate(textwrap.wrap(model_name, width=41)):
         text(canvas, line, 24, header + height + 25 + j * 19, .44, MUTED)
-    text(canvas, "Visual suggestion only - unrecognized obstacles may be missed.", 24, header + height + 76, .49, AMBER)
+    link_status = metrics.get("esp_link", "Visualization only / ESP32 not connected")
+    text(canvas, link_status, 24, header + height + 76, .44, AMBER)
     text(canvas, "SPACE pause / resume    Q or ESC quit", 860, header + height + 76, .44, MUTED)
     if simulated and scene:
         text(canvas, scene, 550, header + height + 25, .44, AMBER)

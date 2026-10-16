@@ -4,7 +4,11 @@
   "left_boundary": 0.3333333333333333,
   "right_boundary": 0.6666666666666666,
   "decision_top": 0.4,
-  "near_top": 0.8,
+  "approach_top": 0.6,
+  "near_top": 0.92,
+  "stop_min_area": 0.04,
+  "avoid_distance_m": 1.5,
+  "stop_distance_m": 0.45,
   "overlap_threshold": 0.1,
   "stable_frames": 3,
   "stale_after_ms": 1000

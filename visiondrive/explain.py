@@ -43,8 +43,7 @@ def render_explanation(image, decision, config, model_name, metrics, label="obst
 
     card(100, 198, "01  MODEL DETECTIONS")
     text(canvas, f"{len(decision.observation.accepted)} accepted / {label}", 990, 151, .51, TEXT, 1)
-    text(canvas, f"Confidence >= {config.confidence_threshold:.2f}", 990, 174, .40, MUTED)
-    text(canvas, f"{decision.observation.ignored} ignored", 1162, 174, .37, MUTED)
+    text(canvas, f"{decision.observation.distant} distant / not blocking", 990, 174, .39, MUTED)
     arrow(204)
 
     card(223, 327, "02  BOX / REGION OVERLAP")
@@ -52,17 +51,18 @@ def render_explanation(image, decision, config, model_name, metrics, label="obst
         x = 989 + i * 91
         color = RED if blocked else TEAL
         text(canvas, name, x, 273, .37, MUTED)
-        text(canvas, "BLOCKED" if blocked else "NO BOX", x, 294, .35, color, 1)
+        text(canvas, "BLOCKED" if blocked else "NO NEAR", x, 294, .35, color, 1)
+        text(canvas, f"{decision.observation.occupancy[i]:.0%} occupied", x, 309, .30, MUTED)
     text(canvas, "Near center: " + ("YES -> STOP" if decision.observation.near_center else "NO"),
-         990, 316, .39, RED if decision.observation.near_center else MUTED)
+         990, 322, .34, RED if decision.observation.near_center else MUTED)
     arrow(333)
 
     card(352, 450, "03  RULE CANDIDATE")
     text(canvas, trace.candidate_action.value if trace.input_available else "INPUT GATE", 990, 403, .67,
          RED if trace.candidate_action == Action.STOP else AMBER, 2)
-    short_reason = {Action.FORWARD: "Center has no detected obstacle",
-                    Action.LEFT: "Center blocked; left has no box",
-                    Action.RIGHT: "Center + left blocked; use right",
+    short_reason = {Action.FORWARD: "No nearby center obstacle detected",
+                    Action.LEFT: "Center blocked; use clearer left",
+                    Action.RIGHT: "Center blocked; use clearer right",
                     Action.STOP: trace.candidate_reason}[trace.candidate_action]
     if not trace.input_available:
         short_reason = "Fresh model observations required"
@@ -74,7 +74,7 @@ def render_explanation(image, decision, config, model_name, metrics, label="obst
     text(canvas, decision.action.value, 990, 533, .98, color, 2)
     reason = decision.reason
     if trace.stabilizing:
-        reason += " / previous instruction held"
+        reason += " / STOP until turn confirmed"
     for i, line in enumerate(textwrap.wrap(reason, width=37)[:2]):
         text(canvas, line, 990, 559 + i * 18, .37, TEXT)
     # Explain the stabilizer in context; the output still comes from Controller.

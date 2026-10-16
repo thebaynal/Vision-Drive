@@ -6,7 +6,8 @@ from visiondrive.config import Config
 @pytest.mark.parametrize("kwargs", [{"confidence_threshold": 0}, {"confidence_threshold": True},
     {"left_boundary": .8, "right_boundary": .2}, {"near_top": 1}, {"decision_top": .9},
     {"stable_frames": 1.5}, {"stable_frames": 0}, {"stale_after_ms": -1},
-    {"overlap_threshold": float("nan")}, {"nms_iou_threshold": float("inf")}])
+    {"overlap_threshold": float("nan")}, {"nms_iou_threshold": float("inf")},
+    {"stop_distance_m":2.,"avoid_distance_m":1.}, {"approach_top":.95}, {"stop_min_area":0}])
 def test_invalid_settings(kwargs):
     with pytest.raises(ValueError):
         Config(**kwargs)

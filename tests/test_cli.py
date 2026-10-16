@@ -26,7 +26,7 @@ def test_simulation_records_and_labels_itself(tmp_path):
 
 
 def test_missing_weights_error_precedes_camera_open(tmp_path):
-    result = subprocess.run([sys.executable, str(ROOT / "demo.py"), "--weights", str(tmp_path / "missing.pt"),
+    result = subprocess.run([sys.executable, str(ROOT / "demo.py"), "--detector", "esp", "--weights", str(tmp_path / "missing.pt"),
                              "--headless", "--max-frames", "1"], capture_output=True, text=True, timeout=30)
     assert result.returncode == 2
     assert "Checkpoint not found" in result.stderr
@@ -50,3 +50,9 @@ def test_logic_view_renders_and_records_with_explicit_synthetic_input(tmp_path):
     rows = [json.loads(line) for line in output.with_suffix(".jsonl").read_text().splitlines()]
     assert len(rows) == 5
     assert all(row["presentation"] == "logic" and row["simulated"] for row in rows)
+
+
+def test_simulated_obstacles_cannot_send_motor_commands():
+    result = subprocess.run([sys.executable,str(ROOT / "demo.py"),"--simulate","--headless",
+        "--max-frames","1","--esp-host","127.0.0.1"],capture_output=True,text=True,timeout=30)
+    assert result.returncode == 2 and "require a live camera" in result.stderr
