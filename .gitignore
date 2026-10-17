@@ -40,15 +40,11 @@ weights/obstacle/*
 !weights/obstacle/best.pt
 !weights/obstacle/model.json
 !weights/obstacle/LICENSE
-!weights/laptop/
-weights/laptop/*
-!weights/laptop/yolo11n-bottle-cup-box.pt
-!weights/laptop/yolo11n-bottle-cup-box.json
-!weights/laptop/LICENSE
 
 # Training, recordings, logs, and temporary verification output
 runs/
 outputs/
+.ipynb_checkpoints/
 recordings/
 .verification/
 *.mp4

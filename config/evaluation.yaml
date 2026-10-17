@@ -1,0 +1,33 @@
+{
+  "protocol": "indoor-pretrained-v3-fresh-person",
+  "dataset": "datasets/indoor-person-evaluation",
+  "weights": "weights/laptop/yolo11n.pt",
+  "weights_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "output": "outputs/evaluation/yolo11n",
+  "class_ids": [
+    0
+  ],
+  "class_names": [
+    "person"
+  ],
+  "image_size": 640,
+  "device": "0",
+  "batch": 1,
+  "half": false,
+  "confidence": 0.35,
+  "matching_iou": 0.5,
+  "nms_iou": 0.7,
+  "ap_confidence_floor": 0.001,
+  "max_detections": 300,
+  "seed": 20261017,
+  "bootstrap_samples": 1000,
+  "benchmark_warmup": 10,
+  "benchmark_frames": 100,
+  "selection": "Fresh person-only verified indoor cohort; 75% person-positive, one image per photographer; official validation=dev and test=test; prior inspected images excluded",
+  "depth_evaluation": "pending: no metric depth ground truth in selected images",
+  "camera_evaluation": "pending: no independent team recordings supplied",
+  "dataset_manifest_sha256": "459a891423980dfcd723f59b0bf191944e0ac0488b7fb6264a7ca647ac436752",
+  "excluded_primary_classes": {
+    "chair": "Open Images Stool is separate; incomplete coverage of COCO chair concept. Exploratory only."
+  }
+}

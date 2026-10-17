@@ -1,0 +1,60 @@
+{
+  "criterion": "Exclude whole images with unresolved cross-source person box overlap IoU > .30 after coincident-box collapse. Ground-truth-only QA; pilot scores are discarded. Operational thresholds unchanged.",
+  "excluded": [
+    {
+      "image_id": "219d48e224ce7575",
+      "split": "dev",
+      "reason": "ambiguous person parent/subtype instance identity"
+    },
+    {
+      "image_id": "8de803c15dc6dc7d",
+      "split": "dev",
+      "reason": "ambiguous person parent/subtype instance identity"
+    },
+    {
+      "image_id": "96591275de430985",
+      "split": "dev",
+      "reason": "ambiguous person parent/subtype instance identity"
+    },
+    {
+      "image_id": "973411d193107c9c",
+      "split": "dev",
+      "reason": "ambiguous person parent/subtype instance identity"
+    },
+    {
+      "image_id": "4986d824ed80ddcc",
+      "split": "test",
+      "reason": "ambiguous person parent/subtype instance identity"
+    },
+    {
+      "image_id": "5513de3c10ae65ae",
+      "split": "test",
+      "reason": "ambiguous person parent/subtype instance identity"
+    },
+    {
+      "image_id": "55ee7572b6d69e2c",
+      "split": "test",
+      "reason": "ambiguous person parent/subtype instance identity"
+    },
+    {
+      "image_id": "84f8855cc8e9ea3c",
+      "split": "test",
+      "reason": "ambiguous person parent/subtype instance identity"
+    },
+    {
+      "image_id": "c846f367fde0456f",
+      "split": "test",
+      "reason": "ambiguous person parent/subtype instance identity"
+    },
+    {
+      "image_id": "f663117b21233d0b",
+      "split": "test",
+      "reason": "ambiguous person parent/subtype instance identity"
+    }
+  ],
+  "manual_spot_check_sheets": [
+    "sheet_01.jpg",
+    "sheet_07.jpg"
+  ],
+  "review_scope": "Source protocol plus structural audit and visual spot checks; not exhaustive independent reannotation."
+}
