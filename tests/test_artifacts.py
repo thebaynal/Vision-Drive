@@ -7,6 +7,16 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_person_report_export_keeps_object_benchmark_without_duplication():
+    from scripts.export_evaluation import retain_supplementary_report
+    marker = '## Bottle and cup detection: additional measured benchmark'
+    previous = '# Old person report\n\n' + marker + '\nGenuine bottle/cup results.\n'
+    exported = retain_supplementary_report('# New person report\n', previous)
+    assert exported.startswith('# New person report')
+    assert 'Genuine bottle/cup results.' in exported
+    assert retain_supplementary_report(exported, previous) == exported
+
+
 @pytest.mark.parametrize("name", ["laptop_esp32_demo.ipynb", "yolo11n_pretrained_evaluation.ipynb"])
 def test_notebook_is_valid_structure_and_all_code_cells_compile(name):
     notebook = json.loads((ROOT / "notebooks" / name).read_text(encoding="utf-8"))

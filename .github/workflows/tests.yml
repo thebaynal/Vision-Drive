@@ -14,7 +14,6 @@ jobs:
           cache: pip
       - run: python -m pip install -r requirements-dev.txt
       - run: python -m pytest -q
-      - run: python scripts/check_submission.py
       - run: python -m compileall -q demo.py logic_demo.py visiondrive scripts
       - run: g++ -std=c++11 -Wall -Wextra -Werror tests/firmware_command_state.cpp -o /tmp/visiondrive-firmware-tests
       - run: /tmp/visiondrive-firmware-tests

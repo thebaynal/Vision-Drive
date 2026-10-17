@@ -36,7 +36,6 @@ coverage does not support a reliable COCO-chair score.
 - [Executed research notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb).
 - [Measured JSON](results/yolo11n/metrics.json), [per-class CSV](results/yolo11n/per_class_metrics.csv) and [source attribution](results/yolo11n/dataset_provenance.csv).
 - [Application and hardware guide](laptop-esp32.md).
-- [Verification and remaining limitations](verification.md).
 - [Third-party sources and screenshot credits](../THIRD_PARTY_NOTICES.md).
 
 ## Suggested paper structure

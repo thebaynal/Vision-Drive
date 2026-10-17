@@ -537,19 +537,6 @@ recordings, reviewed annotations, depth references and acceptable movement actio
 
 ## Repository guide
 
-### Check a checkout without downloading models
-
-```powershell
-python -m pip install -r requirements-dev.txt
-python -m pytest -q
-python scripts/check_submission.py
-```
-
-The submission check validates local documentation files and heading links,
-notebook Python syntax and saved research executions, and agreement between
-published metric CSV/JSON files. CI runs these checks and native firmware tests.
-The tests use fixtures; actual model evaluations are documented separately above.
-
 ```text
 visiondrive/       Live perception, controller, visualization and communication
   evaluation/     Offline research utilities
@@ -572,7 +559,6 @@ tests/             Python and native firmware checks
 | Methodology and measured results | [Methodology](docs/dataset_card.md#evaluation-methodology) · [Report](docs/evaluation_results.md) |
 | Presentation and paper guidance | [Presentation script](docs/documentation-and-paper-guide.md#presentation-script) · [Writing guide](docs/documentation-and-paper-guide.md) |
 | Hardware implementation | [Hardware handoff](docs/laptop-esp32.md#hardware-implementation) |
-| Verification | [130 Python tests and integration checks](docs/verification.md) |
 
 ## References and attribution
 

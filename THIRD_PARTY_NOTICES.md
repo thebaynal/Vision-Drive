@@ -92,4 +92,4 @@ Source image: Open Images ID `995243986ca2dd84`, author **Justin Henry**, [origi
 
 The six-second input produced 179 display frames and 11 unique processed observations. The application ended in STOP / VIDEO ENDED. Median combined inference time was 477 ms on this development CPU, excluding camera capture/rendering. The application drops old frames to avoid an inference backlog. These counts and timing are integration evidence, not an avoidance-accuracy score.
 
-LEFT/RIGHT behavior is covered by controller and known-depth-field tests. This particular public-image clip produced FORWARD and STOP; it is not evidence of successful physical turning. See [machine-readable smoke results](docs/laptop-smoke-results.json), [verification](docs/verification.md).
+LEFT/RIGHT behavior is covered by controller and known-depth-field tests. This particular public-image clip produced FORWARD and STOP; it is not evidence of successful physical turning. See [machine-readable smoke results](docs/laptop-smoke-results.json).
