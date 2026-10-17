@@ -268,6 +268,8 @@ See [the measured report](docs/model-report.md) and
 
 ## Required project materials
 
+- [Dataset and training presentation script](docs/dataset-and-training-presentation-script.md)
+- [Dataset and training section for the paper](docs/paper-dataset-and-training.md)
 - [Documentation and research-paper writing guide](docs/documentation-and-paper-guide.md)
 - [Midterm report and requirement mapping](docs/midterm-report.md)
 - [Dataset card](data/public/README.md) and [fixed split/annotation manifest](data/public/bottle-cup-box-manifest.jsonl)

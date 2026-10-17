@@ -1,0 +1,96 @@
+{
+  "experiment": "VisionDrive original bottle/cup/box ESPDet-Pico fine-tuning",
+  "recorded_date": "2026-10-16",
+  "scope": "Historical baseline; not training for the current pretrained YOLO11n/depth demonstration",
+  "classes": [
+    "bottle",
+    "cup",
+    "box"
+  ],
+  "source_revision": "28de5902a357d99dd9a5db0f52905255641c5a78",
+  "initialization_sha256": "7afca1564f45c3087e39758049412337ff4cec6f63a8f7a5380d50999e4924c5",
+  "selected_checkpoint_sha256": "e5075b5a8fba62ab40c6580225451820006f9dc4f7463629dbe1c34d024de39c",
+  "requested_trainer_settings": {
+    "task": "detect",
+    "imgsz": 224,
+    "epochs": 60,
+    "batch": 16,
+    "patience": 15,
+    "device": "cpu",
+    "workers": 0,
+    "seed": 42,
+    "deterministic": true,
+    "optimizer": "auto",
+    "pretrained": true,
+    "amp": false,
+    "rect": false,
+    "close_mosaic": 10,
+    "weight_decay": 0.0005,
+    "warmup_epochs": 3.0,
+    "hsv_h": 0.015,
+    "hsv_s": 0.7,
+    "hsv_v": 0.4,
+    "translate": 0.1,
+    "scale": 0.5,
+    "fliplr": 0.5,
+    "flipud": 0.0,
+    "degrees": 0.0,
+    "shear": 0.0,
+    "perspective": 0.0,
+    "mosaic": 1.0,
+    "mixup": 0.0,
+    "multi_scale": false,
+    "freeze": null
+  },
+  "resolved_optimizer": {
+    "name": "AdamW",
+    "learning_rate_as_logged": 0.001429,
+    "momentum_as_logged": 0.9,
+    "note": "Auto optimizer overrode nominal lr0/momentum in args; learning rates changed over the recorded schedule. These values are rounded log values."
+  },
+  "checkpoint_selection": {
+    "validation_fitness_weights": {
+      "mAP50": 0.1,
+      "mAP50_95": 0.9
+    },
+    "best_epoch": 40,
+    "epochs_completed": 55,
+    "elapsed_seconds": 695.683
+  },
+  "confidence_calibration": {
+    "thresholds": [
+      0.15,
+      0.2,
+      0.25,
+      0.3,
+      0.35,
+      0.4,
+      0.5
+    ],
+    "selected": 0.35,
+    "criterion": "validation macro F1; higher threshold breaks ties",
+    "prediction_collection_confidence": 0.05,
+    "prediction_nms_iou": 0.45,
+    "fixed_threshold_matching_iou": 0.5,
+    "test_used_for_selection": false
+  },
+  "environment": {
+    "os": "Windows",
+    "python": "3.13.5",
+    "torch": "2.12.0",
+    "torchvision": "0.27.0",
+    "ultralytics": "8.3.112",
+    "cpu_inference_training_threads": 2
+  },
+  "evidence": {
+    "published_training_history": "training-results.csv",
+    "published_model_manifest": "../weights/obstacle/model.json",
+    "published_evaluation": "model-evaluation.json",
+    "local_run_sources": "args.yaml and trainer log retained in ignored local run/cache"
+  },
+  "limitations": [
+    "No new training was performed when preparing this summary",
+    "No independent camera-course or physical-driving evaluation",
+    "Task-irrelevant generic trainer options are intentionally omitted"
+  ]
+}

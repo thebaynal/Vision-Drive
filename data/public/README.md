@@ -42,6 +42,10 @@ see [attribution](../../THIRD_PARTY_NOTICES.md).
 
 ## Reconstruct the prepared splits
 
+For an explanation of dataset preparation, fine-tuning, and measured results,
+read the [formal paper section](../../docs/paper-dataset-and-training.md) or
+[presentation script](../../docs/dataset-and-training-presentation-script.md).
+
 After installing the model requirements:
 
 ```powershell

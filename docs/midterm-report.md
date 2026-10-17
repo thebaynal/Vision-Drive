@@ -104,6 +104,8 @@ motor or board validation is claimed.
 
 ## Submission materials
 
+- [Dataset and training presentation script](dataset-and-training-presentation-script.md)
+- [Dataset and training section for the paper](paper-dataset-and-training.md)
 - [Repository overview and group information](../README.md)
 - [Dataset card](../data/public/README.md) and [split/annotation manifest](../data/public/bottle-cup-box-manifest.jsonl)
 - [Original training notebook](../notebooks/train_bottle_cup_box.ipynb)

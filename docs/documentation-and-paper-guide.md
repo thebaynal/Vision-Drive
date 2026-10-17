@@ -53,6 +53,9 @@ visualization, communication, and evaluation; it did not invent these networks.
 
 | Information | Repository source |
 | --- | --- |
+| Read-aloud dataset/training explanation | [Presentation script](dataset-and-training-presentation-script.md) |
+| Formal dataset/training section for the paper | [Paper section](paper-dataset-and-training.md) |
+| Recorded settings and plotted training history | [Configuration](baseline-training-configuration.json), [curves](../assets/baseline-training-curves.png) |
 | Overview, names, installation, running | [README](../README.md) |
 | Midterm requirement mapping | [Midterm report](midterm-report.md) |
 | Architecture, distance rules, Wi-Fi, limitations | [Laptop/ESP32 guide](laptop-esp32.md) |
