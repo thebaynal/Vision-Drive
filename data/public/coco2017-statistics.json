@@ -1,0 +1,1470 @@
+{
+  "dataset": "COCO 2017 instance annotations",
+  "source_url": "http://images.cocodataset.org/annotations/annotations_trainval2017.zip",
+  "download_page": "https://cocodataset.org/#download",
+  "counting_rule": "Distinct image IDs per class; image counts overlap across classes. Annotation records include iscrowd=1 regions; noncrowd columns exclude these. A crowd region is not a count of individual objects.",
+  "scope": "Dataset composition, not audited exposures in the upstream training run.",
+  "splits": {
+    "train2017": {
+      "total_images": 118287,
+      "total_annotation_records": 860001,
+      "total_noncrowd_instances": 849949,
+      "total_crowd_records": 10052,
+      "classes": [
+        {
+          "coco_category_id": 1,
+          "class_name": "person",
+          "images": 64115,
+          "annotation_records": 262465,
+          "noncrowd_images": 64115,
+          "noncrowd_instances": 257253,
+          "crowd_records": 5212
+        },
+        {
+          "coco_category_id": 2,
+          "class_name": "bicycle",
+          "images": 3252,
+          "annotation_records": 7113,
+          "noncrowd_images": 3252,
+          "noncrowd_instances": 7056,
+          "crowd_records": 57
+        },
+        {
+          "coco_category_id": 3,
+          "class_name": "car",
+          "images": 12251,
+          "annotation_records": 43867,
+          "noncrowd_images": 12251,
+          "noncrowd_instances": 43533,
+          "crowd_records": 334
+        },
+        {
+          "coco_category_id": 4,
+          "class_name": "motorcycle",
+          "images": 3502,
+          "annotation_records": 8725,
+          "noncrowd_images": 3502,
+          "noncrowd_instances": 8654,
+          "crowd_records": 71
+        },
+        {
+          "coco_category_id": 5,
+          "class_name": "airplane",
+          "images": 2986,
+          "annotation_records": 5135,
+          "noncrowd_images": 2986,
+          "noncrowd_instances": 5129,
+          "crowd_records": 6
+        },
+        {
+          "coco_category_id": 6,
+          "class_name": "bus",
+          "images": 3952,
+          "annotation_records": 6069,
+          "noncrowd_images": 3952,
+          "noncrowd_instances": 6061,
+          "crowd_records": 8
+        },
+        {
+          "coco_category_id": 7,
+          "class_name": "train",
+          "images": 3588,
+          "annotation_records": 4571,
+          "noncrowd_images": 3588,
+          "noncrowd_instances": 4570,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 8,
+          "class_name": "truck",
+          "images": 6127,
+          "annotation_records": 9973,
+          "noncrowd_images": 6127,
+          "noncrowd_instances": 9970,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 9,
+          "class_name": "boat",
+          "images": 3025,
+          "annotation_records": 10759,
+          "noncrowd_images": 3025,
+          "noncrowd_instances": 10576,
+          "crowd_records": 183
+        },
+        {
+          "coco_category_id": 10,
+          "class_name": "traffic light",
+          "images": 4139,
+          "annotation_records": 12884,
+          "noncrowd_images": 4139,
+          "noncrowd_instances": 12842,
+          "crowd_records": 42
+        },
+        {
+          "coco_category_id": 11,
+          "class_name": "fire hydrant",
+          "images": 1711,
+          "annotation_records": 1865,
+          "noncrowd_images": 1711,
+          "noncrowd_instances": 1865,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 13,
+          "class_name": "stop sign",
+          "images": 1734,
+          "annotation_records": 1983,
+          "noncrowd_images": 1734,
+          "noncrowd_instances": 1983,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 14,
+          "class_name": "parking meter",
+          "images": 705,
+          "annotation_records": 1285,
+          "noncrowd_images": 705,
+          "noncrowd_instances": 1283,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 15,
+          "class_name": "bench",
+          "images": 5570,
+          "annotation_records": 9838,
+          "noncrowd_images": 5570,
+          "noncrowd_instances": 9820,
+          "crowd_records": 18
+        },
+        {
+          "coco_category_id": 16,
+          "class_name": "bird",
+          "images": 3237,
+          "annotation_records": 10806,
+          "noncrowd_images": 3237,
+          "noncrowd_instances": 10542,
+          "crowd_records": 264
+        },
+        {
+          "coco_category_id": 17,
+          "class_name": "cat",
+          "images": 4114,
+          "annotation_records": 4768,
+          "noncrowd_images": 4114,
+          "noncrowd_instances": 4766,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 18,
+          "class_name": "dog",
+          "images": 4385,
+          "annotation_records": 5508,
+          "noncrowd_images": 4385,
+          "noncrowd_instances": 5500,
+          "crowd_records": 8
+        },
+        {
+          "coco_category_id": 19,
+          "class_name": "horse",
+          "images": 2941,
+          "annotation_records": 6587,
+          "noncrowd_images": 2941,
+          "noncrowd_instances": 6567,
+          "crowd_records": 20
+        },
+        {
+          "coco_category_id": 20,
+          "class_name": "sheep",
+          "images": 1529,
+          "annotation_records": 9509,
+          "noncrowd_images": 1529,
+          "noncrowd_instances": 9223,
+          "crowd_records": 286
+        },
+        {
+          "coco_category_id": 21,
+          "class_name": "cow",
+          "images": 1968,
+          "annotation_records": 8147,
+          "noncrowd_images": 1968,
+          "noncrowd_instances": 8014,
+          "crowd_records": 133
+        },
+        {
+          "coco_category_id": 22,
+          "class_name": "elephant",
+          "images": 2143,
+          "annotation_records": 5513,
+          "noncrowd_images": 2143,
+          "noncrowd_instances": 5484,
+          "crowd_records": 29
+        },
+        {
+          "coco_category_id": 23,
+          "class_name": "bear",
+          "images": 960,
+          "annotation_records": 1294,
+          "noncrowd_images": 960,
+          "noncrowd_instances": 1294,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 24,
+          "class_name": "zebra",
+          "images": 1916,
+          "annotation_records": 5303,
+          "noncrowd_images": 1916,
+          "noncrowd_instances": 5269,
+          "crowd_records": 34
+        },
+        {
+          "coco_category_id": 25,
+          "class_name": "giraffe",
+          "images": 2546,
+          "annotation_records": 5131,
+          "noncrowd_images": 2546,
+          "noncrowd_instances": 5128,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 27,
+          "class_name": "backpack",
+          "images": 5528,
+          "annotation_records": 8720,
+          "noncrowd_images": 5528,
+          "noncrowd_instances": 8714,
+          "crowd_records": 6
+        },
+        {
+          "coco_category_id": 28,
+          "class_name": "umbrella",
+          "images": 3968,
+          "annotation_records": 11431,
+          "noncrowd_images": 3968,
+          "noncrowd_instances": 11265,
+          "crowd_records": 166
+        },
+        {
+          "coco_category_id": 31,
+          "class_name": "handbag",
+          "images": 6841,
+          "annotation_records": 12354,
+          "noncrowd_images": 6841,
+          "noncrowd_instances": 12342,
+          "crowd_records": 12
+        },
+        {
+          "coco_category_id": 32,
+          "class_name": "tie",
+          "images": 3810,
+          "annotation_records": 6496,
+          "noncrowd_images": 3810,
+          "noncrowd_instances": 6448,
+          "crowd_records": 48
+        },
+        {
+          "coco_category_id": 33,
+          "class_name": "suitcase",
+          "images": 2402,
+          "annotation_records": 6192,
+          "noncrowd_images": 2402,
+          "noncrowd_instances": 6112,
+          "crowd_records": 80
+        },
+        {
+          "coco_category_id": 34,
+          "class_name": "frisbee",
+          "images": 2184,
+          "annotation_records": 2682,
+          "noncrowd_images": 2184,
+          "noncrowd_instances": 2681,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 35,
+          "class_name": "skis",
+          "images": 3082,
+          "annotation_records": 6646,
+          "noncrowd_images": 3082,
+          "noncrowd_instances": 6623,
+          "crowd_records": 23
+        },
+        {
+          "coco_category_id": 36,
+          "class_name": "snowboard",
+          "images": 1654,
+          "annotation_records": 2685,
+          "noncrowd_images": 1654,
+          "noncrowd_instances": 2681,
+          "crowd_records": 4
+        },
+        {
+          "coco_category_id": 37,
+          "class_name": "sports ball",
+          "images": 4262,
+          "annotation_records": 6347,
+          "noncrowd_images": 4262,
+          "noncrowd_instances": 6299,
+          "crowd_records": 48
+        },
+        {
+          "coco_category_id": 38,
+          "class_name": "kite",
+          "images": 2261,
+          "annotation_records": 9076,
+          "noncrowd_images": 2261,
+          "noncrowd_instances": 8802,
+          "crowd_records": 274
+        },
+        {
+          "coco_category_id": 39,
+          "class_name": "baseball bat",
+          "images": 2506,
+          "annotation_records": 3276,
+          "noncrowd_images": 2506,
+          "noncrowd_instances": 3273,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 40,
+          "class_name": "baseball glove",
+          "images": 2629,
+          "annotation_records": 3747,
+          "noncrowd_images": 2629,
+          "noncrowd_instances": 3747,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 41,
+          "class_name": "skateboard",
+          "images": 3476,
+          "annotation_records": 5543,
+          "noncrowd_images": 3476,
+          "noncrowd_instances": 5536,
+          "crowd_records": 7
+        },
+        {
+          "coco_category_id": 42,
+          "class_name": "surfboard",
+          "images": 3486,
+          "annotation_records": 6126,
+          "noncrowd_images": 3486,
+          "noncrowd_instances": 6095,
+          "crowd_records": 31
+        },
+        {
+          "coco_category_id": 43,
+          "class_name": "tennis racket",
+          "images": 3394,
+          "annotation_records": 4812,
+          "noncrowd_images": 3394,
+          "noncrowd_instances": 4807,
+          "crowd_records": 5
+        },
+        {
+          "coco_category_id": 44,
+          "class_name": "bottle",
+          "images": 8501,
+          "annotation_records": 24342,
+          "noncrowd_images": 8501,
+          "noncrowd_instances": 24070,
+          "crowd_records": 272
+        },
+        {
+          "coco_category_id": 46,
+          "class_name": "wine glass",
+          "images": 2533,
+          "annotation_records": 7913,
+          "noncrowd_images": 2533,
+          "noncrowd_instances": 7839,
+          "crowd_records": 74
+        },
+        {
+          "coco_category_id": 47,
+          "class_name": "cup",
+          "images": 9189,
+          "annotation_records": 20650,
+          "noncrowd_images": 9189,
+          "noncrowd_instances": 20574,
+          "crowd_records": 76
+        },
+        {
+          "coco_category_id": 48,
+          "class_name": "fork",
+          "images": 3555,
+          "annotation_records": 5479,
+          "noncrowd_images": 3555,
+          "noncrowd_instances": 5474,
+          "crowd_records": 5
+        },
+        {
+          "coco_category_id": 49,
+          "class_name": "knife",
+          "images": 4326,
+          "annotation_records": 7770,
+          "noncrowd_images": 4326,
+          "noncrowd_instances": 7760,
+          "crowd_records": 10
+        },
+        {
+          "coco_category_id": 50,
+          "class_name": "spoon",
+          "images": 3529,
+          "annotation_records": 6165,
+          "noncrowd_images": 3529,
+          "noncrowd_instances": 6159,
+          "crowd_records": 6
+        },
+        {
+          "coco_category_id": 51,
+          "class_name": "bowl",
+          "images": 7111,
+          "annotation_records": 14358,
+          "noncrowd_images": 7111,
+          "noncrowd_instances": 14323,
+          "crowd_records": 35
+        },
+        {
+          "coco_category_id": 52,
+          "class_name": "banana",
+          "images": 2243,
+          "annotation_records": 9458,
+          "noncrowd_images": 2243,
+          "noncrowd_instances": 9195,
+          "crowd_records": 263
+        },
+        {
+          "coco_category_id": 53,
+          "class_name": "apple",
+          "images": 1586,
+          "annotation_records": 5851,
+          "noncrowd_images": 1586,
+          "noncrowd_instances": 5776,
+          "crowd_records": 75
+        },
+        {
+          "coco_category_id": 54,
+          "class_name": "sandwich",
+          "images": 2365,
+          "annotation_records": 4373,
+          "noncrowd_images": 2365,
+          "noncrowd_instances": 4356,
+          "crowd_records": 17
+        },
+        {
+          "coco_category_id": 55,
+          "class_name": "orange",
+          "images": 1699,
+          "annotation_records": 6399,
+          "noncrowd_images": 1699,
+          "noncrowd_instances": 6302,
+          "crowd_records": 97
+        },
+        {
+          "coco_category_id": 56,
+          "class_name": "broccoli",
+          "images": 1939,
+          "annotation_records": 7308,
+          "noncrowd_images": 1939,
+          "noncrowd_instances": 7261,
+          "crowd_records": 47
+        },
+        {
+          "coco_category_id": 57,
+          "class_name": "carrot",
+          "images": 1683,
+          "annotation_records": 7852,
+          "noncrowd_images": 1683,
+          "noncrowd_instances": 7758,
+          "crowd_records": 94
+        },
+        {
+          "coco_category_id": 58,
+          "class_name": "hot dog",
+          "images": 1222,
+          "annotation_records": 2918,
+          "noncrowd_images": 1222,
+          "noncrowd_instances": 2884,
+          "crowd_records": 34
+        },
+        {
+          "coco_category_id": 59,
+          "class_name": "pizza",
+          "images": 3166,
+          "annotation_records": 5821,
+          "noncrowd_images": 3166,
+          "noncrowd_instances": 5807,
+          "crowd_records": 14
+        },
+        {
+          "coco_category_id": 60,
+          "class_name": "donut",
+          "images": 1523,
+          "annotation_records": 7179,
+          "noncrowd_images": 1523,
+          "noncrowd_instances": 7005,
+          "crowd_records": 174
+        },
+        {
+          "coco_category_id": 61,
+          "class_name": "cake",
+          "images": 2925,
+          "annotation_records": 6353,
+          "noncrowd_images": 2925,
+          "noncrowd_instances": 6296,
+          "crowd_records": 57
+        },
+        {
+          "coco_category_id": 62,
+          "class_name": "chair",
+          "images": 12774,
+          "annotation_records": 38491,
+          "noncrowd_images": 12774,
+          "noncrowd_instances": 38073,
+          "crowd_records": 418
+        },
+        {
+          "coco_category_id": 63,
+          "class_name": "couch",
+          "images": 4423,
+          "annotation_records": 5779,
+          "noncrowd_images": 4423,
+          "noncrowd_instances": 5779,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 64,
+          "class_name": "potted plant",
+          "images": 4452,
+          "annotation_records": 8652,
+          "noncrowd_images": 4452,
+          "noncrowd_instances": 8631,
+          "crowd_records": 21
+        },
+        {
+          "coco_category_id": 65,
+          "class_name": "bed",
+          "images": 3682,
+          "annotation_records": 4192,
+          "noncrowd_images": 3682,
+          "noncrowd_instances": 4192,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 67,
+          "class_name": "dining table",
+          "images": 11837,
+          "annotation_records": 15714,
+          "noncrowd_images": 11837,
+          "noncrowd_instances": 15695,
+          "crowd_records": 19
+        },
+        {
+          "coco_category_id": 70,
+          "class_name": "toilet",
+          "images": 3353,
+          "annotation_records": 4157,
+          "noncrowd_images": 3353,
+          "noncrowd_instances": 4149,
+          "crowd_records": 8
+        },
+        {
+          "coco_category_id": 72,
+          "class_name": "tv",
+          "images": 4561,
+          "annotation_records": 5805,
+          "noncrowd_images": 4561,
+          "noncrowd_instances": 5803,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 73,
+          "class_name": "laptop",
+          "images": 3524,
+          "annotation_records": 4970,
+          "noncrowd_images": 3524,
+          "noncrowd_instances": 4960,
+          "crowd_records": 10
+        },
+        {
+          "coco_category_id": 74,
+          "class_name": "mouse",
+          "images": 1876,
+          "annotation_records": 2262,
+          "noncrowd_images": 1876,
+          "noncrowd_instances": 2261,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 75,
+          "class_name": "remote",
+          "images": 3076,
+          "annotation_records": 5703,
+          "noncrowd_images": 3076,
+          "noncrowd_instances": 5700,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 76,
+          "class_name": "keyboard",
+          "images": 2115,
+          "annotation_records": 2855,
+          "noncrowd_images": 2115,
+          "noncrowd_instances": 2854,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 77,
+          "class_name": "cell phone",
+          "images": 4803,
+          "annotation_records": 6434,
+          "noncrowd_images": 4803,
+          "noncrowd_instances": 6422,
+          "crowd_records": 12
+        },
+        {
+          "coco_category_id": 78,
+          "class_name": "microwave",
+          "images": 1547,
+          "annotation_records": 1673,
+          "noncrowd_images": 1547,
+          "noncrowd_instances": 1672,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 79,
+          "class_name": "oven",
+          "images": 2877,
+          "annotation_records": 3334,
+          "noncrowd_images": 2877,
+          "noncrowd_instances": 3334,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 80,
+          "class_name": "toaster",
+          "images": 217,
+          "annotation_records": 225,
+          "noncrowd_images": 217,
+          "noncrowd_instances": 225,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 81,
+          "class_name": "sink",
+          "images": 4678,
+          "annotation_records": 5610,
+          "noncrowd_images": 4678,
+          "noncrowd_instances": 5609,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 82,
+          "class_name": "refrigerator",
+          "images": 2360,
+          "annotation_records": 2637,
+          "noncrowd_images": 2360,
+          "noncrowd_instances": 2634,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 84,
+          "class_name": "book",
+          "images": 5332,
+          "annotation_records": 24715,
+          "noncrowd_images": 5332,
+          "noncrowd_instances": 24077,
+          "crowd_records": 638
+        },
+        {
+          "coco_category_id": 85,
+          "class_name": "clock",
+          "images": 4659,
+          "annotation_records": 6334,
+          "noncrowd_images": 4659,
+          "noncrowd_instances": 6320,
+          "crowd_records": 14
+        },
+        {
+          "coco_category_id": 86,
+          "class_name": "vase",
+          "images": 3593,
+          "annotation_records": 6613,
+          "noncrowd_images": 3593,
+          "noncrowd_instances": 6577,
+          "crowd_records": 36
+        },
+        {
+          "coco_category_id": 87,
+          "class_name": "scissors",
+          "images": 947,
+          "annotation_records": 1481,
+          "noncrowd_images": 947,
+          "noncrowd_instances": 1464,
+          "crowd_records": 17
+        },
+        {
+          "coco_category_id": 88,
+          "class_name": "teddy bear",
+          "images": 2140,
+          "annotation_records": 4793,
+          "noncrowd_images": 2140,
+          "noncrowd_instances": 4729,
+          "crowd_records": 64
+        },
+        {
+          "coco_category_id": 89,
+          "class_name": "hair drier",
+          "images": 189,
+          "annotation_records": 198,
+          "noncrowd_images": 189,
+          "noncrowd_instances": 198,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 90,
+          "class_name": "toothbrush",
+          "images": 1007,
+          "annotation_records": 1954,
+          "noncrowd_images": 1007,
+          "noncrowd_instances": 1945,
+          "crowd_records": 9
+        }
+      ],
+      "annotation_member": "annotations/instances_train2017.json",
+      "annotation_sha256": "610fce4944abdeb15354cc765333805529359d12d88f2f711393ca586901d01d"
+    },
+    "val2017": {
+      "total_images": 5000,
+      "total_annotation_records": 36781,
+      "total_noncrowd_instances": 36335,
+      "total_crowd_records": 446,
+      "classes": [
+        {
+          "coco_category_id": 1,
+          "class_name": "person",
+          "images": 2693,
+          "annotation_records": 11004,
+          "noncrowd_images": 2693,
+          "noncrowd_instances": 10777,
+          "crowd_records": 227
+        },
+        {
+          "coco_category_id": 2,
+          "class_name": "bicycle",
+          "images": 149,
+          "annotation_records": 316,
+          "noncrowd_images": 149,
+          "noncrowd_instances": 314,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 3,
+          "class_name": "car",
+          "images": 535,
+          "annotation_records": 1932,
+          "noncrowd_images": 535,
+          "noncrowd_instances": 1918,
+          "crowd_records": 14
+        },
+        {
+          "coco_category_id": 4,
+          "class_name": "motorcycle",
+          "images": 159,
+          "annotation_records": 371,
+          "noncrowd_images": 159,
+          "noncrowd_instances": 367,
+          "crowd_records": 4
+        },
+        {
+          "coco_category_id": 5,
+          "class_name": "airplane",
+          "images": 97,
+          "annotation_records": 143,
+          "noncrowd_images": 97,
+          "noncrowd_instances": 143,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 6,
+          "class_name": "bus",
+          "images": 189,
+          "annotation_records": 285,
+          "noncrowd_images": 189,
+          "noncrowd_instances": 283,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 7,
+          "class_name": "train",
+          "images": 157,
+          "annotation_records": 190,
+          "noncrowd_images": 157,
+          "noncrowd_instances": 190,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 8,
+          "class_name": "truck",
+          "images": 250,
+          "annotation_records": 415,
+          "noncrowd_images": 250,
+          "noncrowd_instances": 414,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 9,
+          "class_name": "boat",
+          "images": 121,
+          "annotation_records": 430,
+          "noncrowd_images": 121,
+          "noncrowd_instances": 424,
+          "crowd_records": 6
+        },
+        {
+          "coco_category_id": 10,
+          "class_name": "traffic light",
+          "images": 191,
+          "annotation_records": 637,
+          "noncrowd_images": 191,
+          "noncrowd_instances": 634,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 11,
+          "class_name": "fire hydrant",
+          "images": 86,
+          "annotation_records": 101,
+          "noncrowd_images": 86,
+          "noncrowd_instances": 101,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 13,
+          "class_name": "stop sign",
+          "images": 69,
+          "annotation_records": 75,
+          "noncrowd_images": 69,
+          "noncrowd_instances": 75,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 14,
+          "class_name": "parking meter",
+          "images": 37,
+          "annotation_records": 60,
+          "noncrowd_images": 37,
+          "noncrowd_instances": 60,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 15,
+          "class_name": "bench",
+          "images": 235,
+          "annotation_records": 413,
+          "noncrowd_images": 235,
+          "noncrowd_instances": 411,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 16,
+          "class_name": "bird",
+          "images": 125,
+          "annotation_records": 440,
+          "noncrowd_images": 125,
+          "noncrowd_instances": 427,
+          "crowd_records": 13
+        },
+        {
+          "coco_category_id": 17,
+          "class_name": "cat",
+          "images": 184,
+          "annotation_records": 202,
+          "noncrowd_images": 184,
+          "noncrowd_instances": 202,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 18,
+          "class_name": "dog",
+          "images": 177,
+          "annotation_records": 218,
+          "noncrowd_images": 177,
+          "noncrowd_instances": 218,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 19,
+          "class_name": "horse",
+          "images": 128,
+          "annotation_records": 273,
+          "noncrowd_images": 128,
+          "noncrowd_instances": 272,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 20,
+          "class_name": "sheep",
+          "images": 65,
+          "annotation_records": 361,
+          "noncrowd_images": 65,
+          "noncrowd_instances": 354,
+          "crowd_records": 7
+        },
+        {
+          "coco_category_id": 21,
+          "class_name": "cow",
+          "images": 87,
+          "annotation_records": 380,
+          "noncrowd_images": 87,
+          "noncrowd_instances": 372,
+          "crowd_records": 8
+        },
+        {
+          "coco_category_id": 22,
+          "class_name": "elephant",
+          "images": 89,
+          "annotation_records": 255,
+          "noncrowd_images": 89,
+          "noncrowd_instances": 252,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 23,
+          "class_name": "bear",
+          "images": 49,
+          "annotation_records": 71,
+          "noncrowd_images": 49,
+          "noncrowd_instances": 71,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 24,
+          "class_name": "zebra",
+          "images": 85,
+          "annotation_records": 268,
+          "noncrowd_images": 85,
+          "noncrowd_instances": 266,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 25,
+          "class_name": "giraffe",
+          "images": 101,
+          "annotation_records": 232,
+          "noncrowd_images": 101,
+          "noncrowd_instances": 232,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 27,
+          "class_name": "backpack",
+          "images": 228,
+          "annotation_records": 371,
+          "noncrowd_images": 228,
+          "noncrowd_instances": 371,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 28,
+          "class_name": "umbrella",
+          "images": 174,
+          "annotation_records": 413,
+          "noncrowd_images": 174,
+          "noncrowd_instances": 407,
+          "crowd_records": 6
+        },
+        {
+          "coco_category_id": 31,
+          "class_name": "handbag",
+          "images": 292,
+          "annotation_records": 540,
+          "noncrowd_images": 292,
+          "noncrowd_instances": 540,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 32,
+          "class_name": "tie",
+          "images": 145,
+          "annotation_records": 254,
+          "noncrowd_images": 145,
+          "noncrowd_instances": 252,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 33,
+          "class_name": "suitcase",
+          "images": 105,
+          "annotation_records": 303,
+          "noncrowd_images": 105,
+          "noncrowd_instances": 299,
+          "crowd_records": 4
+        },
+        {
+          "coco_category_id": 34,
+          "class_name": "frisbee",
+          "images": 84,
+          "annotation_records": 115,
+          "noncrowd_images": 84,
+          "noncrowd_instances": 115,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 35,
+          "class_name": "skis",
+          "images": 120,
+          "annotation_records": 241,
+          "noncrowd_images": 120,
+          "noncrowd_instances": 241,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 36,
+          "class_name": "snowboard",
+          "images": 49,
+          "annotation_records": 69,
+          "noncrowd_images": 49,
+          "noncrowd_instances": 69,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 37,
+          "class_name": "sports ball",
+          "images": 169,
+          "annotation_records": 263,
+          "noncrowd_images": 169,
+          "noncrowd_instances": 260,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 38,
+          "class_name": "kite",
+          "images": 91,
+          "annotation_records": 336,
+          "noncrowd_images": 91,
+          "noncrowd_instances": 327,
+          "crowd_records": 9
+        },
+        {
+          "coco_category_id": 39,
+          "class_name": "baseball bat",
+          "images": 97,
+          "annotation_records": 146,
+          "noncrowd_images": 97,
+          "noncrowd_instances": 145,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 40,
+          "class_name": "baseball glove",
+          "images": 100,
+          "annotation_records": 148,
+          "noncrowd_images": 100,
+          "noncrowd_instances": 148,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 41,
+          "class_name": "skateboard",
+          "images": 127,
+          "annotation_records": 179,
+          "noncrowd_images": 127,
+          "noncrowd_instances": 179,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 42,
+          "class_name": "surfboard",
+          "images": 149,
+          "annotation_records": 269,
+          "noncrowd_images": 149,
+          "noncrowd_instances": 267,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 43,
+          "class_name": "tennis racket",
+          "images": 167,
+          "annotation_records": 225,
+          "noncrowd_images": 167,
+          "noncrowd_instances": 225,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 44,
+          "class_name": "bottle",
+          "images": 379,
+          "annotation_records": 1025,
+          "noncrowd_images": 379,
+          "noncrowd_instances": 1013,
+          "crowd_records": 12
+        },
+        {
+          "coco_category_id": 46,
+          "class_name": "wine glass",
+          "images": 110,
+          "annotation_records": 343,
+          "noncrowd_images": 110,
+          "noncrowd_instances": 341,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 47,
+          "class_name": "cup",
+          "images": 390,
+          "annotation_records": 899,
+          "noncrowd_images": 390,
+          "noncrowd_instances": 895,
+          "crowd_records": 4
+        },
+        {
+          "coco_category_id": 48,
+          "class_name": "fork",
+          "images": 155,
+          "annotation_records": 215,
+          "noncrowd_images": 155,
+          "noncrowd_instances": 215,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 49,
+          "class_name": "knife",
+          "images": 181,
+          "annotation_records": 326,
+          "noncrowd_images": 181,
+          "noncrowd_instances": 325,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 50,
+          "class_name": "spoon",
+          "images": 153,
+          "annotation_records": 253,
+          "noncrowd_images": 153,
+          "noncrowd_instances": 253,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 51,
+          "class_name": "bowl",
+          "images": 314,
+          "annotation_records": 626,
+          "noncrowd_images": 314,
+          "noncrowd_instances": 623,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 52,
+          "class_name": "banana",
+          "images": 103,
+          "annotation_records": 379,
+          "noncrowd_images": 103,
+          "noncrowd_instances": 370,
+          "crowd_records": 9
+        },
+        {
+          "coco_category_id": 53,
+          "class_name": "apple",
+          "images": 76,
+          "annotation_records": 239,
+          "noncrowd_images": 76,
+          "noncrowd_instances": 236,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 54,
+          "class_name": "sandwich",
+          "images": 98,
+          "annotation_records": 177,
+          "noncrowd_images": 98,
+          "noncrowd_instances": 177,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 55,
+          "class_name": "orange",
+          "images": 85,
+          "annotation_records": 287,
+          "noncrowd_images": 85,
+          "noncrowd_instances": 285,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 56,
+          "class_name": "broccoli",
+          "images": 71,
+          "annotation_records": 316,
+          "noncrowd_images": 71,
+          "noncrowd_instances": 312,
+          "crowd_records": 4
+        },
+        {
+          "coco_category_id": 57,
+          "class_name": "carrot",
+          "images": 81,
+          "annotation_records": 371,
+          "noncrowd_images": 81,
+          "noncrowd_instances": 365,
+          "crowd_records": 6
+        },
+        {
+          "coco_category_id": 58,
+          "class_name": "hot dog",
+          "images": 51,
+          "annotation_records": 127,
+          "noncrowd_images": 51,
+          "noncrowd_instances": 125,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 59,
+          "class_name": "pizza",
+          "images": 153,
+          "annotation_records": 285,
+          "noncrowd_images": 153,
+          "noncrowd_instances": 284,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 60,
+          "class_name": "donut",
+          "images": 62,
+          "annotation_records": 338,
+          "noncrowd_images": 62,
+          "noncrowd_instances": 328,
+          "crowd_records": 10
+        },
+        {
+          "coco_category_id": 61,
+          "class_name": "cake",
+          "images": 124,
+          "annotation_records": 316,
+          "noncrowd_images": 124,
+          "noncrowd_instances": 310,
+          "crowd_records": 6
+        },
+        {
+          "coco_category_id": 62,
+          "class_name": "chair",
+          "images": 580,
+          "annotation_records": 1791,
+          "noncrowd_images": 580,
+          "noncrowd_instances": 1771,
+          "crowd_records": 20
+        },
+        {
+          "coco_category_id": 63,
+          "class_name": "couch",
+          "images": 195,
+          "annotation_records": 261,
+          "noncrowd_images": 195,
+          "noncrowd_instances": 261,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 64,
+          "class_name": "potted plant",
+          "images": 172,
+          "annotation_records": 343,
+          "noncrowd_images": 172,
+          "noncrowd_instances": 342,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 65,
+          "class_name": "bed",
+          "images": 149,
+          "annotation_records": 163,
+          "noncrowd_images": 149,
+          "noncrowd_instances": 163,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 67,
+          "class_name": "dining table",
+          "images": 501,
+          "annotation_records": 697,
+          "noncrowd_images": 501,
+          "noncrowd_instances": 695,
+          "crowd_records": 2
+        },
+        {
+          "coco_category_id": 70,
+          "class_name": "toilet",
+          "images": 149,
+          "annotation_records": 179,
+          "noncrowd_images": 149,
+          "noncrowd_instances": 179,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 72,
+          "class_name": "tv",
+          "images": 207,
+          "annotation_records": 288,
+          "noncrowd_images": 207,
+          "noncrowd_instances": 288,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 73,
+          "class_name": "laptop",
+          "images": 183,
+          "annotation_records": 231,
+          "noncrowd_images": 183,
+          "noncrowd_instances": 231,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 74,
+          "class_name": "mouse",
+          "images": 88,
+          "annotation_records": 106,
+          "noncrowd_images": 88,
+          "noncrowd_instances": 106,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 75,
+          "class_name": "remote",
+          "images": 145,
+          "annotation_records": 283,
+          "noncrowd_images": 145,
+          "noncrowd_instances": 283,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 76,
+          "class_name": "keyboard",
+          "images": 106,
+          "annotation_records": 153,
+          "noncrowd_images": 106,
+          "noncrowd_instances": 153,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 77,
+          "class_name": "cell phone",
+          "images": 214,
+          "annotation_records": 262,
+          "noncrowd_images": 214,
+          "noncrowd_instances": 262,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 78,
+          "class_name": "microwave",
+          "images": 54,
+          "annotation_records": 55,
+          "noncrowd_images": 54,
+          "noncrowd_instances": 55,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 79,
+          "class_name": "oven",
+          "images": 115,
+          "annotation_records": 143,
+          "noncrowd_images": 115,
+          "noncrowd_instances": 143,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 80,
+          "class_name": "toaster",
+          "images": 8,
+          "annotation_records": 9,
+          "noncrowd_images": 8,
+          "noncrowd_instances": 9,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 81,
+          "class_name": "sink",
+          "images": 187,
+          "annotation_records": 225,
+          "noncrowd_images": 187,
+          "noncrowd_instances": 225,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 82,
+          "class_name": "refrigerator",
+          "images": 101,
+          "annotation_records": 126,
+          "noncrowd_images": 101,
+          "noncrowd_instances": 126,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 84,
+          "class_name": "book",
+          "images": 230,
+          "annotation_records": 1161,
+          "noncrowd_images": 230,
+          "noncrowd_instances": 1129,
+          "crowd_records": 32
+        },
+        {
+          "coco_category_id": 85,
+          "class_name": "clock",
+          "images": 204,
+          "annotation_records": 267,
+          "noncrowd_images": 204,
+          "noncrowd_instances": 267,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 86,
+          "class_name": "vase",
+          "images": 137,
+          "annotation_records": 277,
+          "noncrowd_images": 137,
+          "noncrowd_instances": 274,
+          "crowd_records": 3
+        },
+        {
+          "coco_category_id": 87,
+          "class_name": "scissors",
+          "images": 28,
+          "annotation_records": 36,
+          "noncrowd_images": 28,
+          "noncrowd_instances": 36,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 88,
+          "class_name": "teddy bear",
+          "images": 94,
+          "annotation_records": 191,
+          "noncrowd_images": 94,
+          "noncrowd_instances": 190,
+          "crowd_records": 1
+        },
+        {
+          "coco_category_id": 89,
+          "class_name": "hair drier",
+          "images": 9,
+          "annotation_records": 11,
+          "noncrowd_images": 9,
+          "noncrowd_instances": 11,
+          "crowd_records": 0
+        },
+        {
+          "coco_category_id": 90,
+          "class_name": "toothbrush",
+          "images": 34,
+          "annotation_records": 57,
+          "noncrowd_images": 34,
+          "noncrowd_instances": 57,
+          "crowd_records": 0
+        }
+      ],
+      "annotation_member": "annotations/instances_val2017.json",
+      "annotation_sha256": "e8c7f7908f1d7278341fae127d0da654f102f11bd7b21d8aeefa635b8c810b6f"
+    }
+  },
+  "archive_sha256": "113a836d90195ee1f884e704da6304dfaaecff1f023f49b6ca93c4aaae470268"
+}

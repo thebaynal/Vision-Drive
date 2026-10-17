@@ -162,6 +162,167 @@ Checkpoint hashes, class mappings, matching rules and uncertainty methods are
 documented in the [evaluation methodology](docs/dataset_card.md#evaluation-methodology).
 Historical ESP training records do not describe YOLO performance.
 
+### Pretrained YOLO11n: origin and published metrics
+
+**Ultralytics trained the original detector on COCO**, with 80 object categories.
+We use its [official pretrained checkpoint](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt)
+without fine-tuning. Credit: **Jocher and Qiu (2024)**;
+[formatted citation and BibTeX](#yolo11n-citation).
+
+| Published YOLO11n benchmark | Value |
+| --- | --- |
+| Evaluation dataset | COCO val2017, 80 detection classes |
+| Input size | 640 pixels |
+| Bounding-box mAP50–95 | **39.5%** |
+| CPU latency, ONNX | 56.1 ± 0.8 ms/image |
+| NVIDIA T4 latency, TensorRT 10 | 1.5 ± 0.0 ms/image |
+| Parameters, rounded | 2.6 million |
+| Compute | 6.5 GFLOPs |
+
+Source: [Ultralytics YOLO11 detection benchmark](https://docs.ultralytics.com/models/yolo11/#performance-metrics).
+These are upstream results, not measurements made by our group. The cited
+summary does not provide YOLO11n precision, recall, F1, AP50 or AP75; our
+[local results](#sample-results) report those for **person only**. Local
+person AP and upstream 80-class mAP measure different tasks. ONNX/TensorRT
+timings also use different runtimes and hardware from our PyTorch laptop run.
+
+### Original training dataset and all 80 class counts
+
+COCO means **Common Objects in Context**. Its photographs contain everyday
+objects in varied scenes; detection annotations provide category labels,
+bounding boxes and instance masks. The original source is the
+[COCO dataset](https://cocodataset.org/#download), described by
+[Lin et al. (2014)](https://arxiv.org/abs/1405.0312).
+The [Ultralytics dataset configuration](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/coco.yaml)
+specifies `train2017` and `val2017` for COCO detection.
+
+| Official COCO 2017 split | Images | Non-crowd object instances | Crowd-region records |
+| --- | --- | --- | --- |
+| Training (`train2017`) | 118,287 | 849,949 | 10,052 |
+| Validation (`val2017`) | 5,000 | 36,335 | 446 |
+
+The published benchmark uses validation images. COCO test-dev has 20,288
+images with withheld ground truth; it is not the split behind the reported
+39.5% validation mAP. See the [split specification](https://docs.ultralytics.com/datasets/detect/coco/#dataset-structure).
+Our separate Open Images development/test cohort is described above.
+
+Counts below were computed directly from the official
+[`instances_train2017.json` and `instances_val2017.json` archive](http://images.cocodataset.org/annotations/annotations_trainval2017.zip).
+**Images per class** counts distinct images containing that category, including
+crowd annotations. A photo can contain several classes, so column sums exceed
+the number of photos. **Instances** below excludes `iscrowd=1`: a crowd-region
+annotation does not specify how many individual objects it contains.
+
+Download the [complete counts CSV](data/public/coco2017-class-counts.csv),
+including sparse COCO category IDs and separate crowd columns. The
+[statistics JSON](data/public/coco2017-statistics.json) records annotation and
+archive SHA-256 hashes. Counts describe the source dataset, not exact image
+exposures after upstream filtering, augmentation or repeated epochs.
+
+<details>
+<summary>Show all 80 classes and their training/validation image and instance counts</summary>
+
+| YOLO ID | Class | Train images | Train instances | Val images | Val instances |
+| --- | --- | --- | --- | --- | --- |
+| 0 | person | 64,115 | 257,253 | 2,693 | 10,777 |
+| 1 | bicycle | 3,252 | 7,056 | 149 | 314 |
+| 2 | car | 12,251 | 43,533 | 535 | 1,918 |
+| 3 | motorcycle | 3,502 | 8,654 | 159 | 367 |
+| 4 | airplane | 2,986 | 5,129 | 97 | 143 |
+| 5 | bus | 3,952 | 6,061 | 189 | 283 |
+| 6 | train | 3,588 | 4,570 | 157 | 190 |
+| 7 | truck | 6,127 | 9,970 | 250 | 414 |
+| 8 | boat | 3,025 | 10,576 | 121 | 424 |
+| 9 | traffic light | 4,139 | 12,842 | 191 | 634 |
+| 10 | fire hydrant | 1,711 | 1,865 | 86 | 101 |
+| 11 | stop sign | 1,734 | 1,983 | 69 | 75 |
+| 12 | parking meter | 705 | 1,283 | 37 | 60 |
+| 13 | bench | 5,570 | 9,820 | 235 | 411 |
+| 14 | bird | 3,237 | 10,542 | 125 | 427 |
+| 15 | cat | 4,114 | 4,766 | 184 | 202 |
+| 16 | dog | 4,385 | 5,500 | 177 | 218 |
+| 17 | horse | 2,941 | 6,567 | 128 | 272 |
+| 18 | sheep | 1,529 | 9,223 | 65 | 354 |
+| 19 | cow | 1,968 | 8,014 | 87 | 372 |
+| 20 | elephant | 2,143 | 5,484 | 89 | 252 |
+| 21 | bear | 960 | 1,294 | 49 | 71 |
+| 22 | zebra | 1,916 | 5,269 | 85 | 266 |
+| 23 | giraffe | 2,546 | 5,128 | 101 | 232 |
+| 24 | backpack | 5,528 | 8,714 | 228 | 371 |
+| 25 | umbrella | 3,968 | 11,265 | 174 | 407 |
+| 26 | handbag | 6,841 | 12,342 | 292 | 540 |
+| 27 | tie | 3,810 | 6,448 | 145 | 252 |
+| 28 | suitcase | 2,402 | 6,112 | 105 | 299 |
+| 29 | frisbee | 2,184 | 2,681 | 84 | 115 |
+| 30 | skis | 3,082 | 6,623 | 120 | 241 |
+| 31 | snowboard | 1,654 | 2,681 | 49 | 69 |
+| 32 | sports ball | 4,262 | 6,299 | 169 | 260 |
+| 33 | kite | 2,261 | 8,802 | 91 | 327 |
+| 34 | baseball bat | 2,506 | 3,273 | 97 | 145 |
+| 35 | baseball glove | 2,629 | 3,747 | 100 | 148 |
+| 36 | skateboard | 3,476 | 5,536 | 127 | 179 |
+| 37 | surfboard | 3,486 | 6,095 | 149 | 267 |
+| 38 | tennis racket | 3,394 | 4,807 | 167 | 225 |
+| 39 | bottle | 8,501 | 24,070 | 379 | 1,013 |
+| 40 | wine glass | 2,533 | 7,839 | 110 | 341 |
+| 41 | cup | 9,189 | 20,574 | 390 | 895 |
+| 42 | fork | 3,555 | 5,474 | 155 | 215 |
+| 43 | knife | 4,326 | 7,760 | 181 | 325 |
+| 44 | spoon | 3,529 | 6,159 | 153 | 253 |
+| 45 | bowl | 7,111 | 14,323 | 314 | 623 |
+| 46 | banana | 2,243 | 9,195 | 103 | 370 |
+| 47 | apple | 1,586 | 5,776 | 76 | 236 |
+| 48 | sandwich | 2,365 | 4,356 | 98 | 177 |
+| 49 | orange | 1,699 | 6,302 | 85 | 285 |
+| 50 | broccoli | 1,939 | 7,261 | 71 | 312 |
+| 51 | carrot | 1,683 | 7,758 | 81 | 365 |
+| 52 | hot dog | 1,222 | 2,884 | 51 | 125 |
+| 53 | pizza | 3,166 | 5,807 | 153 | 284 |
+| 54 | donut | 1,523 | 7,005 | 62 | 328 |
+| 55 | cake | 2,925 | 6,296 | 124 | 310 |
+| 56 | chair | 12,774 | 38,073 | 580 | 1,771 |
+| 57 | couch | 4,423 | 5,779 | 195 | 261 |
+| 58 | potted plant | 4,452 | 8,631 | 172 | 342 |
+| 59 | bed | 3,682 | 4,192 | 149 | 163 |
+| 60 | dining table | 11,837 | 15,695 | 501 | 695 |
+| 61 | toilet | 3,353 | 4,149 | 149 | 179 |
+| 62 | tv | 4,561 | 5,803 | 207 | 288 |
+| 63 | laptop | 3,524 | 4,960 | 183 | 231 |
+| 64 | mouse | 1,876 | 2,261 | 88 | 106 |
+| 65 | remote | 3,076 | 5,700 | 145 | 283 |
+| 66 | keyboard | 2,115 | 2,854 | 106 | 153 |
+| 67 | cell phone | 4,803 | 6,422 | 214 | 262 |
+| 68 | microwave | 1,547 | 1,672 | 54 | 55 |
+| 69 | oven | 2,877 | 3,334 | 115 | 143 |
+| 70 | toaster | 217 | 225 | 8 | 9 |
+| 71 | sink | 4,678 | 5,609 | 187 | 225 |
+| 72 | refrigerator | 2,360 | 2,634 | 101 | 126 |
+| 73 | book | 5,332 | 24,077 | 230 | 1,129 |
+| 74 | clock | 4,659 | 6,320 | 204 | 267 |
+| 75 | vase | 3,593 | 6,577 | 137 | 274 |
+| 76 | scissors | 947 | 1,464 | 28 | 36 |
+| 77 | teddy bear | 2,140 | 4,729 | 94 | 190 |
+| 78 | hair drier | 189 | 198 | 9 | 11 |
+| 79 | toothbrush | 1,007 | 1,945 | 34 | 57 |
+
+</details>
+
+To reproduce the counts, download the annotation ZIP from COCO's official page
+to `data/raw/coco2017/annotations_trainval2017.zip`, then run:
+
+```powershell
+python scripts/summarize_coco.py
+```
+
+The script uses only Python's standard library; it downloads no photos and
+runs no training. The exact upstream training GPU, physical training location,
+epoch-by-epoch history and checkpoint-specific training settings are not
+established by the cited model summary. We do not present tutorial defaults
+as the actual pretrained checkpoint's training log. Our downloaded checkpoint's
+SHA-256 is `0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1`.
+The training and evaluation descriptions above concern the YOLO detector;
+Depth Anything V2 has separate provenance.
+
 ## Installation and setup
 
 Run the following from the repository root in **Windows PowerShell**.
@@ -337,11 +498,43 @@ tests/             Python and native firmware checks
 | Presentation and paper guidance | [Presentation script](docs/documentation-and-paper-guide.md#presentation-script) · [Writing guide](docs/documentation-and-paper-guide.md) |
 | Historical dataset/training paper section | [ESPDet paper section](docs/model-report.md#historical-methodology) |
 | Hardware implementation | [Hardware handoff](docs/laptop-esp32.md#hardware-implementation) |
-| Verification | [139 Python tests and integration checks](docs/verification.md) |
+| Verification | [141 Python tests and integration checks](docs/verification.md) |
 
 ## References and attribution
 
-- [Ultralytics YOLO11](https://docs.ultralytics.com/models/yolo11/)
+### YOLO11n citation
+
+YOLO11n is the nano detection variant of **Ultralytics YOLO11**. Use the
+authors' [official software citation](https://docs.ultralytics.com/models/yolo11/#citations-and-acknowledgments)
+in the paper:
+
+> Jocher, G., & Qiu, J. (2024). *Ultralytics YOLO11* (Version 11.0.0)
+> [Computer software]. https://github.com/ultralytics/ultralytics
+
+In-text citation: **(Jocher & Qiu, 2024)**. The cited version identifies the
+YOLO11 release; the installed package version for our actual evaluation is
+recorded separately in the [run metadata](docs/results/yolo11n/metrics.json).
+Ultralytics supplies a software citation and states that it has not published
+a formal YOLO11 research paper.
+
+```bibtex
+@software{yolo11_ultralytics,
+  author = {Glenn Jocher and Jing Qiu},
+  title = {Ultralytics YOLO11},
+  version = {11.0.0},
+  year = {2024},
+  url = {https://github.com/ultralytics/ultralytics},
+  orcid = {0000-0001-5950-6979, 0000-0003-3783-7069},
+  license = {AGPL-3.0}
+}
+```
+
+### Model and dataset sources
+
+- [Ultralytics YOLO11 documentation and published benchmarks](https://docs.ultralytics.com/models/yolo11/)
+- [Ultralytics COCO dataset configuration](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/coco.yaml)
+- [COCO official downloads and annotations](https://cocodataset.org/#download)
+- [Lin et al., Microsoft COCO: Common Objects in Context](https://arxiv.org/abs/1405.0312)
 - [Depth Anything V2](https://github.com/DepthAnything/Depth-Anything-V2)
 - [Espressif ESP-Detection](https://github.com/espressif/esp-detection)
 - [Open Images annotation protocol](https://storage.googleapis.com/openimages/web/factsfigures_v7.html)

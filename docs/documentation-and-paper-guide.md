@@ -30,6 +30,7 @@ coverage does not support a reliable COCO-chair score.
 
 ## Evidence to cite
 
+- [Official YOLO11 software citation, formatted reference and BibTeX](../README.md#yolo11n-citation): cite **Jocher and Qiu (2024)** for YOLO11n.
 - [Dataset, methodology and source licenses](dataset_card.md).
 - [Measured report, graphs and failure examples](evaluation_results.md).
 - [Executed research notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb).
