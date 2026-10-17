@@ -41,7 +41,7 @@ def export():
     index=json.loads((source/'prediction_examples/index.json').read_text())
     write_json(assets/'image-attribution.json',[r for r in index if (assets/r['file']).exists()])
     report=(source/'evaluation_report.md').read_text(encoding='utf-8')
-    report+='\n## Submission evidence\n\n[Measured JSON](results/yolo11n/metrics.json) · [Tables](results/yolo11n/per_class_metrics.csv) · [Per-image counts](results/yolo11n/per_image_counts.csv) · [Image/source attribution](results/yolo11n/dataset_provenance.csv) · [Taxonomy exclusion audit](taxonomy-audit.md).\n\n'
+    report+='\n## Submission evidence\n\n[Measured JSON](results/yolo11n/metrics.json) · [Tables](results/yolo11n/per_class_metrics.csv) · [Per-image counts](results/yolo11n/per_image_counts.csv) · [Image/source attribution](results/yolo11n/dataset_provenance.csv) · [Taxonomy exclusion audit](dataset_card.md#chair-stool-taxonomy).\n\n'
     for name in graphs:report+=f'![{name.replace("_"," ").removesuffix(".png")}](../assets/evaluation/{name})\n\n'
     report+='![Actual missed person examples](../assets/evaluation/missed_1.jpg)\n\n![Actual unmatched person predictions](../assets/evaluation/false_positive_1.jpg)\n\nPhoto credits and original pages are recorded in [image-attribution.json](../assets/evaluation/image-attribution.json).\n'
     system=source/'system_benchmark.json'
@@ -56,7 +56,6 @@ def export():
         original['status']='EXPLORATORY ONLY: Chair/Stool source taxonomy is incomplete for COCO chair. Not primary evidence.'
         write_json(dest/'metrics.json',original)
         shutil.copyfile(exploratory/'per_class_metrics.csv',dest/'per_class_metrics.csv')
-        (dest/'README.md').write_text('# Exploratory results only\n\nChair/Stool taxonomy coverage is incomplete. Do not cite these numbers as reliable chair performance. See [the audit](../../taxonomy-audit.md).\n',encoding='utf-8')
     print('Verified measured counts and exported compact submission evidence.')
 
 

@@ -13,7 +13,7 @@ The protocol was frozen in Git before first inference on these images.
 - [Excluded source category counts](indoor-excluded-source-classes.csv).
 - [Executable notebook](../../notebooks/yolo11n_pretrained_evaluation.ipynb).
 - [Measured results](../../docs/evaluation_results.md).
-- [Pilot Chair/Stool limitation](../../docs/taxonomy-audit.md).
+- [Pilot Chair/Stool limitation](../../docs/dataset_card.md#chair-stool-taxonomy).
 
 ```powershell
 .venv-evaluation\Scripts\python scripts/download_dataset.py

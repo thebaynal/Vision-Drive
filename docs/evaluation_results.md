@@ -61,7 +61,7 @@ These measurements describe pretrained person localization on this explicitly se
 
 ## Submission evidence
 
-[Measured JSON](results/yolo11n/metrics.json) · [Tables](results/yolo11n/per_class_metrics.csv) · [Per-image counts](results/yolo11n/per_image_counts.csv) · [Image/source attribution](results/yolo11n/dataset_provenance.csv) · [Taxonomy exclusion audit](taxonomy-audit.md).
+[Measured JSON](results/yolo11n/metrics.json) · [Tables](results/yolo11n/per_class_metrics.csv) · [Per-image counts](results/yolo11n/per_image_counts.csv) · [Image/source attribution](results/yolo11n/dataset_provenance.csv) · [Taxonomy exclusion audit](dataset_card.md#chair-stool-taxonomy).
 
 ![confusion matrix](../assets/evaluation/confusion_matrix.png)
 

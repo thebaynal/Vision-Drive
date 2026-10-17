@@ -10,12 +10,12 @@ a laptop; an optional ESP32 receives expiring movement commands.
 [Evaluation notebook](notebooks/yolo11n_pretrained_evaluation.ipynb) ·
 [Measured results](docs/evaluation_results.md) ·
 [Dataset and sources](docs/dataset_card.md) ·
-[Project materials](docs/README.md)
+[Project materials](#required-project-materials)
 
 ![VisionDrive application visualization](assets/laptop-demo.png)
 
 *Actual application output. Image credits and modifications are documented in
-[sample results](docs/sample-results.md). This screenshot is separate from the
+[sample results](THIRD_PARTY_NOTICES.md#application-screenshot-attribution). This screenshot is separate from the
 fresh evaluation study.*
 
 ## Project description
@@ -80,7 +80,7 @@ See [the run guide](docs/laptop-esp32.md) for the exact behavior and configurati
 | Motor driver, motors, chassis and vehicle-mounted camera | Future physical integration |
 
 The laptop runs YOLO and depth estimation. The current implementation does not
-run these networks on the ESP32. The [hardware handoff](docs/hardware-implementation.md)
+run these networks on the ESP32. The [hardware handoff](docs/laptop-esp32.md#hardware-implementation)
 covers later integration.
 
 ## Software and tools
@@ -142,7 +142,7 @@ coverage for the COCO chair concept. The live detector retains all 80 categories
 - [Dataset card and source comparison](docs/dataset_card.md)
 - [Frozen annotations and individual attribution](data/public/indoor-evaluation-manifest.jsonl)
 - [Selection audit and source checksums](data/public/indoor-selection-audit.json)
-- [Chair/Stool taxonomy audit](docs/taxonomy-audit.md)
+- [Chair/Stool taxonomy audit](docs/dataset_card.md#chair-stool-taxonomy)
 
 The historical ESPDet-Pico experiment separately retains its **402-image
 training/validation/test dataset**. The unchanged YOLO study uses development/test
@@ -159,7 +159,7 @@ partitions and introduces no unnecessary training workflow.
 | Historical baseline | Separately trained ESPDet-Pico bottle/cup/box detector |
 
 Checkpoint hashes, class mappings, matching rules and uncertainty methods are
-documented in the [evaluation methodology](docs/evaluation_methodology.md).
+documented in the [evaluation methodology](docs/dataset_card.md#evaluation-methodology).
 Historical ESP training records do not describe YOLO performance.
 
 ## Installation and setup
@@ -251,8 +251,8 @@ Local outputs are written to `outputs/evaluation/yolo11n/`:
 - Ground-truth review sheets, predictions, missed detections and false positives
 - Automatically generated research report
 
-Compact published evidence is in [docs/results/yolo11n](docs/results/yolo11n/)
-and [assets/evaluation](assets/evaluation/). Raw images, downloaded laptop weights
+Compact published evidence is in [docs/results/yolo11n](docs/results/yolo11n)
+and [assets/evaluation](assets/evaluation). Raw images, downloaded laptop weights
 and full local runs remain outside Git.
 
 ## Sample results
@@ -292,7 +292,7 @@ condition breakdowns, attributed failure examples and experimental limitations.
 ## Midterm evidence and limitations
 
 The midterm asks **“Can the System SEE and RECOGNIZE?”** The
-[midterm report](docs/midterm-report.md) maps the working pipeline, datasets,
+[midterm report](docs/documentation-and-paper-guide.md#midterm-evidence) maps the working pipeline, datasets,
 image processing and evaluation artifacts to that requirement.
 
 The historical ESPDet-Pico study preserves its
@@ -309,7 +309,7 @@ Current limitations:
 - Precision depends on the deliberately selected 75% positive / 25% negative image ratio.
 - Metric-depth accuracy, independent vehicle-camera generalization and physical driving remain unmeasured.
 
-The [independent camera protocol](docs/camera-evaluation.md) covers future
+The [independent camera protocol](docs/dataset_card.md#independent-camera-evaluation) covers future
 recordings, reviewed annotations, depth references and acceptable movement actions.
 
 ## Repository guide
@@ -333,12 +333,11 @@ tests/             Python and native firmware checks
 | --- | --- |
 | Main research notebook | [Pretrained YOLO11n evaluation](notebooks/yolo11n_pretrained_evaluation.ipynb) |
 | Dataset sources and licenses | [Dataset card](docs/dataset_card.md) |
-| Methodology and measured results | [Methodology](docs/evaluation_methodology.md) · [Report](docs/evaluation_results.md) |
-| Presentation and paper guidance | [Presentation script](docs/current-presentation-script.md) · [Writing guide](docs/documentation-and-paper-guide.md) |
-| Historical dataset/training paper section | [ESPDet paper section](docs/paper-dataset-and-training.md) |
-| Hardware implementation | [Hardware handoff](docs/hardware-implementation.md) |
+| Methodology and measured results | [Methodology](docs/dataset_card.md#evaluation-methodology) · [Report](docs/evaluation_results.md) |
+| Presentation and paper guidance | [Presentation script](docs/documentation-and-paper-guide.md#presentation-script) · [Writing guide](docs/documentation-and-paper-guide.md) |
+| Historical dataset/training paper section | [ESPDet paper section](docs/model-report.md#historical-methodology) |
+| Hardware implementation | [Hardware handoff](docs/laptop-esp32.md#hardware-implementation) |
 | Verification | [139 Python tests and integration checks](docs/verification.md) |
-| All project materials | [Documentation index](docs/README.md) |
 
 ## References and attribution
 

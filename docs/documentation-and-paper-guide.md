@@ -1,277 +1,123 @@
-# Guide for the documentation and research-paper team
+# Documentation and paper guide
 
-**Current study:** use [the unchanged pretrained YOLO11n report](evaluation_results.md),
-[methodology](evaluation_methodology.md), [dataset card](dataset_card.md),
-[presentation script](current-presentation-script.md) and
-[executed notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb).
-YOLO11n is not fine-tuned. The training procedures and 402-image counts below
-describe only the historical ESPDet-Pico study. Never substitute those scores
-for current YOLO results or claim the group collected the public photographs.
+Use the instructor's paper template and citation style. This guide identifies
+the current evidence; it is not a substitute for the group's own analysis.
 
-Use this guide to write about **VisionDrive** accurately. Follow the instructor's
-required paper template and citation style; adapt the suggested structure below
-to chapter-based or IMRaD formats. This is a writing guide, not a completed paper.
+## Project identity
 
-## 1. Project identity and scope
+**VisionDrive — Computer Vision–Based Obstacle Detection and Avoidance.**
+Confirm the instructor's officially assigned specialization wording.
 
-**Suggested title:** VisionDrive: Camera-Based Obstacle Detection and Movement
-Instruction Using Laptop Vision and an ESP32 Controller
+Group members: Sean Xander Aquino; Blessie Faith Bongalos; Joshua Jericho Barja;
+John Renzzo Montenegro; John Carlo Nas; Divino Al Ricafort.
 
-**Group members:**
+The laptop runs original YOLO11n and metric indoor depth. Three-region logic
+displays movement recommendations. The optional ESP32 receives expiring commands;
+it does not run those neural networks. Physical driving remains unvalidated.
 
-- Sean Xander Aquino
-- Blessie Faith Bongalos
-- Joshua Jericho Barja
-- John Renzzo Montenegro
-- John Carlo Nas
-- Divino Al Ricafort
+## Keep the experiments separate
 
-**Working specialization:** Computer Vision–Based Obstacle Detection and
-Avoidance. Confirm the instructor's exact assigned wording before submission.
+| Study | Evidence and permitted interpretation |
+| --- | --- |
+| Current pretrained YOLO11n | 400 fresh indoor photos, 80 dev / 320 test, 923 person annotations; person-only localization score; no YOLO fine-tuning |
+| Historical ESPDet-Pico | 402 bottle/cup/box images with 280/60/62 training/validation/test; separate training and measured baseline |
+| Hybrid demo | Real object/depth inference and displayed instructions; not an avoidance-accuracy measurement |
 
-The midterm asks **“Can the System SEE and RECOGNIZE?”** Prioritize computer
-vision, image processing, dataset preparation, model development, interpretation,
-and evaluation. Separate later motor integration from the demonstrated vision
-system. No physical board, motor, or autonomous-driving validation is claimed.
+Do not call mAP classification accuracy, attribute ESP results to YOLO, or imply
+that the group photographed public source images. The live detector retains 80
+classes, but the primary numerical score covers person only. Source Stool/Chair
+coverage does not support a reliable COCO-chair score.
 
-The camera represents the vehicle's forward view. A laptop runs YOLO11n object
-detection and an indoor metric-depth model. Nearby surfaces can affect decisions
-without known class names. Three image regions guide FORWARD, LEFT, RIGHT, or
-STOP suggestions. Optional Wi-Fi commands connect to an ESP32 motor receiver.
-**The current neural networks run on the laptop, not on the ESP32.**
+## Evidence to cite
 
-## 2. Keep the two model experiments separate
+- [Dataset, methodology and source licenses](dataset_card.md).
+- [Measured report, graphs and failure examples](evaluation_results.md).
+- [Executed research notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb).
+- [Measured JSON](results/yolo11n/metrics.json), [per-class CSV](results/yolo11n/per_class_metrics.csv) and [source attribution](results/yolo11n/dataset_provenance.csv).
+- [Historical ESP methodology and results](model-report.md).
+- [Application and hardware guide](laptop-esp32.md).
+- [Verification and remaining limitations](verification.md).
+- [Third-party sources and screenshot credits](../THIRD_PARTY_NOTICES.md).
 
-| Item | Original training experiment | Current demonstration |
+## Suggested paper structure
+
+1. **Introduction:** forward-camera obstacle interpretation, intended environment and research question.
+2. **Related work:** cite original model/dataset sources; distinguish upstream methods from group contributions.
+3. **System methodology:** capture, YOLO, depth, floor heuristic, three regions, confirmation and optional ESP32 communication.
+4. **Dataset:** public origins, licenses, source labels, positive/negative sampling, photographer grouping, exclusions and frozen splits.
+5. **Experiment:** unchanged checkpoint hash, original class ID 0, 640 input, confidence/IoU/NMS settings, hardware, software and timing scope.
+6. **Results:** actual P/R/F1, TP/FP/FN, AP50/AP75/AP50–95, intervals, condition breakdowns and attributed examples.
+7. **Discussion:** misses, false positives, sampling bias, viewpoint mismatch, uncertain COCO overlap and one-class scope.
+8. **Conclusion and future work:** independent camera sessions, reference depth, acceptable-action labels and physical trials.
+
+Use the generated [12-part research report](evaluation_results.md) for measured
+values. Keep model-only timing separate from hybrid processing and live driving.
+The evaluation NMS (.70) differs from the live default (.45).
+
+<a id="midterm-evidence"></a>
+
+## Midterm evidence: “Can the System SEE and RECOGNIZE?”
+
+| Requirement | Submission evidence | Qualification |
 | --- | --- | --- |
-| Detector | ESPDet-Pico | YOLO11n |
-| Input | 224×224 | 640×640 YOLO; depth resize configured separately |
-| Recognized classes | Bottle, cup, box | 80 pretrained COCO categories |
-| Additional obstacle cues | None | Metric-depth estimates and nearby surfaces |
-| Project training | Fine-tuning on the prepared group dataset | Upstream pretrained weights; no project-specific fine-tuning of these models |
-| Execution | Desktop baseline; future onboard research | Laptop perception, optional ESP32 commands |
-| Published detector metrics | Three-class baseline available | Exploratory bottle/cup scores available; independent course evaluation pending |
+| Training / validation / testing | Historical ESP 280/60/62 split and training notebook | Public source images; physical scene independence unverified |
+| Dataset appropriate to specialization | Fresh 400-image indoor person study and preserved baseline | No universal-obstacle coverage claim |
+| Computer vision and image processing | Actual YOLO/depth demo, letterboxing, proximity and floor processing | Metric distance accuracy pending references |
+| Model development and evaluation | Historical ESP training; current unchanged YOLO evaluation | The current study does not retrain YOLO |
+| Unseen situations | Fresh test images excluded from prior inspected pilot, frozen before inference | Camera-domain testing and COCO overlap audit remain pending |
+| Working visual system | Demo notebook, video workflow and verification records | No physical car success rate |
 
-The current detector's separate [YOLO11n report](yolo11-evaluation.md) records
-an exploratory two-class evaluation. Use the [evaluation guide](evaluation-guide.md)
-for independent camera tests. Neither the detector scores nor the original
-baseline measure the hybrid system's depth or instruction accuracy.
+Discuss acceptance of the specialization scope with the instructor. Do not
+invent field trials, dataset collection sessions, distance labels or scores.
 
-Do not attribute the baseline's mAP or recall to the hybrid. Do not say the
-402-image group dataset trained YOLO11n or the depth model. The group's work
-includes dataset preparation, baseline fine-tuning, integration, region logic,
-visualization, communication, and evaluation; it did not invent these networks.
+## Figures and citations
 
-## 3. Read these sources before writing
+Use actual evaluation graphs in `assets/evaluation/`, the architecture in the
+README and historical curves only when discussing ESP training. Give each figure
+a caption, model/configuration, dataset scope and applicable photo attribution.
+Retain the provided author/source/license records. Cite Open Images, Ultralytics,
+Depth Anything V2 and Espressif from the linked original sources; do not invent
+bibliography entries or substitute published benchmarks for local measurements.
 
-| Information | Repository source |
-| --- | --- |
-| Read-aloud dataset/training explanation | [Presentation script](dataset-and-training-presentation-script.md) |
-| Formal dataset/training section for the paper | [Paper section](paper-dataset-and-training.md) |
-| Recorded settings and plotted training history | [Configuration](baseline-training-configuration.json), [curves](../assets/baseline-training-curves.png) |
-| Overview, names, installation, running | [README](../README.md) |
-| Midterm requirement mapping | [Midterm report](midterm-report.md) |
-| Architecture, distance rules, Wi-Fi, limitations | [Laptop/ESP32 guide](laptop-esp32.md) |
-| Dataset preparation, split counts, unseen-situation limits | [Dataset card](../data/public/README.md) |
-| Image IDs, hashes, labels, splits, licenses, authors | [Fixed manifest](../data/public/bottle-cup-box-manifest.jsonl) |
-| Original training and measured performance | [Model report](model-report.md), [evaluation JSON](model-evaluation.json) |
-| Training/validation curves data | [Training CSV](training-results.csv) |
-| Actual model screenshots and attribution | [Sample results](sample-results.md) |
-| Software checks and unfinished validation | [Verification report](verification.md) |
-| Current integration-check counts and timing | [Smoke-test JSON](laptop-smoke-results.json) |
-| Baseline model provenance | [Model manifest](../weights/obstacle/model.json) |
-| Hardware status and firmware handoff | [Hardware guide](hardware-implementation.md) |
-| Upstream models and licenses | [Third-party notices](../THIRD_PARTY_NOTICES.md) |
+## Before submission
 
-Inspect the [training notebook](../notebooks/train_bottle_cup_box.ipynb) and
-[current model walkthrough](../notebooks/laptop_esp32_demo.ipynb). Ask the
-implementation team to explain any step you cannot trace to an artifact. Record
-the final paper's software version with `git rev-parse HEAD`.
+Verify that reported values match the CSV/JSON, titles distinguish current and
+historical studies, table sample counts are correct, limitations are visible,
+and every teammate can explain the data source and the person-only score.
 
-## 4. Suggested paper structure
 
-### Title page and abstract
+<a id="presentation-script"></a>
 
-Confirm the title, specialization, group names, course, instructor, institution,
-and submission date. Obtain missing administrative information rather than
-inventing it. Write the abstract last: summarize the problem, camera/laptop/ESP32
-division, vision methods, tests actually performed, results, and main limitation.
-Describe a working prototype without implying a tested self-driving car.
+## Presentation script
 
-### Introduction, problem statement, and objectives
+“VisionDrive treats the camera as the vehicle's forward view. The laptop runs
+original YOLO11n plus a separate metric-depth model. Three-region logic explains
+FORWARD, LEFT, RIGHT or STOP. The optional ESP32 receives expiring commands.
 
-Explain why a forward-camera system needs to interpret blocking obstacles and
-why a few named object classes are insufficient for the broader objective.
-State a testable problem: how can a controlled indoor vision prototype recognize
-objects or nearby surfaces and produce understandable movement instructions?
+We did not train or fine-tune YOLO11n. We evaluated its existing person category
+on 400 real indoor public photos: 80 development and 320 test, containing 923
+source-annotated people. Every image has verified person presence or absence.
+Each photo has a different photographer; all earlier inspected images are excluded.
+We froze the source-only protocol in Git before inference on the fresh test set.
 
-Separate implemented objectives—dataset preparation, baseline training, visual
-interpretation, proximity rules, explainable instructions—from future physical
-avoidance objectives. Identify educational relevance and the intended environment.
+The photos and original annotations came from Open Images. Individual photos
+are credited under CC BY 2.0; annotations are CC BY 4.0. We selected building
+interiors, checked annotation geometry and hashes, and excluded group-of,
+ambiguous person labels and unverified images. We used original COCO ID 0.
 
-### Related work and background
+Our pilot found that Open Images separates Stool from Chair. Scoring source
+Chair alone could mark genuine COCO chair detections on stools as false
+positives, so furniture is outside the primary score. The live detector retains
+all 80 categories, with separate depth cues for unnamed nearby surfaces.
 
-Explain object detection, bounding boxes, confidence, nonmaximum suppression,
-transfer learning, monocular depth, dataset splits, and temporal confirmation
-only as needed to understand the design. Cite original papers, official model
-cards, and documentation. Distinguish upstream architectures from the group's
-implementation contributions. Avoid unsupported claims that a chosen model is
-universally the best or recognizes every object.
+On the fresh 320-image test set, precision was 79.19 percent,
+recall 63.93 percent and F1 70.75 percent at confidence .35 and IoU .50.
+AP at .50 was 72.12 percent; AP over .50 through .95 was 50.94 percent.
+Only one category is scored, so mAP equals person AP. This is object localization,
+not ordinary classification accuracy or collision-avoidance success.
 
-### Methodology and system design
-
-Describe the implemented workflow in order:
-
-1. Capture an unmirrored forward frame or recorded frame, retaining timestamps.
-2. Resize/letterbox for detection; normalize and convert channels for depth.
-3. Run laptop detection and metric-depth estimation.
-4. Restore boxes to image coordinates and estimate object proximity.
-5. Reject likely flat-floor depth pixels and extract connected nearby surfaces.
-6. Exclude distant obstacles from blockage; calculate region occupancy.
-7. Apply deterministic rules and confirm movement across fresh observations.
-8. Display the explanation; optionally send expiring Wi-Fi commands to the ESP32.
-
-Copy actual settings from [the config](../config/default.json). Initial defaults
-are estimated 1.5 m approach distance, estimated 0.45 m emergency center distance,
-three matching processed observations, and a 1,000 ms motor freshness limit. These are
-demo values, not calibrated stopping distances. Expired outputs stop immediately;
-fresh observations within the allowed capture gap can continue confirmation.
-True outages, hazards, invalid input, and changed directions interrupt confirmation
-as applicable. This avoids confusing a display timeout with a new observation.
-
-The display now has a separate, bounded five-second hold for the last visual
-instruction while the next frame is analyzed. It explicitly labels that state;
-input failure or a stalled model still stops the preview. Only the stricter
-motor controller supplies ESP32 commands. Describe these as separate outputs,
-not as a five-second permission for a physical car to move on an old observation.
-
-If describing hardware, explain STOP handshakes, sequence checking, command
-expiry, and the receiver's independent watchdog. Separate native C++ tests from
-an Arduino board build, upload, Wi-Fi range test, or physical motor test.
-
-### Dataset preparation and unseen situations
-
-The original dataset came from Open Images' validation source and was
-repartitioned into new project sets after deduplication. It is not the official
-Open Images training/validation/test benchmark.
-
-| Project set | Images | Bottle instances | Cup instances | Box instances |
-| --- | ---: | ---: | ---: | ---: |
-| Training | 280 | 294 | 136 | 73 |
-| Validation | 60 | 48 | 28 | 15 |
-| Testing | 62 | 43 | 25 | 26 |
-| Total | 402 | 385 | 189 | 114 |
-
-Explain class mapping, YOLO labels, normalized coordinates, exclusion of
-depiction/group annotations, content-hash deduplication, and preserved provenance.
-The approximate image distribution is 70% / 15% / 15%; report exact counts too.
-
-Distinct hashes do not establish different scenes/sessions or independence from
-upstream pretraining. For the next collection, reserve entire sessions and new
-physical object instances for testing. Vary lighting, distance, angle, background,
-occlusion, and arrangements. Include verified empty floors and difficult objects.
-Never put adjacent frames from one clip into different splits. Audit missing
-labels so unlabeled obstacles are not treated as background. Distinguish this
-planned protocol from data collection already completed.
-
-### Baseline training and evaluation
-
-ESPDet fine-tuning rebuilt a three-class head and transferred initialization
-weights. Training completed 55 epochs with early stopping; validation selected
-epoch 40 and confidence 0.35. Explain why checkpoint/threshold selection uses
-validation and test evaluation happens separately. These test photos were later
-used for illustrations; they are not an independent test of the newer hybrid.
-
-### Results and discussion
-
-Use the original detector's measured table with its exact scope:
-
-| Class | Precision | Recall | F1 |
-| --- | ---: | ---: | ---: |
-| Bottle | 0.559 | 0.442 | 0.494 |
-| Cup | 0.760 | 0.760 | 0.760 |
-| Box | 0.222 | 0.154 | 0.182 |
-
-These use confidence 0.35 and IoU ≥ 0.5 with class-aware one-to-one matching on
-62 project test images. Baseline mAP@0.5 is 0.469; mAP@0.5:0.95 is 0.357.
-Explain weak box recall. Neither mAP nor recall is a driving-accuracy percentage.
-
-Present current hybrid screenshots as qualitative integration examples. Its
-recorded check processed 11 observations from a six-second clip, produced
-179 display frames, and ended in STOP / VIDEO ENDED. Median combined inference
-was about 477 ms on the development CPU, excluding capture/rendering. Display
-frames are not inference FPS. This clip showed FORWARD and STOP; controller
-tests cover LEFT/RIGHT, but there is no measured physical-turn success rate.
-
-The current suite has 123 Python tests plus native C++ watchdog/protocol
-assertions. These measure software behavior, not model accuracy. Recheck the
-[verification report](verification.md) before freezing test counts in the paper.
-
-### Limitations, conclusion, and future work
-
-Discuss depth error, floor-fit failures, false stops, thin/transparent obstacles,
-lighting, occlusion, camera mounting, latency, and the difference between image
-regions and real chassis/turning clearance. Include failures, not just successes.
-
-Conclude at the level demonstrated: a visual interpretation/instruction prototype,
-baseline training evidence, and a documented motor-control interface. Future
-work includes new scene-disjoint data, annotation review, calibration, independent
-hybrid evaluation, board integration, and measured physical stopping/turning.
-Onboard ESP32 inference is a separate future experiment.
-
-## 5. Figures and tables to prepare
-
-- Architecture: camera → laptop detection/depth → controller → visualization /
-  Wi-Fi → ESP32 → motor driver.
-- Dataset distribution with image and instance counts.
-- Correctly attributed annotated examples, with split names.
-- Baseline training/validation curves from the CSV, with labeled axes.
-- Baseline precision/recall/F1 and clearly defined mAP.
-- Actual screenshots with predicted labels, estimated distances, instructions,
-  and limitations; use [the supplied attribution](sample-results.md).
-- A new unseen-course results table only after collecting measurements.
-
-Label synthetic examples as synthetic. Never present simulation as model
-inference or a diagram as a screenshot. Retain source credits when moving
-images into slides or the paper.
-
-## 6. Claims checklist
-
-| Supported wording | Wording that overstates the evidence |
-| --- | --- |
-| Laptop vision with an optional ESP32 receiver | The hybrid runs onboard an ESP32 |
-| Unnamed nearby surfaces can influence steering | The system detects everything |
-| Learned distance estimates need calibration | The camera measures exact distance |
-| The baseline achieved the reported test metrics | The hybrid has the baseline's measured accuracy |
-| Tests verify software behavior | 123 tests are 123 successful driving trials |
-| Receiver/watchdog code is native-tested | A physical car is proven to stop safely |
-| Image-hash-disjoint splits were prepared | All test scenes and pretraining sources are independent |
-| Image occupancy guides a suggestion | The turning path is proven collision-free |
-
-## 7. Work allocation and final review
-
-Choose owners within the group; this guide does not assign roles to members.
-Suggested responsibilities are dataset/provenance, methodology/architecture,
-results/evaluation, citations/formatting, and a final technical review. Maintain
-one shared version of tables and figure captions.
-
-Before submission, confirm the official specialization, instructor's format,
-roles, deadlines, slide/video links, final commit, and evaluation sessions actually
-performed. Have implementers verify every numerical table and hardware/model
-claim. Mark unknowns as not measured. Never invent accuracy, timing, electrical
-specifications, author lists, or participant information.
-
-## 8. Primary references to consult
-
-- [Depth Anything V2 paper](https://arxiv.org/abs/2406.09414)
-- [Metric Indoor Small model card](https://huggingface.co/depth-anything/Depth-Anything-V2-Metric-Indoor-Small-hf)
-- [YOLO11 documentation](https://docs.ultralytics.com/models/yolo11/)
-- [Espressif ESP-Detection](https://github.com/espressif/esp-detection)
-- [Open Images downloads and documentation](https://storage.googleapis.com/openimages/web/download_v7.html)
-- [Transformers depth documentation](https://huggingface.co/docs/transformers/model_doc/depth_anything_v2)
-- [Arduino-ESP32 documentation](https://docs.espressif.com/projects/arduino-esp32/en/latest/)
-
-Build citations from actual source metadata using the required style. Do not
-invent a YOLO11 paper, DOI, publication date, or author list. Cite documentation
-as a web source when that is what you used. Record access dates for changing
-documentation and image source/license links for figures.
+The notebook records actual predictions, per-class counts, uncertainty intervals,
+failure examples and synchronized GPU timing. Public photos do not prove
+independence from COCO pretraining or performance on our car's camera.
+Independent camera sessions, reviewed labels, calibrated depth and physical
+trials remain necessary. Existing STOP and watchdog protections remain enabled.”

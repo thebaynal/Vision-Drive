@@ -18,3 +18,20 @@ The dataset source protocol and visual spot checks do not constitute independent
 No ESP32 board, motors or physical course was connected. Live webcam capture was not tested in this run; the existing saved-video workflow was tested. Metric depth accuracy, independent car-camera generalization, end-to-end live-camera FPS, stopping distance and physical collision avoidance remain unmeasured. COCO pretraining overlap is not ruled out.
 
 Historical CPU/baseline measurements are retained in their original model reports and smoke records. They are not substituted for the current GPU experiment.
+
+
+## Documentation cleanup
+
+The 2026-10-17 documentation consolidation reduced tracked Markdown documents
+from 24 to nine. Detailed dataset/method/camera/taxonomy material now lives in
+`dataset_card.md`; hardware instructions in `laptop-esp32.md`; midterm and
+presentation material in `documentation-and-paper-guide.md`. Historical baseline
+evidence remains in `model-report.md` and its original JSON/CSV/notebook files.
+Screenshot attribution is consolidated in the root third-party notices.
+
+Redundant indexes, internal acceptance/cleanup ledgers and duplicated historical
+prose were removed. Their original versions are recoverable at commit `a98b1d6`.
+No model checkpoint, source manifest, measured JSON/CSV, graph, notebook, runtime
+algorithm or firmware safeguard was deleted. Existing research results refer to
+their recorded evaluation commit; documentation-link/export changes do not
+represent a new experiment.
