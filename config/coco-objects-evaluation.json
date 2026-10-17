@@ -1,0 +1,22 @@
+{
+  "protocol": "coco-val2017-bottle-cup-v1",
+  "weights": "weights/laptop/yolo11n.pt",
+  "weights_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "annotation_sha256": "e8c7f7908f1d7278341fae127d0da654f102f11bd7b21d8aeefa635b8c810b6f",
+  "manifest_sha256": "b1b42ecb48043261e3af42a52df4f49251e6c1717866bae3b8be5f522b5f6f97",
+  "class_ids": [39, 41],
+  "coco_category_ids": [44, 47],
+  "image_size": 640,
+  "device": "0",
+  "batch": 1,
+  "half": false,
+  "confidence": 0.35,
+  "matching_iou": 0.5,
+  "nms_iou": 0.7,
+  "ap_confidence_floor": 0.001,
+  "max_detections": 100,
+  "expected_images": 5000,
+  "selection": "All COCO val2017 images, including target-negative images; no outcome-based selection",
+  "scoring": "Official pycocotools COCOeval bbox, area=all, maxDets=100; crowd/ignore handling retained",
+  "scope": "Secondary benchmark reproduction, not an independent unseen vehicle-camera test; no training"
+}
