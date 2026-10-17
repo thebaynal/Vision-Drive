@@ -12,6 +12,10 @@ The protocol evaluates unchanged original YOLO11n. It never trains or fine-tunes
 
 ## Operational P/R/F1
 
+These are research operating-point measurements. Evaluation uses NMS IoU .70;
+the live application's default NMS is .45. Do not describe these scores as an
+end-to-end measurement of the live application's exact configuration.
+
 Confidence≥.35; descending-confidence predictions; same-class one-to-one highest-available-IoU≥.50 matching. Unmatched prediction=FP; unmatched truth=FN. Duplicate predictions cannot both match one truth.
 
 `P=TP/(TP+FP)`, `R=TP/(TP+FN)`, `F1=2TP/(2TP+FP+FN)`. Undefined ratios use zero, with sample counts shown. Micro pools counts. Macro P/R/F1 average corresponding class scores; macro F1 is not the harmonic mean of macro P/R.
