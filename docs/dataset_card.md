@@ -303,3 +303,45 @@ single-label confusion matrix; export action versus acceptability tables instead
 These software checks do not measure camera interpretation or physical success.
 Actual collisions, stopping distance and motor behavior require separate physical
 trials with existing STOP/watchdog protections retained.
+
+## Secondary bottle and cup benchmark
+
+The unchanged YOLO11n detector is additionally evaluated on **all 5,000 COCO
+val2017 images**, scoring bottle (YOLO ID 39, COCO category 44) and cup (YOLO ID
+41, COCO category 47). There is no new training split, fine-tuning, threshold
+search or selection based on predictions. This is an upstream benchmark check;
+COCO validation is not independent unseen mini-car footage.
+
+Sources: [COCO downloads](https://cocodataset.org/#download),
+[COCO paper](https://arxiv.org/abs/1405.0312), and the
+[official COCO evaluation implementation](https://github.com/cocodataset/cocoapi).
+Download `annotations_trainval2017.zip` and `val2017.zip` from COCO into
+`data/raw/coco2017/`. Raw photos remain ignored. The
+[frozen manifest](../data/public/coco-objects-manifest.jsonl) preserves image IDs,
+source URLs, original Flickr pages and per-image license metadata from COCO.
+COCO does not supply photographer names in this JSON; consult the original
+photo pages before redistributing examples. Individual image terms vary.
+
+The manifest and [fixed configuration](../config/coco-objects-evaluation.json)
+were committed in `127dfbe` before the project's first cup/bottle inference in
+this benchmark. Of 5,000 images, 641 contain bottle and/or cup annotations;
+the other 4,359 are negative for both targets. Official annotations include
+1,013 non-crowd bottle instances and 895 non-crowd cup instances, plus 12 bottle
+and 4 cup crowd regions. Crowd regions are retained and handled by the official
+evaluator rather than treated as ordinary boxes.
+
+Use `scripts/evaluate_coco_objects.py --stage prepare` to restore annotations and
+check the manifest, then `--stage evaluate --device 0` for real GPU inference.
+The script checks all image dimensions and archive CRCs, records SHA-256 hashes,
+and verifies the original checkpoint remains unchanged. Input is 640×640
+letterboxed, FP32, batch 1, confidence floor .001, NMS IoU .70 and maximum 100
+detections. These settings are frozen separately from the person study.
+
+AP uses official `pycocotools` bounding-box evaluation with 101 recall points,
+IoUs .50:.05:.95, all object areas and maxDets=100. Precision, recall and F1
+use confidence ≥ .35, IoU ≥ .50, and COCO's matching/ignore rules. Ignored crowd
+matches do not count as true positives or false positives. Other 78 classes are
+unscored in this supplementary benchmark. The native Ultralytics integration
+used in the person study and its maxDets=300 settings differ; report the studies
+separately. This measures object localization, not physical obstacle avoidance
+or instruction accuracy.

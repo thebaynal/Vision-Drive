@@ -1,0 +1,109 @@
+{
+  "protocol": "coco-val2017-bottle-cup-v1",
+  "configuration": {
+    "protocol": "coco-val2017-bottle-cup-v1",
+    "weights": "weights/laptop/yolo11n.pt",
+    "weights_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+    "annotation_sha256": "e8c7f7908f1d7278341fae127d0da654f102f11bd7b21d8aeefa635b8c810b6f",
+    "manifest_sha256": "b1b42ecb48043261e3af42a52df4f49251e6c1717866bae3b8be5f522b5f6f97",
+    "class_ids": [
+      39,
+      41
+    ],
+    "coco_category_ids": [
+      44,
+      47
+    ],
+    "image_size": 640,
+    "device": "0",
+    "batch": 1,
+    "half": false,
+    "confidence": 0.35,
+    "matching_iou": 0.5,
+    "nms_iou": 0.7,
+    "ap_confidence_floor": 0.001,
+    "max_detections": 100,
+    "expected_images": 5000,
+    "selection": "All COCO val2017 images, including target-negative images; no outcome-based selection",
+    "scoring": "Official pycocotools COCOeval bbox, area=all, maxDets=100; crowd/ignore handling retained",
+    "scope": "Secondary benchmark reproduction, not an independent unseen vehicle-camera test; no training"
+  },
+  "completed_at_utc": "2026-10-17T12:47:21.133771+00:00",
+  "images": 5000,
+  "manifest_sha256": "b1b42ecb48043261e3af42a52df4f49251e6c1717866bae3b8be5f522b5f6f97",
+  "weights_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "weights_unchanged": true,
+  "image_archive_sha256": "4f7e2ccb2866ec5041993c9cf2a952bbed69647b115d0f74da7ce8f4bef82f05",
+  "image_checksums_sha256": "d6e628c2a0de67467e82c4857c5354ca018ef77304f6f3fff3de03ddde8746db",
+  "predictions_sha256": "ba754560b8894ea80c6d64774d9cb3cb3d65e2ace08de5c1ed43e6bb9c9a8195",
+  "git_commit": "127dfbec9e24c6680143a20d13817017bd24cd37",
+  "working_tree_dirty": true,
+  "source_sha256": "fc821d07c5501ccb7f95502d937de860ff55f0c1512e39457943fa45517507c8",
+  "environment": {
+    "python": "3.13.5",
+    "os": "Windows-11-10.0.26300-SP0",
+    "cpu": "AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",
+    "logical_cpus": 12,
+    "packages": {
+      "torch": "2.11.0+cu128",
+      "torchvision": "0.26.0+cu128",
+      "ultralytics": "8.3.112",
+      "numpy": "2.2.6",
+      "pandas": "3.0.3",
+      "matplotlib": "3.10.9",
+      "opencv-python": "4.12.0.88",
+      "transformers": "4.57.6",
+      "nbformat": "5.11.1",
+      "nbclient": "0.11.0"
+    },
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+    "device": "0",
+    "image_size": 640,
+    "batch": 1,
+    "half": false
+  },
+  "evaluator_version": "2.0.11",
+  "per_class": {
+    "bottle": {
+      "yolo_id": 39,
+      "coco_category_id": 44,
+      "tp": 327,
+      "fp": 93,
+      "fn": 686,
+      "precision": 0.7785714285714286,
+      "recall": 0.3228035538005923,
+      "f1": 0.45638520586182835,
+      "ap50": 0.4832051534754068,
+      "ap75": 0.35726819447110486,
+      "ap50_95": 0.3206092468483724,
+      "ground_truth": 1013,
+      "crowd_regions": 12,
+      "positive_images": 379
+    },
+    "cup": {
+      "yolo_id": 41,
+      "coco_category_id": 47,
+      "tp": 354,
+      "fp": 145,
+      "fn": 541,
+      "precision": 0.7094188376753507,
+      "recall": 0.39553072625698327,
+      "f1": 0.5078909612625538,
+      "ap50": 0.49481553609826223,
+      "ap75": 0.38435854052462093,
+      "ap50_95": 0.35607369481506046,
+      "ground_truth": 895,
+      "crowd_regions": 4,
+      "positive_images": 390
+    }
+  },
+  "limitations": [
+    "COCO validation is a known upstream benchmark, not an independent unseen dataset.",
+    "Only bottle and cup are scored; other 78 classes remain available but are unscored here.",
+    "Photo detection does not measure depth, movement instructions or collision avoidance.",
+    "COCO crowd/ignore rules and maxDets=100 apply; AP uses official 101-point COCO interpolation.",
+    "NMS=0.70 differs from the live application default=0.45; confidence was not tuned."
+  ]
+}

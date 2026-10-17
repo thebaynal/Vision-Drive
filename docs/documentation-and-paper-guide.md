@@ -20,12 +20,13 @@ it does not run those neural networks. Physical driving remains unvalidated.
 | Study | Evidence and permitted interpretation |
 | --- | --- |
 | Current pretrained YOLO11n | 400 fresh indoor photos, 80 dev / 320 test, 923 person annotations; person-only localization score; no YOLO fine-tuning |
+| Supplementary bottle/cup benchmark | All 5,000 COCO val2017 images, 1,013 bottle and 895 cup non-crowd instances; official COCO evaluation; known upstream validation data |
 | Historical ESPDet-Pico | 402 bottle/cup/box images with 280/60/62 training/validation/test; separate training and measured baseline |
 | Hybrid demo | Real object/depth inference and displayed instructions; not an avoidance-accuracy measurement |
 
 Do not call mAP classification accuracy, attribute ESP results to YOLO, or imply
 that the group photographed public source images. The live detector retains 80
-classes, but the primary numerical score covers person only. Source Stool/Chair
+classes. The primary fresh indoor score covers person only; a separate COCO validation benchmark measures bottle and cup. Source Stool/Chair
 coverage does not support a reliable COCO-chair score.
 
 ## Evidence to cite
@@ -122,3 +123,25 @@ failure examples and synchronized GPU timing. Public photos do not prove
 independence from COCO pretraining or performance on our car's camera.
 Independent camera sessions, reviewed labels, calibrated depth and physical
 trials remain necessary. Existing STOP and watchdog protections remain enabled.”
+
+## Paper wording for the bottle/cup benchmark
+
+In addition to the fresh indoor person study, we evaluated the unchanged
+COCO-pretrained YOLO11n on all 5,000 COCO val2017 images for bottle and cup.
+The official human annotations contain 1,013 non-crowd bottle instances and
+895 non-crowd cup instances. COCO's official evaluator handles crowd regions;
+all images without these objects remain included to measure false positives.
+The manifest, original class mappings and scoring thresholds were frozen before
+inference. No training, fine-tuning or confidence optimization was performed.
+
+| Object | Ground-truth instances | Precision | Recall | F1 | AP50 | AP75 | AP50–95 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Bottle | 1,013 | 77.86% | 32.28% | 45.64% | 48.32% | 35.73% | 32.06% |
+| Cup | 895 | 70.94% | 39.55% | 50.79% | 49.48% | 38.44% | 35.61% |
+
+These are measured localization results on a known upstream benchmark. They
+must not be described as independent unseen-data accuracy, classification
+accuracy, or physical obstacle-avoidance success. Cite Jocher and Qiu (2024)
+for YOLO11n, Lin et al. (2014) for COCO, and the project's
+[measured report](evaluation_results.md#bottle-and-cup-detection-additional-measured-benchmark)
+for the values. The executed notebook's Section 13 reproduces this experiment.

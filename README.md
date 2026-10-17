@@ -155,7 +155,8 @@ partitions and introduces no unnecessary training workflow.
 | Object detector | Original pretrained YOLO11n; no project fine-tuning |
 | Depth estimator | Depth Anything V2 Metric Indoor Small |
 | Navigation logic | Three-region proximity analysis and stateful confirmation |
-| Primary evaluation | Person only, preserving the original 80-class model |
+| Primary evaluation | Fresh indoor person study, preserving the original 80-class model |
+| Supplementary evaluation | Bottle and cup on all 5,000 COCO validation images |
 | Historical baseline | Separately trained ESPDet-Pico bottle/cup/box detector |
 
 Checkpoint hashes, class mappings, matching rules and uncertainty methods are
@@ -182,7 +183,7 @@ without fine-tuning. Credit: **Jocher and Qiu (2024)**;
 Source: [Ultralytics YOLO11 detection benchmark](https://docs.ultralytics.com/models/yolo11/#performance-metrics).
 These are upstream results, not measurements made by our group. The cited
 summary does not provide YOLO11n precision, recall, F1, AP50 or AP75; our
-[local results](#sample-results) report those for **person only**. Local
+[local results](#sample-results) report those for the **person study** and the separate **bottle/cup benchmark**. Local
 person AP and upstream 80-class mAP measure different tasks. ONNX/TensorRT
 timings also use different runtimes and hardware from our PyTorch laptop run.
 
@@ -384,6 +385,23 @@ Acquisition restores the frozen manifest, verifies image hashes and reuses valid
 cached data. No API key is required for this cohort. For CPU evaluation, use
 `.venv-cpu\Scripts\python` and `--device cpu`.
 
+### Reproduce the bottle/cup benchmark
+
+Download `annotations_trainval2017.zip` and `val2017.zip` from
+[COCO's official download page](https://cocodataset.org/#download) into
+`data/raw/coco2017/`. Both evaluation requirements files include `pycocotools`.
+With the GPU environment installed, run:
+
+```powershell
+.venv-evaluation\Scripts\python scripts/evaluate_coco_objects.py --stage prepare
+.venv-evaluation\Scripts\python scripts/evaluate_coco_objects.py --stage evaluate --device 0
+```
+
+For CPU use the CPU environment and `--device cpu`. The executed notebook's
+**Section 13** runs this experiment and displays the measured table and chart.
+Raw predictions stay in `outputs/evaluation/coco-objects/`; published metrics and
+hashes are in `docs/results/yolo11n-coco-objects/`.
+
 ### Run the notebook
 
 ```powershell
@@ -393,12 +411,12 @@ cached data. No API key is required for this cohort. For CPU evaluation, use
 
 Select **Python (VisionDrive evaluation)** and choose **Run All**.
 For a CPU notebook run, register/select the CPU environment and set
-`DEVICE='cpu'` in Section 2.
+`DEVICE='cpu'` in Section 2 and `objects_device='cpu'` in Section 13.
 
-The notebook contains **12 labeled sections** covering the objective, environment,
+The notebook contains **13 labeled sections** covering the objective, environment,
 acquisition, exploration, checkpoint verification, native evaluation, metrics,
 class results, diagnostic plots, benchmarking, error analysis and interpretation.
-All 11 code cells were executed successfully for the published study.
+All 12 code cells have saved successful executions, including the supplementary bottle/cup benchmark in Section 13.
 **No YOLO training or fine-tuning occurs.**
 
 ### Locate the outputs
@@ -450,6 +468,44 @@ These measurements exclude live camera capture, GUI display and motor execution.
 Read the [full report](docs/evaluation_results.md) for confidence intervals,
 condition breakdowns, attributed failure examples and experimental limitations.
 
+### Bottle and cup detection: additional measured benchmark
+
+We also ran the **same unchanged YOLO11n on all 5,000 COCO val2017 images**
+using the RTX 3050. This includes 641 images with bottle and/or cup annotations
+and 4,359 images containing neither, so false alarms are included. There was
+**no training or fine-tuning**. The original 80-class detector is preserved.
+
+| Object | Ground-truth instances | Precision | Recall | F1 | AP50 | AP75 | AP50–95 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Bottle | 1,013 | 77.86% | 32.28% | 45.64% | 48.32% | 35.73% | 32.06% |
+| Cup | 895 | 70.94% | 39.55% | 50.79% | 49.48% | 38.44% | 35.61% |
+
+At confidence .35, the model misses **686 of 1,013 bottles** and **541 of 895
+cups**. The recall values show that recognizing these classes does not mean
+reliably detecting every object in view.
+
+P/R/F1: confidence ≥ .35 and matching IoU ≥ .50. AP: official `pycocotools`
+COCO bounding-box evaluation, IoUs .50:.05:.95, 101 recall points, all areas,
+maxDets=100; 640×640 letterboxing, FP32, NMS .70 and AP confidence floor .001.
+COCO crowd/ignore handling is retained. The instance counts exclude 12 bottle
+and 4 cup crowd regions; these regions are handled by the evaluator.
+
+**This is a known upstream COCO validation benchmark, not an independent unseen
+car-camera test.** It is separate from the person-only Open Images study and
+from Ultralytics' published 80-class mAP. These detection metrics do not measure
+movement-instruction correctness or physical avoidance.
+
+The configuration and complete manifest were frozen in
+[`127dfbe`](https://github.com/thebaynal/Vision-Drive/commit/127dfbe) before this
+experiment's inference. See the [measured JSON](docs/results/yolo11n-coco-objects/metrics.json),
+[per-class CSV](docs/results/yolo11n-coco-objects/per_class_metrics.csv),
+[image hashes](docs/results/yolo11n-coco-objects/image_checksums.csv),
+[source/individual license manifest](data/public/coco-objects-manifest.jsonl), and
+[methodology](docs/dataset_card.md#secondary-bottle-and-cup-benchmark).
+Source: [COCO](https://cocodataset.org/#download), with its original human annotations.
+
+![Measured bottle and cup detection results](assets/evaluation/coco-objects-performance.png)
+
 ## Midterm evidence and limitations
 
 The midterm asks **“Can the System SEE and RECOGNIZE?”** The
@@ -464,7 +520,7 @@ partitions are separate from the unchanged pretrained YOLO experiment.
 
 Current limitations:
 
-- The primary score covers person only; furniture and the other 79 classes are unscored.
+- The fresh indoor study scores person only; the separate COCO benchmark scores bottle and cup. The remaining 77 classes are unscored across these studies.
 - Public interior photographs differ from a camera mounted on a mini car.
 - Hash and photographer checks do not prove physical-scene independence or absence from COCO pretraining.
 - Precision depends on the deliberately selected 75% positive / 25% negative image ratio.
@@ -498,7 +554,7 @@ tests/             Python and native firmware checks
 | Presentation and paper guidance | [Presentation script](docs/documentation-and-paper-guide.md#presentation-script) · [Writing guide](docs/documentation-and-paper-guide.md) |
 | Historical dataset/training paper section | [ESPDet paper section](docs/model-report.md#historical-methodology) |
 | Hardware implementation | [Hardware handoff](docs/laptop-esp32.md#hardware-implementation) |
-| Verification | [141 Python tests and integration checks](docs/verification.md) |
+| Verification | [143 Python tests and integration checks](docs/verification.md) |
 
 ## References and attribution
 

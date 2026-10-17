@@ -84,3 +84,45 @@ Photo credits and original pages are recorded in [image-attribution.json](../ass
 ## Separate hybrid processing benchmark
 
 Over 20 images, serial decode + YOLO11n + depth + controller + render averaged 109.34 ms (9.15 FPS). This excludes camera, async scheduling, GUI and motors. It is separate from person-only YOLO timing.
+
+## Bottle and cup detection: additional measured benchmark
+
+We also ran the **same unchanged YOLO11n on all 5,000 COCO val2017 images**
+using the RTX 3050. This includes 641 images with bottle and/or cup annotations
+and 4,359 images containing neither, so false alarms are included. There was
+**no training or fine-tuning**. The original 80-class detector is preserved.
+
+| Object | Ground-truth instances | Precision | Recall | F1 | AP50 | AP75 | AP50–95 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Bottle | 1,013 | 77.86% | 32.28% | 45.64% | 48.32% | 35.73% | 32.06% |
+| Cup | 895 | 70.94% | 39.55% | 50.79% | 49.48% | 38.44% | 35.61% |
+
+P/R/F1: confidence ≥ .35 and matching IoU ≥ .50. AP: official `pycocotools`
+COCO bounding-box evaluation, IoUs .50:.05:.95, 101 recall points, all areas,
+maxDets=100; 640×640 letterboxing, FP32, NMS .70 and AP confidence floor .001.
+COCO crowd/ignore handling is retained. The instance counts exclude 12 bottle
+and 4 cup crowd regions; these regions are handled by the evaluator.
+
+**This is a known upstream COCO validation benchmark, not an independent unseen
+car-camera test.** It is separate from the person-only Open Images study and
+from Ultralytics' published 80-class mAP. These detection metrics do not measure
+movement-instruction correctness or physical avoidance.
+
+The configuration and complete manifest were frozen in
+[`127dfbe`](https://github.com/thebaynal/Vision-Drive/commit/127dfbe) before this
+experiment's inference. See the [measured JSON](results/yolo11n-coco-objects/metrics.json),
+[per-class CSV](results/yolo11n-coco-objects/per_class_metrics.csv),
+[image hashes](results/yolo11n-coco-objects/image_checksums.csv),
+[source/individual license manifest](../data/public/coco-objects-manifest.jsonl), and
+[methodology](dataset_card.md#secondary-bottle-and-cup-benchmark).
+Source: [COCO](https://cocodataset.org/#download), with its original human annotations.
+
+![Measured bottle and cup detection results](../assets/evaluation/coco-objects-performance.png)
+
+
+Fixed-point detection counts:
+
+| Class | TP | FP | FN |
+| --- | ---: | ---: | ---: |
+| bottle | 327 | 93 | 686 |
+| cup | 354 | 145 | 541 |

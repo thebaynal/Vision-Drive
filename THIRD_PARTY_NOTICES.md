@@ -16,6 +16,7 @@ This repository contains documentation, application/tooling code, tests, artwork
 | Arduino-ESP32 | Wi-Fi motor receiver firmware platform | [Repository and license](https://github.com/espressif/arduino-esp32) |
 | OpenCV | Image capture, video, and presentation overlay | [Repository and license](https://github.com/opencv/opencv) |
 | Open Images | Initial training and evaluation image sources | [Download and attribution information](https://storage.googleapis.com/openimages/web/download_v7.html) |
+| COCO / pycocotools | Secondary bottle/cup benchmark images, original annotations and official evaluator | [COCO downloads and terms](https://cocodataset.org/#download), [COCO API source/license](https://github.com/cocodataset/cocoapi), [per-image license metadata](data/public/coco-objects-manifest.jsonl) |
 | Shields.io | Remote README status badges | [Service](https://shields.io/) |
 
 ESP-Detection identifies its upstream license as AGPL-3.0. Retain its applicable notices and review the actual pinned dependencies and licenses when introducing code or distributing a trained application. Do not label third-party code or weights as an original VisionDrive model architecture.

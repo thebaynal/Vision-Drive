@@ -2,7 +2,7 @@
 
 Recorded on **2026-10-17** for the fresh pretrained evaluation.
 
-- **141 Python tests passed** on Windows/Python 3.13.5 after the pretrained citation/statistics update. Coverage includes the existing camera/video pipeline, region logic, depth processing, stabilization, stale-input STOP, ESP32 UDP expiry/acknowledgement safeguards, dataset validation, mappings, matching, bootstrap grouping, independent-camera import and COCO image/instance/crowd counting.
+- **143 Python tests passed** on Windows/Python 3.13.5 after the supplementary bottle/cup evaluation update. Coverage includes the existing camera/video pipeline, region logic, depth processing, stabilization, stale-input STOP, ESP32 UDP expiry/acknowledgement safeguards, dataset validation, mappings, matching, bootstrap grouping, independent-camera import and COCO image/instance/crowd counting.
 - COCO class counts were computed from the official 2017 annotation ZIP: 118,287 training images and 5,000 validation images. All 80 category names match the project's original YOLO class mapping. The exported CSV separates distinct images, non-crowd instances and crowd regions; the statistics JSON preserves source SHA-256 hashes. README and notebook citation/provenance links were checked; notebook code and saved inference outputs were unchanged.
 - Native firmware command-state tests compiled with MinGW g++ 8.1.0, C++11, `-Wall -Wextra -Werror -static`, and passed. MinGW's bin directory was added to PATH for its runtime. UDP loopback tests ran outside sandbox network isolation.
 - The full **12-section notebook executed all 11 code cells successfully** in 100.9 seconds using RTX 3050 CUDA inference. It made genuine predictions and generated the measured report, tables and plots. Only textual repository-path prefixes in saved outputs were redacted as `<repo>` for portability.
@@ -36,3 +36,19 @@ No model checkpoint, source manifest, measured JSON/CSV, graph, notebook, runtim
 algorithm or firmware safeguard was deleted. Existing research results refer to
 their recorded evaluation commit; documentation-link/export changes do not
 represent a new experiment.
+
+## Bottle/cup benchmark verification
+
+- All 5,000 official COCO validation images decoded at the annotated dimensions;
+  ZIP CRC verification and per-image SHA-256 checks completed.
+- Manifest/configuration were committed in `127dfbe` before this experiment's
+  inference. The original YOLO11n hash was unchanged. No training ran.
+- Actual RTX 3050 FP32 inference completed for every image. Official pycocotools
+  2.0.11 scored bottle and cup, retaining crowd/ignore handling. Fixed-count
+  fixtures verify ignored crowd matches and repeated area bins are excluded.
+- The new Section 13 executed its inference/scoring cell successfully. The main
+  notebook now contains 13 sections and 12 executed code cells. Earlier person
+  study code and outputs are preserved. The saved table and chart are generated
+  from genuine predictions; they are not published upstream values.
+- This is known COCO validation data, not an independent vehicle-camera trial.
+  No physical movement, calibrated depth or instruction accuracy is established.
