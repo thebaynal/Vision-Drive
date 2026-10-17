@@ -28,11 +28,16 @@ def main():
         image_id = row['image_id']
         if len(image_id) != 16 or any(c not in '0123456789abcdef' for c in image_id):
             raise ValueError('Invalid image ID in manifest')
-        path = images/(image_id+'.jpg')
+        source_split = row.get('source', {}).get('original_split', 'validation')
+        if source_split not in {'train', 'validation', 'test'}:
+            raise ValueError(f'Invalid source split: {source_split}')
+        source_images = images if source_split == 'validation' else ROOT/'data/raw'/f'openimages-{source_split}-supplement'/'images'
+        source_images.mkdir(parents=True, exist_ok=True)
+        path = source_images/(image_id+'.jpg')
         if not path.exists():
             if not args.download:
                 raise ValueError('Source images are missing; use --download to allow downloads')
-            url = f'https://open-images-dataset.s3.amazonaws.com/validation/{image_id}.jpg'
+            url = f'https://open-images-dataset.s3.amazonaws.com/{source_split}/{image_id}.jpg'
             with urllib.request.urlopen(url, timeout=60) as response:
                 payload = response.read()
             if hashlib.sha256(payload).hexdigest() != row['sha256']:
@@ -40,7 +45,7 @@ def main():
             path.write_bytes(payload)
         if hashlib.sha256(path.read_bytes()).hexdigest() != row['sha256']:
             raise ValueError(f'Cached image hash differs: {image_id}')
-        return {**row, 'image': 'images/'+image_id+'.jpg'}
+        return {**row, 'image': path.resolve().as_posix()}
 
     with ThreadPoolExecutor(max_workers=8) as pool:
         restored = list(pool.map(restore, records))

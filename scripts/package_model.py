@@ -87,7 +87,7 @@ def main():
     lines += ["", "Cups performed best in this run. Bottles still have substantial misses. Box recall is low and requires more varied, representative data. No test-set-driven retraining or threshold changes were used for this published result.", "",
               f"Warm single-image model.predict calls over the evaluation images had median {evaluation['median_inference_ms']:.1f} ms on this development CPU. This excludes cold start, camera buffering, and rendering; it is not end-to-end FPS or an ESP32 benchmark.", "",
               "## Reproduce and extend", "",
-              "Use [the notebook](../notebooks/train_bottle_cup_box.ipynb) or [the run guide](running-the-demo.md). [Machine-readable evaluation](model-evaluation.json), [training history](training-results.csv), and [model provenance](../weights/obstacle/model.json) are included. Raw images, full run checkpoints, and local environments stay outside Git.", "",
+              "Use [the notebook](../notebooks/train_bottle_cup_box.ipynb) or [the run guide](laptop-esp32.md). [Machine-readable evaluation](model-evaluation.json), [training history](training-results.csv), and [model provenance](../weights/obstacle/model.json) are included. Raw images, full run checkpoints, and local environments stay outside Git.", "",
               "Next steps are more box images and camera-height-specific recordings, an independent course test, and separate INT8/ESP32 evaluation. No physical car behavior is validated here."]
     (ROOT / "docs/model-report.md").write_text("\n".join(lines)+"\n", encoding="utf-8")
     print(f"Packaged {output / 'best.pt'} ({source.stat().st_size:,} bytes), report, history, and model license.")

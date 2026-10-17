@@ -1,0 +1,96 @@
+{
+  "recorded_utc": "2026-10-17T06:15:50.616370+00:00",
+  "model": "YOLO11n COCO pretrained; no project fine-tuning",
+  "weights_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "dataset_manifest_sha256": "ae542b0556489f9b44b97c28183fc7bc32314827cc64c2d0ffe9380353e2405d",
+  "split": "test",
+  "image_count": 62,
+  "annotated_instances": {
+    "bottle": 43,
+    "box": 26,
+    "cup": 25
+  },
+  "evaluated_classes": [
+    "bottle",
+    "cup"
+  ],
+  "excluded_classes": {
+    "box": "No COCO box class"
+  },
+  "configuration": {
+    "image_size": 640,
+    "device": "cpu",
+    "cpu_threads": 2,
+    "runtime_confidence": 0.35,
+    "nms_iou": 0.45,
+    "matching_iou": 0.5,
+    "ap_confidence_floor": 0.001,
+    "max_detections": 300
+  },
+  "fixed_threshold": {
+    "per_class": {
+      "bottle": {
+        "tp": 19,
+        "fp": 8,
+        "fn": 24,
+        "precision": 0.7037037037037037,
+        "recall": 0.4418604651162791,
+        "f1": 0.5428571428571428
+      },
+      "cup": {
+        "tp": 19,
+        "fp": 10,
+        "fn": 6,
+        "precision": 0.6551724137931034,
+        "recall": 0.76,
+        "f1": 0.7037037037037037
+      }
+    },
+    "macro_f1": 0.6232804232804232,
+    "micro": {
+      "tp": 38,
+      "fp": 18,
+      "fn": 30,
+      "precision": 0.6785714285714286,
+      "recall": 0.5588235294117647,
+      "f1": 0.6129032258064516
+    }
+  },
+  "average_precision": {
+    "map50": 0.6505415966488679,
+    "map50_95": 0.5385890869571222,
+    "per_class": {
+      "bottle": {
+        "ap50": 0.4974612682745375,
+        "ap50_95": 0.3677458176563335
+      },
+      "cup": {
+        "ap50": 0.8036219250231984,
+        "ap50_95": 0.7094323562579109
+      }
+    }
+  },
+  "warm_detector_latency_ms": {
+    "median": 90.34830000018701,
+    "mean": 94.0257612902872,
+    "samples": 62
+  },
+  "environment": {
+    "python": "3.13.5",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "processor": "AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",
+    "torch": "2.12.0+cpu",
+    "ultralytics": "8.3.112"
+  },
+  "limitations": [
+    "Only bottle and cup annotations are scored; this is not an 80-class or all-obstacle benchmark.",
+    "Box annotations are excluded, not silently mapped to another COCO category.",
+    "Open Images labels may be incomplete; apparent false positives need manual audit.",
+    "No overlap audit with upstream model pretraining data; not proven unseen to pretrained YOLO.",
+    "The test split was previously used for integration examples; treat this as exploratory.",
+    "Fixed runtime confidence was not selected on this test split; changing it requires validation data.",
+    "AP uses the native Ultralytics validator, whose matching differs from the fixed-threshold scorer.",
+    "No depth, region blockage, instruction accuracy, physical avoidance, or end-to-end latency measured.",
+    "Timing includes the warm CPU detector adapter, excluding image decoding, depth, UI, camera, and Wi-Fi."
+  ]
+}

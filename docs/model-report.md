@@ -44,11 +44,11 @@ Warm single-image model.predict calls over the evaluation images had median 25.9
 
 ## Reproduce and extend
 
-For a complete explanation, use the [presentation script](dataset-and-training-presentation-script.md)
-or [formal paper section](paper-dataset-and-training.md). The
-[recorded training configuration](baseline-training-configuration.json) and
+This is the earlier ESPDet experiment. The current presentation and paper
+describe the newer YOLO11 fine-tuning run. For ESPDet, use its notebook below;
+the [recorded training configuration](baseline-training-configuration.json) and
 [training curves](../assets/baseline-training-curves.png) support the methodology.
 
-Use [the notebook](../notebooks/train_bottle_cup_box.ipynb) or [the run guide](running-the-demo.md). [Machine-readable evaluation](model-evaluation.json), [training history](training-results.csv), and [model provenance](../weights/obstacle/model.json) are included. Raw images, full run checkpoints, and local environments stay outside Git.
+Use [the notebook](../notebooks/train_bottle_cup_box.ipynb) or [the run guide](laptop-esp32.md). [Machine-readable evaluation](model-evaluation.json), [training history](training-results.csv), and [model provenance](../weights/obstacle/model.json) are included. Raw images, full run checkpoints, and local environments stay outside Git.
 
 Next steps are more box images and camera-height-specific recordings, an independent course test, and separate INT8/ESP32 evaluation. No physical car behavior is validated here.

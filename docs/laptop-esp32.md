@@ -46,17 +46,22 @@ The PC requires the PyTorch runtime; the ESP32 requires only its receiver firmwa
 # Explicit alternative backends:
 .\run_logic_demo.cmd --detector coco  # Known categories, image proximity only
 .\run_logic_demo.cmd --detector esp   # Original tiny bottle/cup/box model
+# Group-fine-tuned YOLO11n, with category-independent depth cues:
+.\run_logic_demo.cmd --weights weights/laptop/yolo11n-bottle-cup-box.pt --config config/yolo-finetuned.json
 ```
 
 Use [the demo notebook](../notebooks/laptop_esp32_demo.ipynb) to inspect model
 setup, depth, detections, and instructions in stages. The original
 [training notebook](../notebooks/train_bottle_cup_box.ipynb) remains available
-for the earlier three-class ESPDet experiment. This larger demo uses pretrained
-weights; it does not retrain on three objects and call that universal detection.
+for the earlier ESPDet experiment. The new [YOLO11 training notebook](../notebooks/train_yolo11.ipynb)
+and [fine-tuning report](yolo11-finetuning-report.md) cover the three-class YOLO
+alternative. That model names bottle/cup/box only; the original default names
+80 COCO categories. Neither model provides universal detection.
 
 ## What makes an obstacle?
 
-YOLO11n recognizes its 80 COCO categories. **Recognized names are optional for
+Default YOLO11n recognizes 80 COCO categories; the fine-tuned alternative names
+bottles, cups, and boxes. **Recognized names are optional for
 obstacle reasoning:** a separate indoor metric-depth model estimates distance
 for image surfaces. Nearby connected surfaces in the decision area can be
 labeled `depth obstacle` or `near surface` even if YOLO cannot name them. This

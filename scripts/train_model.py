@@ -26,7 +26,7 @@ def main():
     cli.add_argument("--evaluate", action="store_true", help="Evaluate --weights on the test split without training")
     args = cli.parse_args()
     if not args.data.is_file() or not args.weights.is_file():
-        cli.error("Data YAML and trusted pretrained checkpoint must exist. See docs/running-the-demo.md.")
+        cli.error("Data YAML and trusted pretrained checkpoint must exist. See docs/laptop-esp32.md.")
     if args.epochs < 1 or args.batch < 1:
         cli.error("Epochs and batch must be positive")
     YOLO = register_esp(args.esp_repo, cpu_threads=args.cpu_threads if args.device == "cpu" else None)

@@ -1,8 +1,48 @@
-# VisionDrive baseline dataset card
+# VisionDrive dataset card
+
+## Current YOLO11 fine-tuning dataset: version 2
+
+The current three-class fine-tuning dataset contains **435 images and 730
+annotated instances**. It extends the original dataset with **33 additional box
+training photos**, preserving every existing validation/test assignment.
+
+| Split | Total images | Bottle images | Cup images | Box images |
+| --- | ---: | ---: | ---: | ---: |
+| Training | 313 | **125** | **108** | **80** |
+| Validation | 60 | 27 | 23 | 10 |
+| Testing | 62 | 27 | 24 | 11 |
+| Total | 435 | 179 | 155 | 101 |
+
+Counts above are **unique images containing a class**, not bounding boxes or
+augmented copies. Each class exceeds 60 training images. Training has 294
+bottle, 136 cup, and 115 box instances; validation has 48/28/15 and test has
+43/25/26 instances respectively.
+
+The original photos came from the official Open Images validation pool. The
+additional box photos came from its official test pool and are assigned to
+**project training only**. These are new project partitions, not official Open
+Images benchmark splits. Source photos and annotations were gathered by Open
+Images; the group prepared and converted the subset. All 435 image records
+retain their authors, original URLs, SHA-256 hashes, and CC BY 2.0 license links.
+
+Use the [version 2 manifest](yolo-bottle-cup-box-v2-manifest.jsonl) and
+[preparation audit](yolo-bottle-cup-box-v2-preparation.json). Restore its exact
+photos and labels on another computer with:
+
+```powershell
+.venv-inference\Scripts\python scripts/restore_dataset.py --manifest data/public/yolo-bottle-cup-box-v2-manifest.jsonl --output datasets/yolo-bottle-cup-box-v2 --download
+```
+
+The dataset and raw source downloads remain outside Git. The download below is
+the **original 402-image version**, not the expanded version 2. The manifest
+restore command above supplies the expanded dataset. See the
+[fine-tuned YOLO11 report](../../docs/yolo11-finetuning-report.md).
+
+## Original baseline dataset: version 1
 
 The group prepared **402 images / 688 annotated instances** for the original
-bottle/cup/box ESPDet experiment. The current YOLO-plus-depth laptop demo uses
-upstream pretrained models; this card does not describe their full training data.
+bottle/cup/box ESPDet experiment. The unchanged 80-class YOLO and depth branches
+also retain their upstream pretraining data; this card describes project data.
 
 ## Preview and download
 

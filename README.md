@@ -8,7 +8,7 @@
 ![Vision: YOLO and depth](https://img.shields.io/badge/vision-YOLO11n_%2B_depth-0f766e)
 ![Controller: ESP32](https://img.shields.io/badge/motor_controller-ESP32-dc2626)
 
-[Run the demo](docs/laptop-esp32.md) · [Demo notebook](notebooks/laptop_esp32_demo.ipynb) · [ESP32 receiver](firmware/visiondrive_receiver/visiondrive_receiver.ino)
+[Full training and results notebook](notebooks/train_yolo11.ipynb) · [Run the demo](docs/laptop-esp32.md) · [Project materials](docs/README.md)
 
 </div>
 
@@ -38,8 +38,8 @@ specialization title. Replace this wording if the officially assigned title diff
 
 The midterm asks: **“Can the System SEE and RECOGNIZE?”** VisionDrive answers
 this with camera capture, image preprocessing, an annotated dataset with separate
-training/validation/testing sets, a trained baseline detector, and a working
-pretrained object-plus-depth interpretation demo. The movement overlay explains
+training/validation/testing sets, a fine-tuned YOLO11 detector, and a working
+object-plus-depth interpretation demo. The movement overlay explains
 how recognized objects and nearby surfaces influence a proposed vehicle action.
 The motor receiver supports later integration; a physical car is not required
 to demonstrate the midterm vision pipeline.
@@ -109,6 +109,20 @@ after a STOP handshake and stops when commands expire. The receiver defaults
 to **motor output disabled** until actual board/driver pins are configured.
 See the [complete setup and calibration guide](docs/laptop-esp32.md).
 
+To demonstrate the **group-fine-tuned bottle/cup/box YOLO11 model**, use its
+packaged checkpoint and validation-selected confidence configuration:
+
+```powershell
+.\run_logic_demo.cmd --weights weights/laptop/yolo11n-bottle-cup-box.pt --config config/yolo-finetuned.json
+```
+
+Without the weights override, the original **80-class COCO model** remains the
+default. Fine-tuning replaces its head with three named classes; the separate
+depth branch still supplies category-independent obstacle cues in hybrid mode.
+See the [fine-tuning report](docs/yolo11-finetuning-report.md),
+[training notebook](notebooks/train_yolo11.ipynb), and
+[submission document index](docs/README.md).
+
 ## Instructions for running the system
 
 Run `run_logic_demo.cmd` for a live camera, add `--source path/to/video.mp4` for
@@ -172,21 +186,24 @@ A moving prototype needs a rigid forward camera and a live video path to the lap
 
 [**View annotated examples and download the dataset**](data/public/README.md#preview-and-download)
 
-The group's prepared **baseline dataset** contains 402 public Open Images images
-and 688 labeled bottle/cup/box instances. Bounding boxes are normalized to YOLO
+The group's prepared **version 2 dataset** contains 435 public Open Images images
+and 730 labeled bottle/cup/box instances. Bounding boxes are normalized to YOLO
 format. Content hashes are unique across splits, with source URLs, authors,
 licenses, labels, and split assignments retained in the
-[published manifest](data/public/bottle-cup-box-manifest.jsonl).
+[published manifest](data/public/yolo-bottle-cup-box-v2-manifest.jsonl).
 
-| Project split | Images | Approximate distribution | Purpose |
-| --- | ---: | ---: | --- |
-| Training | 280 | 70% | Fit the original ESPDet baseline |
-| Validation | 60 | 15% | Select checkpoint and confidence threshold |
-| Testing | 62 | 15% | Evaluate the original selected model |
+| Project split | Images | Bottle images | Cup images | Box images |
+| --- | ---: | ---: | ---: | ---: |
+| Training | 313 | **125** | **108** | **80** |
+| Validation | 60 | 27 | 23 | 10 |
+| Testing | 62 | 27 | 24 | 11 |
 
-These are project partitions from Open Images' validation source, not official
-benchmark splits. The current laptop models use upstream pretrained COCO and
-Hypersim weights; they were not trained on this 402-image group dataset.
+Every class has at least **60 distinct training images**. Version 2 adds 33 box
+training images to the original 402-image dataset while keeping all previous
+validation/test assignments. The original source is Open Images' validation
+pool; the additional training photos come from its official test pool. These
+are project partitions, not official benchmark splits. YOLO11n is fine-tuned
+from COCO weights; the separate depth network retains upstream pretraining.
 
 **Unseen situations:** hold out entire new recording sessions/locations and new
 physical object instances, varying lighting, distance, angle, background, and
@@ -201,6 +218,7 @@ annotation review remain necessary. See the
 | Model / algorithm | Role and scope |
 | --- | --- |
 | YOLO11n, 640×640 | Current pretrained 80-category object detector on the laptop |
+| Fine-tuned YOLO11n, 320 training / 640 inference | Group-trained bottle/cup/box alternative with recorded test metrics |
 | Depth Anything V2 Metric Indoor Small | Current category-independent proximity cues; estimated meters |
 | Ground-plane fitting and connected components | Reduce floor responses and form nearby-surface obstacles |
 | Three-region controller and temporal confirmation | Explainable forward/left/right/stop suggestions |
@@ -251,6 +269,17 @@ Test results and actual model integration checks are recorded in the
 [verification report](docs/verification.md). CI also exercises the portable
 ESP32 command parser/watchdog in native C++; it does not flash hardware.
 
+An exploratory YOLO11n evaluation on the 62 project test images scored bottle
+and cup detections at confidence 0.35: **67.86% micro precision, 55.88% recall,
+61.29% F1**, and **65.05% mAP@0.5 / 53.86% mAP@0.5:0.95**. Generic boxes are
+excluded because they are not a COCO class. These are detector metrics, not
+depth or instruction accuracy. See the [measured YOLO report](docs/yolo11-evaluation.md)
+and [guide for independent camera evaluation](docs/evaluation-guide.md).
+
+```powershell
+.venv-inference\Scripts\python scripts/evaluate_yolo.py
+```
+
 ## Sample results
 
 ![Actual laptop hybrid-model inference and instruction overlay](assets/laptop-demo.png)
@@ -270,11 +299,13 @@ See [the measured report](docs/model-report.md) and
 
 - [Dataset and training presentation script](docs/dataset-and-training-presentation-script.md)
 - [Dataset and training section for the paper](docs/paper-dataset-and-training.md)
+- [YOLO11 training notebook](notebooks/train_yolo11.ipynb) and [fine-tuning report](docs/yolo11-finetuning-report.md)
 - [Documentation and research-paper writing guide](docs/documentation-and-paper-guide.md)
 - [Midterm report and requirement mapping](docs/midterm-report.md)
-- [Dataset card](data/public/README.md) and [fixed split/annotation manifest](data/public/bottle-cup-box-manifest.jsonl)
+- [Dataset card](data/public/README.md) and [current split/annotation manifest](data/public/yolo-bottle-cup-box-v2-manifest.jsonl)
 - [Original training notebook](notebooks/train_bottle_cup_box.ipynb) and [current model walkthrough](notebooks/laptop_esp32_demo.ipynb)
 - [Baseline evaluation](docs/model-report.md), [machine-readable metrics](docs/model-evaluation.json), and [training curves data](docs/training-results.csv)
+- [YOLO11n evaluation](docs/yolo11-evaluation.md), [recorded metrics](docs/yolo11-evaluation.json), and [evaluation guide](docs/evaluation-guide.md)
 - [Sample results and attribution](docs/sample-results.md)
 - [Installation, running, and Wi-Fi guide](docs/laptop-esp32.md)
 - [Hardware handoff](docs/hardware-implementation.md) and [ESP32 receiver](firmware/visiondrive_receiver/visiondrive_receiver.ino)
@@ -285,7 +316,7 @@ Presentation slides and a separate submitted demo-video link have not been suppl
 
 Object detection uses [Ultralytics YOLO11](https://docs.ultralytics.com/models/yolo11/).
 Depth uses [Depth Anything V2 Metric Indoor Small](https://huggingface.co/depth-anything/Depth-Anything-V2-Metric-Indoor-Small-hf).
-The compact model uses [Espressif ESP-Detection](https://github.com/espressif/esp-detection).
+The retained ESPDet baseline uses [Espressif ESP-Detection](https://github.com/espressif/esp-detection).
 Upstream models and libraries retain their licenses; see
 [third-party notices](THIRD_PARTY_NOTICES.md). Downloaded large weights,
 environments, source datasets, recordings, and Wi-Fi credentials stay outside Git.

@@ -20,7 +20,7 @@ This repository contains documentation, application/tooling code, tests, artwork
 
 ESP-Detection identifies its upstream license as AGPL-3.0. Retain its applicable notices and review the actual pinned dependencies and licenses when introducing code or distributing a trained application. Do not label third-party code or weights as an original VisionDrive model architecture.
 
-## Required records when implementation begins
+## Provenance records
 
 For each source dependency, record repository URL, exact revision, dependency versions, license files, and any local modifications. For a checkpoint, record its download URL, SHA-256 hash, original task/classes, source license, and fine-tuning configuration. Do not infer weight usage terms solely from the repository name.
 
@@ -39,13 +39,19 @@ Dataset annotation terms and individual image terms can differ. Preserve attribu
 
 ## Packaged fine-tuned model
 
+`weights/laptop/yolo11n-bottle-cup-box.pt` is the selected YOLO11n derivative
+fine-tuned for bottle, cup, and box. Its provenance is recorded in the adjacent
+JSON file; training/evaluation settings and measured results are in the YOLO11
+report. It retains Ultralytics' AGPL-3.0 terms, with the license text alongside
+the checkpoint. It is separate from the original ESPDet checkpoint below.
+
 `weights/obstacle/best.pt` is the selected three-class fine-tuned checkpoint. Its class mapping, initialization hash, dataset/split summary, validation-selected confidence, measured results, and artifact hash are recorded in `weights/obstacle/model.json`. The upstream AGPL-3.0 license is preserved as `weights/obstacle/LICENSE`. The upstream architecture and initialization are not original VisionDrive inventions.
 
 The model report describes the limited public-data run and weak box performance. No raw dataset images or original pretrained weights are bundled in Git. The original cat checkpoint is training initialization only and is rejected by the active demo.
 
 ## Project licensing
 
-No project-wide redistribution license is declared in this documentation milestone. This file is an attribution inventory, not a replacement for an upstream license. Add a project license deliberately when the implementation and incorporated dependencies are known, and keep third-party notices intact.
+No project-wide redistribution license is declared. This file is an attribution inventory, not a replacement for an upstream license. Keep third-party notices and the packaged model licenses intact.
 
 ## Laptop models and sample images
 
@@ -63,6 +69,10 @@ original image URLs, CC BY 2.0 license links, source IDs, and modifications
 are recorded in [sample-result attribution](docs/sample-results.md).
 The group's fixed dataset annotations/splits and individual attribution records
 are published in [the manifest](data/public/bottle-cup-box-manifest.jsonl).
+The expanded 435-image YOLO fine-tuning dataset has a separate
+[version 2 manifest](data/public/yolo-bottle-cup-box-v2-manifest.jsonl), including
+33 additional Open Images box photos assigned only to project training. Each
+photo retains its author, original URL, license, and content hash.
 
 `assets/dataset-preview.png` is a contact sheet of nine annotated public images.
 Its author/source/license records are in [preview attribution](data/public/preview-sources.json).

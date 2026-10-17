@@ -42,7 +42,12 @@ STOP suggestions. Optional Wi-Fi commands connect to an ESP32 motor receiver.
 | Additional obstacle cues | None | Metric-depth estimates and nearby surfaces |
 | Project training | Fine-tuning on the prepared group dataset | Upstream pretrained weights; no project-specific fine-tuning of these models |
 | Execution | Desktop baseline; future onboard research | Laptop perception, optional ESP32 commands |
-| Published detector metrics | Available | Independent course-accuracy evaluation pending |
+| Published detector metrics | Three-class baseline available | Exploratory bottle/cup scores available; independent course evaluation pending |
+
+The current detector's separate [YOLO11n report](yolo11-evaluation.md) records
+an exploratory two-class evaluation. Use the [evaluation guide](evaluation-guide.md)
+for independent camera tests. Neither the detector scores nor the original
+baseline measure the hybrid system's depth or instruction accuracy.
 
 Do not attribute the baseline's mAP or recall to the hybrid. Do not say the
 402-image group dataset trained YOLO11n or the depth model. The group's work
