@@ -23,6 +23,13 @@ or self-driving physical vehicle has not been demonstrated.
 
 ## Requirement-to-evidence mapping
 
+The current unchanged pretrained YOLO11n study adds a separate
+[400-image indoor evaluation](dataset_card.md),
+[executed notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb) and
+[measured report](evaluation_results.md). Its 80 development / 320 test images
+are evaluation partitions; no YOLO training occurs. The original three-way
+ESPDet dataset below remains the evidence for the rubric's training split.
+
 | Requirement | Actual evidence | Remaining qualification |
 | --- | --- | --- |
 | Appropriate prepared dataset | 402 annotated bottle/cup/box images; [dataset card](../data/public/README.md) | Initial specialization subset; not arbitrary obstacles |

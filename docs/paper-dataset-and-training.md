@@ -1,5 +1,7 @@
 # Dataset Preparation, Model Training, and Evaluation
 
+> Historical ESPDet-Pico study. For the current unchanged YOLO11n evaluation, use [the research report](evaluation_results.md) and [notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb). No YOLO fine-tuning is part of that experiment.
+
 This section describes the completed three-class ESPDet-Pico experiment in
 VisionDrive. It can be adapted to the paper's methodology and results chapters.
 The subsequent laptop demonstration uses separate pretrained YOLO11n and depth

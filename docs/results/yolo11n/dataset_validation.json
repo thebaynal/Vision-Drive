@@ -1,0 +1,21 @@
+{
+  "valid": true,
+  "images": 400,
+  "splits": {
+    "dev": 80,
+    "test": 320
+  },
+  "instances": {
+    "dev/person": 191,
+    "test/person": 732
+  },
+  "independent_group_proxy": "Flickr photographer URL",
+  "groups": 400,
+  "manifest_sha256": "459a891423980dfcd723f59b0bf191944e0ac0488b7fb6264a7ca647ac436752",
+  "errors": [],
+  "warnings": [
+    "Photographer grouping is a proxy; physical scene IDs are unavailable.",
+    "COCO pretraining overlap is not ruled out by source split or hashing within this repository.",
+    "Public photographs are not a low-mounted robot camera course; no metric depth or motion ground truth."
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "scope": "hand-authored software fixtures, not model or physical driving evidence",
+  "pending_reference_scenarios": [
+    "moving obstacles",
+    "low light with genuine camera labels"
+  ],
+  "rows": [
+    {
+      "scenario": "clear",
+      "acceptable_actions": [
+        "FORWARD"
+      ],
+      "predicted_action": "FORWARD",
+      "unsafe_forward": false,
+      "stop_unnecessary": true,
+      "latency_ms": 0.09239999781129882
+    },
+    {
+      "scenario": "center",
+      "acceptable_actions": [
+        "LEFT",
+        "RIGHT"
+      ],
+      "predicted_action": "LEFT",
+      "unsafe_forward": true,
+      "stop_unnecessary": true,
+      "latency_ms": 0.10280000424245372
+    },
+    {
+      "scenario": "left",
+      "acceptable_actions": [
+        "FORWARD"
+      ],
+      "predicted_action": "FORWARD",
+      "unsafe_forward": false,
+      "stop_unnecessary": true,
+      "latency_ms": 0.06850000499980524
+    },
+    {
+      "scenario": "right",
+      "acceptable_actions": [
+        "FORWARD"
+      ],
+      "predicted_action": "FORWARD",
+      "unsafe_forward": false,
+      "stop_unnecessary": true,
+      "latency_ms": 0.05999999848427251
+    },
+    {
+      "scenario": "center_left",
+      "acceptable_actions": [
+        "RIGHT"
+      ],
+      "predicted_action": "RIGHT",
+      "unsafe_forward": true,
+      "stop_unnecessary": true,
+      "latency_ms": 0.08450000314041972
+    },
+    {
+      "scenario": "center_right",
+      "acceptable_actions": [
+        "LEFT"
+      ],
+      "predicted_action": "LEFT",
+      "unsafe_forward": true,
+      "stop_unnecessary": true,
+      "latency_ms": 0.08040000102482736
+    },
+    {
+      "scenario": "all_blocked",
+      "acceptable_actions": [
+        "STOP"
+      ],
+      "predicted_action": "STOP",
+      "unsafe_forward": true,
+      "stop_unnecessary": false,
+      "latency_ms": 0.07199999527074397
+    },
+    {
+      "scenario": "emergency",
+      "acceptable_actions": [
+        "STOP"
+      ],
+      "predicted_action": "STOP",
+      "unsafe_forward": true,
+      "stop_unnecessary": false,
+      "latency_ms": 0.03839999408228323
+    },
+    {
+      "scenario": "invalid_input",
+      "acceptable_actions": [
+        "STOP"
+      ],
+      "predicted_action": "STOP",
+      "unsafe_forward": true,
+      "stop_unnecessary": false,
+      "latency_ms": null
+    },
+    {
+      "scenario": "stale_input",
+      "acceptable_actions": [
+        "STOP"
+      ],
+      "predicted_action": "STOP",
+      "unsafe_forward": true,
+      "stop_unnecessary": false,
+      "latency_ms": null
+    }
+  ],
+  "fixture_metrics": {
+    "scenarios": 10,
+    "acceptable_set_correctness": 1.0,
+    "unsafe_forward_denominator": 7,
+    "unsafe_forward_rate": 0.0,
+    "false_stop_denominator": 6,
+    "false_stop_rate": 0.0
+  }
+}

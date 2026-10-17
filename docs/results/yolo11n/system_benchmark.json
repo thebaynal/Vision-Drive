@@ -1,0 +1,17 @@
+{
+  "measurement": "serial source-image decode + actual YOLO11n + metric depth + controller + explanation render",
+  "completed_at_utc": "2026-10-17T11:58:42.332197+00:00",
+  "gpu": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "torch_version": "2.11.0+cu128",
+  "frames": 20,
+  "warmup_iterations": 3,
+  "device": "0",
+  "cuda_synchronized": true,
+  "mean_ms": 109.34081499981403,
+  "median_ms": 104.10920000140322,
+  "std_ms": 16.475718252854204,
+  "fps_from_mean": 9.145715623225424,
+  "yolo_input": 640,
+  "depth_input": 392,
+  "excludes": "camera capture, asynchronous scheduling, GUI display, UDP, motor execution; not physical navigation success"
+}

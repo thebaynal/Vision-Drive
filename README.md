@@ -1,322 +1,124 @@
-<div align="center">
-
 # VisionDrive
 
-**Forward-camera obstacle avoidance: laptop vision, explainable steering, ESP32 commands.**
+**Camera-based obstacle interpretation: laptop vision, visible movement logic and an optional ESP32 controller.**
 
-![Status: desktop prototype](https://img.shields.io/badge/status-desktop_prototype-2563eb)
-![Vision: YOLO and depth](https://img.shields.io/badge/vision-YOLO11n_%2B_depth-0f766e)
-![Controller: ESP32](https://img.shields.io/badge/motor_controller-ESP32-dc2626)
+[Executable evaluation notebook](notebooks/yolo11n_pretrained_evaluation.ipynb) · [Measured results](docs/evaluation_results.md) · [Run the demo](docs/laptop-esp32.md) · [Project materials](docs/README.md)
 
-[Full training and results notebook](notebooks/train_yolo11.ipynb) · [Run the demo](docs/laptop-esp32.md) · [Project materials](docs/README.md)
+VisionDrive treats the camera as the vehicle's forward view. Original pretrained YOLO11n recognizes objects; Depth Anything V2 Metric Indoor Small estimates nearby surfaces. A three-region controller displays **FORWARD, LEFT, RIGHT or STOP**. An optional ESP32 receives expiring commands over Wi-Fi. The laptop runs the neural networks; a board is unnecessary for the visual demo.
 
-</div>
+This academic prototype does not guarantee recognition of every obstacle, calibrated distance, a clear route or safe physical driving.
 
-The camera represents the vehicle's forward view. VisionDrive detects objects
-and nearby surfaces, checks **left, middle, and right** regions, and suggests
-**FORWARD, LEFT, RIGHT, or STOP**. The laptop runs the neural networks. An
-optional Wi-Fi link sends expiring movement commands to an ESP32 motor controller.
+## Group members and specialization
 
-The visualization works without a board. Physical driving, distance calibration,
-and avoidance accuracy remain unvalidated on a real course.
+Sean Xander Aquino · Blessie Faith Bongalos · Joshua Jericho Barja · John Renzzo Montenegro · John Carlo Nas · Divino Al Ricafort
 
-## Group members
+Working specialization: **Computer Vision–Based Obstacle Detection and Avoidance**. The group must confirm its officially assigned wording.
 
-- Sean Xander Aquino
-- Blessie Faith Bongalos
-- Joshua Jericho Barja
-- John Renzzo Montenegro
-- John Carlo Nas
-- Divino Al Ricafort
-
-## Assigned group project specialization
-
-**Computer Vision–Based Obstacle Detection and Avoidance** is the working
-specialization title. Replace this wording if the officially assigned title differs.
-
-## Project description and system overview
-
-The midterm asks: **“Can the System SEE and RECOGNIZE?”** VisionDrive answers
-this with camera capture, image preprocessing, an annotated dataset with separate
-training/validation/testing sets, a fine-tuned YOLO11 detector, and a working
-object-plus-depth interpretation demo. The movement overlay explains
-how recognized objects and nearby surfaces influence a proposed vehicle action.
-The motor receiver supports later integration; a physical car is not required
-to demonstrate the midterm vision pipeline.
-
-The [midterm report](docs/midterm-report.md) maps the rubric to actual artifacts,
-explains unseen-situation testing, and identifies unfinished validation.
-
-## System architecture and workflow
+## System overview and computer vision methodology
 
 ```mermaid
 flowchart LR
-    A[Forward camera] --> B[Laptop YOLO11n]
-    A --> C[Laptop metric depth]
-    B --> D[Obstacle boxes + estimated distance]
+    A[Forward camera or video] --> B[Original pretrained YOLO11n]
+    A --> C[Metric indoor depth]
+    B --> D[Objects and proximity cues]
     C --> D
-    D --> E[Three-region proximity and free space]
-    E --> F[Stabilized movement instruction]
-    F --> G[Visualization]
-    F -->|Optional Wi-Fi| H[ESP32 watchdog + motor driver]
+    D --> E[LEFT / CENTER / RIGHT analysis]
+    E --> F[Stabilized movement recommendation]
+    F --> G[Visual explanation]
+    F --> H[Optional ESP32 command receiver]
 ```
 
-YOLO recognizes its 80 pretrained COCO categories. The depth path can flag
-nearby, unnamed surfaces, including potential walls or unfamiliar shapes. A
-ground-plane heuristic rejects visible flat floor. This provides broader
-obstacle cues than the earlier bottle/cup/box-only detector. **It cannot
-guarantee detection of every obstacle or certify that a route is clear.**
+The detector keeps its original **80 COCO classes**. The separate depth pathway contributes unnamed surfaces, including potential walls or generic boxes. Ground-plane rejection and estimated-distance thresholds require camera-specific validation. Nearby center obstacles prompt a usable side turn; distant obstacles need not stop movement. Emergency clearance, blocked regions, invalid/stale observations and command timeouts preserve STOP behavior.
 
-| What the vehicle sees | Suggested behavior |
+## Hardware and software
+
+| Component | Current role |
 | --- | --- |
-| Only distant center obstacles | Continue forward |
-| Nearby center obstacle | Turn toward a usable side |
-| Both sides usable | Choose the side with less occupied image area |
-| Center at emergency distance, or no usable side | Stop |
-| Stale/invalid input, pause, or lost command updates | Stop |
+| Laptop and USB/integrated camera | Perception and visualization |
+| RTX 3050 6 GB Laptop GPU | Actual CUDA evaluation hardware; CPU also supported |
+| ESP32, motor driver, motors, vehicle camera | Optional future physical integration; no board trial claimed |
+| Python, PyTorch, torchvision, Ultralytics | Original YOLO11n inference and evaluation |
+| Transformers, OpenCV, NumPy | Depth, camera capture and image processing |
+| Pandas, Matplotlib, Jupyter | Reproducible tables, graphs and research notebook |
 
-Defaults start avoidance at **estimated 1.5 m** and emergency center stopping
-at **estimated 0.45 m**. These are tunable demo thresholds, not calibrated
-measurements. Three matching processed observations confirm movement. A newly
-blocked center stops forward movement while a turn is being confirmed.
+## Installation and quick start — Windows PowerShell
 
-## Installation and setup instructions
+Run from the repository root. Python 3.11–3.13 is recommended; the recorded local evaluation used Python 3.13.5. GPU wheels require a compatible NVIDIA driver.
 
 ```powershell
-python -m venv .venv-inference
-.venv-inference\Scripts\python -m pip install -r requirements-laptop.txt
-.venv-inference\Scripts\python scripts/setup_laptop_models.py
-.\run_logic_demo.cmd
+python -m venv .venv-evaluation
+.venv-evaluation\Scripts\python -m pip install -r requirements-evaluation-gpu.txt
+.venv-evaluation\Scripts\python scripts/setup_laptop_models.py
+.venv-evaluation\Scripts\python logic_demo.py --device 0
 ```
 
-On the already prepared development computer, just run `run_logic_demo.cmd`.
-Setup downloads approximately 105 MB; inference uses local files. The viewer
-shows **detections and estimated distances → blocked regions → rule candidate
-→ final instruction**. Space pauses; Q/Escape quits.
+For CPU use, install `requirements-evaluation.txt` instead, add `requirements-laptop.txt` for the depth demo, and use `--device cpu`. Keep CPU and GPU package sets in separate environments. Setup explicitly downloads and checks model files; inference never silently downloads replacements.
 
 ```powershell
-# Video demonstration without hardware:
-.\run_logic_demo.cmd --source path/to/video.mp4
-# Tune thresholds after comparing estimates with measured distances:
-.\run_logic_demo.cmd --avoid-distance 1.5 --stop-distance 0.45
-# Optional ESP32 connection after configuring/flashing the receiver:
-$env:VISIONDRIVE_ESP_TOKEN = "your_shared_32_character_hex_token"
-.\run_logic_demo.cmd --source 0 --esp-host 192.168.1.50
+# Saved footage, visualization only.
+.venv-evaluation\Scripts\python logic_demo.py --device 0 --source path/to/video.mp4
+# Object-only view.
+.venv-evaluation\Scripts\python logic_demo.py --device 0 --detector coco
 ```
 
-The board needs no neural-network runtime. It accepts valid, sequenced commands
-after a STOP handshake and stops when commands expire. The receiver defaults
-to **motor output disabled** until actual board/driver pins are configured.
-See the [complete setup and calibration guide](docs/laptop-esp32.md).
+See the [run guide](docs/laptop-esp32.md) for recording, OBS capture, calibration and ESP32 commands. `--simulate` is explicitly synthetic and cannot issue motor commands.
 
-To demonstrate the **group-fine-tuned bottle/cup/box YOLO11 model**, use its
-packaged checkpoint and validation-selected confidence configuration:
+## Dataset overview and evaluation
+
+The current experiment evaluates **unchanged pretrained YOLO11n**, with no training or fine-tuning. Its fresh indoor cohort contains **400 photos: 80 development / 320 test**, with **923 person annotations**. Every image has human-verified person presence or absence. Each split is 75% person-positive / 25% verified negative; every photograph has a different photographer. Previously inspected and baseline images are excluded. The protocol and hashes were frozen in commit `8a6f52a` before fresh-cohort inference.
+
+**Only person (original COCO ID 0) is primary-scored.** Pilot chair scoring was excluded because Open Images separates Stool and does not provide complete coverage for the COCO chair concept. All 80 detector categories remain available in the live application. The [taxonomy audit](docs/taxonomy-audit.md) explains this limit; the old pilot remains exploratory.
+
+Photos come from Open Images with per-image authors and CC BY 2.0 attribution; annotations are CC BY 4.0. Original source splits, photographer separation, checksums, label validation and duplicate checks are recorded. The cohort meets the 300–500-image planning target while retaining strict annotation checks.
+
+[Dataset card and candidate comparison](docs/dataset_card.md) · [Frozen manifest](data/public/indoor-evaluation-manifest.jsonl) · [Annotation QA exclusions](data/public/indoor-annotation-review.json)
 
 ```powershell
-.\run_logic_demo.cmd --weights weights/laptop/yolo11n-bottle-cup-box.pt --config config/yolo-finetuned.json
+.venv-evaluation\Scripts\python scripts/download_dataset.py
+.venv-evaluation\Scripts\python scripts/validate_annotations.py
+.venv-evaluation\Scripts\python scripts/evaluate_pretrained.py --device 0
 ```
 
-Without the weights override, the original **80-class COCO model** remains the
-default. Fine-tuning replaces its head with three named classes; the separate
-depth branch still supplies category-independent obstacle cues in hybrid mode.
-See the [fine-tuning report](docs/yolo11-finetuning-report.md),
-[training notebook](notebooks/train_yolo11.ipynb), and
-[submission document index](docs/README.md).
+Download restores exactly the frozen manifest and verifies image hashes. No API key is required for this cohort. Raw images and generated local outputs stay outside Git.
 
-## Instructions for running the system
-
-Run `run_logic_demo.cmd` for a live camera, add `--source path/to/video.mp4` for
-a recording, or use `--esp-host IP` after configuring the board. Space pauses;
-Q/Escape exits. With no board address, the program only visualizes instructions.
-
-The viewer holds its last visual instruction while the next model result is
-being computed, for at most five seconds of frame age. It labels this state
-**Analyzing next frame** instead of alternating FORWARD/STOP between normal
-updates. Input failure or exceeding that display deadline still stops the
-preview. Use `--preview-timeout-ms` to set a 1,000–10,000 ms display deadline.
-Actual ESP32 commands use a separate controller with the original **1,000 ms**
-freshness limit; a held visual instruction cannot extend motor movement.
-
-For a synthetic controller presentation without ML dependencies:
+## Notebook and graphs
 
 ```powershell
-python -m pip install -r requirements.txt
-python logic_demo.py --simulate
+.venv-evaluation\Scripts\python -m ipykernel install --user --name visiondrive-evaluation --display-name "Python (VisionDrive evaluation)"
+.venv-evaluation\Scripts\python -m jupyter lab notebooks/yolo11n_pretrained_evaluation.ipynb
 ```
 
-Simulation is explicitly labeled and cannot send commands to the ESP32.
+Select **Python (VisionDrive evaluation)** and **Run All**. Set `DEVICE='cpu'` in Section 2 for an intentional CPU run. The notebook has 12 labeled sections: objective, environment, acquisition, exploration, original checkpoint, native evaluation, metrics, class results, plots, timing, errors and interpretation. It never invokes training.
 
-## Hardware used
+Outputs in `outputs/evaluation/yolo11n/`: metrics JSON, CSV tables, provenance, validation, environment, configuration, raw/normalized confusion matrices, PR/F1 curves, distribution, per-class AP, attributed prediction examples and generated report. Compact submission copies live in `docs/results/yolo11n/` and `assets/evaluation/`.
 
-| Hardware | Actual use / status |
-| --- | --- |
-| Development laptop | Runs the implemented vision system; CPU inference tested |
-| Recorded camera images/video | Used for actual inference and integration checks |
-| Forward-facing webcam or vehicle camera | Live input supported; independent live-course testing pending |
-| ESP32 board, motor driver, motors, chassis, power supply | Planned motor-control hardware; receiver firmware provided, no board connected or tested |
+## Sample results and interpretation
 
-The current architecture does not require an ESP32 camera module or onboard ML.
-A moving prototype needs a rigid forward camera and a live video path to the laptop.
+| Metric | Measured on 320 fresh indoor test images |
+| --- | ---: |
+| Micro precision at confidence .35 | 79.19% |
+| Micro recall at confidence .35 | 63.93% |
+| Micro F1 at confidence .35 | 70.75% |
+| mAP@50 | 72.12% |
+| mAP@75 | 54.02% |
+| mAP@50–95 | 50.94% |
 
-## Software and tools used
+These are person-only **object-detection** measurements (mAP equals AP for this single scored class), not classification accuracy or obstacle-avoidance success. Misses remain substantial. Read the [full results](docs/evaluation_results.md) for counts, confidence intervals, GPU latency and failure examples. Published COCO benchmark values are external references.
 
-| Tool | Role |
-| --- | --- |
-| Python 3.10+; tested with 3.13.5 | Application, data preparation, training, evaluation |
-| OpenCV and NumPy | Capture, image processing, region geometry, overlays |
-| PyTorch, torchvision, Ultralytics | YOLO and original ESPDet training/inference |
-| Hugging Face Transformers / safetensors | Indoor metric-depth inference |
-| Jupyter notebooks | Training and staged demonstration |
-| Arduino-ESP32, Wi-Fi UDP | Receiver firmware and expiring motor instructions |
-| pytest, native C++ compiler, GitHub Actions | Controller, depth, communication, and watchdog checks |
+![Measured per-class performance](assets/evaluation/per_class_performance.png)
 
-## Computer vision methodology
+## Midterm evidence and limitations
 
-1. Capture an unmirrored forward frame and retain its capture timestamp.
-2. Letterbox/resize for YOLO; normalize and convert image channels for depth.
-3. Run object detection and metric-depth estimation on the laptop.
-4. Restore boxes to original-image coordinates and estimate object proximity.
-5. Remove matching flat-floor depth pixels; extract nearby connected surfaces.
-6. Ignore distant obstacles for steering, calculate region occupancy, and apply
-   the approach/emergency rules.
-7. Confirm movement across fresh observations, display the explanation, and
-   optionally send an expiring command to the ESP32.
+The [midterm report](docs/midterm-report.md) maps **“Can the System SEE and RECOGNIZE?”** to the demo and research artifacts. The earlier ESPDet-Pico experiment retains its **402-image training/validation/test dataset**, checkpoint, [training curves](assets/baseline-training-curves.png) and measured results. It is separate from unchanged YOLO evaluation.
 
-## Dataset overview
+Public interior photos are not recordings from our car. Duplicate and photographer checks cannot prove physical scene independence or absence from COCO pretraining. Only person is validly primary-scored. The earlier two-class result is exploratory because of the chair/stool taxonomy defect. Independent camera testing, calibrated depth and physical driving remain separate work. See the [future camera protocol](docs/camera-evaluation.md).
 
-[**View annotated examples and download the dataset**](data/public/README.md#preview-and-download)
+## Required materials and citations
 
-The group's prepared **version 2 dataset** contains 435 public Open Images images
-and 730 labeled bottle/cup/box instances. Bounding boxes are normalized to YOLO
-format. Content hashes are unique across splits, with source URLs, authors,
-licenses, labels, and split assignments retained in the
-[published manifest](data/public/yolo-bottle-cup-box-v2-manifest.jsonl).
+- [Methodology](docs/evaluation_methodology.md), [dataset card](docs/dataset_card.md), [research report](docs/evaluation_results.md).
+- [Paper guide](docs/documentation-and-paper-guide.md), [current presentation script](docs/current-presentation-script.md), [historical ESP paper section](docs/paper-dataset-and-training.md).
+- [Hardware handoff](docs/hardware-implementation.md), [verification](docs/verification.md), [cleanup ledger](docs/repository-inventory.md).
+- [Ultralytics YOLO11](https://docs.ultralytics.com/models/yolo11/), [Depth Anything V2](https://github.com/DepthAnything/Depth-Anything-V2), [ESP-Detection](https://github.com/espressif/esp-detection).
+- [Open Images protocol](https://storage.googleapis.com/openimages/web/factsfigures_v7.html), [download specification](https://storage.googleapis.com/openimages/web/download_v7.html), [Open Images paper](https://arxiv.org/abs/1811.00982).
 
-| Project split | Images | Bottle images | Cup images | Box images |
-| --- | ---: | ---: | ---: | ---: |
-| Training | 313 | **125** | **108** | **80** |
-| Validation | 60 | 27 | 23 | 10 |
-| Testing | 62 | 27 | 24 | 11 |
-
-Every class has at least **60 distinct training images**. Version 2 adds 33 box
-training images to the original 402-image dataset while keeping all previous
-validation/test assignments. The original source is Open Images' validation
-pool; the additional training photos come from its official test pool. These
-are project partitions, not official benchmark splits. YOLO11n is fine-tuned
-from COCO weights; the separate depth network retains upstream pretraining.
-
-**Unseen situations:** hold out entire new recording sessions/locations and new
-physical object instances, varying lighting, distance, angle, background, and
-obstacle combinations. Do not distribute adjacent frames of one clip across
-splits. Our existing image-hash separation does not establish scene separation
-or independence from upstream pretraining. New course recordings and manual
-annotation review remain necessary. See the
-[dataset card and reconstruction instructions](data/public/README.md).
-
-## Model and algorithm used
-
-| Model / algorithm | Role and scope |
-| --- | --- |
-| YOLO11n, 640×640 | Current pretrained 80-category object detector on the laptop |
-| Fine-tuned YOLO11n, 320 training / 640 inference | Group-trained bottle/cup/box alternative with recorded test metrics |
-| Depth Anything V2 Metric Indoor Small | Current category-independent proximity cues; estimated meters |
-| Ground-plane fitting and connected components | Reduce floor responses and form nearby-surface obstacles |
-| Three-region controller and temporal confirmation | Explainable forward/left/right/stop suggestions |
-| ESPDet-Pico, 224×224 | Original group-trained three-class baseline; retained for comparison |
-
-No claim of universal obstacle detection or reliable metric range is made.
-
-## Project components
-
-| Component | Location / status |
-| --- | --- |
-| Object and depth inference | [Laptop detector](visiondrive/laptop_detector.py), [depth processing](visiondrive/depth.py) |
-| Movement rules | [Decision controller](visiondrive/decision.py) |
-| Camera/video and instruction display | [Application](demo.py), [logic viewer](logic_demo.py) |
-| Wi-Fi sender | [UDP link](visiondrive/esp_link.py) |
-| ESP32 receiver and watchdog | [Arduino sketch](firmware/visiondrive_receiver/visiondrive_receiver.ino); physical validation outstanding |
-| Model walkthrough | [Laptop/ESP32 notebook](notebooks/laptop_esp32_demo.ipynb) |
-| Original tiny-model research | [Training notebook](notebooks/train_bottle_cup_box.ipynb), [three-class report](docs/model-report.md) |
-| Validation | [Verification report](docs/verification.md) |
-
-## Original ESP32 onboard experiment
-
-The earlier **ESPDet-Pico, 224×224, bottle/cup/box** checkpoint remains included
-with provenance and its upstream license. Its small held-out test showed weak
-box recall (15%). It is retained for comparison and future onboard work:
-
-```powershell
-.venv-inference\Scripts\python scripts/setup_model.py --source-only
-.\run_logic_demo.cmd --detector esp
-```
-
-That backend uses camera-specific image-position proximity, not depth in meters.
-The [training notebook](notebooks/train_bottle_cup_box.ipynb) reproduces that
-experiment. The current default is the stronger laptop hybrid. Running the
-current hybrid entirely on an ESP32 is not implemented or claimed.
-
-## Evaluation and limits
-
-This is a reactive indoor prototype. Estimated depth can be wrong, especially
-for transparent/reflective objects, thin structures, unfamiliar camera heights,
-occlusion, poor lighting, and non-flat floors. Side image regions do not encode
-vehicle width or turning arcs. Course testing must measure missed obstacles,
-false stops, distance error, latency, and physical stopping distance before
-making an avoidance-accuracy claim. Broader coverage is not a measured accuracy
-percentage.
-
-Test results and actual model integration checks are recorded in the
-[verification report](docs/verification.md). CI also exercises the portable
-ESP32 command parser/watchdog in native C++; it does not flash hardware.
-
-An exploratory YOLO11n evaluation on the 62 project test images scored bottle
-and cup detections at confidence 0.35: **67.86% micro precision, 55.88% recall,
-61.29% F1**, and **65.05% mAP@0.5 / 53.86% mAP@0.5:0.95**. Generic boxes are
-excluded because they are not a COCO class. These are detector metrics, not
-depth or instruction accuracy. See the [measured YOLO report](docs/yolo11-evaluation.md)
-and [guide for independent camera evaluation](docs/evaluation-guide.md).
-
-```powershell
-.venv-inference\Scripts\python scripts/evaluate_yolo.py
-```
-
-## Sample results
-
-![Actual laptop hybrid-model inference and instruction overlay](assets/laptop-demo.png)
-
-Actual inference on a public test image; boxes/labels and distances are model
-predictions, not ground-truth guarantees. Source attribution and the exact
-record are in [sample results](docs/sample-results.md). This image is an
-integration example, not a live vehicle trial.
-
-The original group-trained baseline achieved **mAP@0.5 = 0.469** on 62 project
-test images. Bottle recall was 0.442, cup recall 0.760, and box recall 0.154 at
-confidence 0.35. These results belong to ESPDet, **not** the newer hybrid system.
-See [the measured report](docs/model-report.md) and
-[current integration checks](docs/verification.md).
-
-## Required project materials
-
-- [Dataset and training presentation script](docs/dataset-and-training-presentation-script.md)
-- [Dataset and training section for the paper](docs/paper-dataset-and-training.md)
-- [YOLO11 training notebook](notebooks/train_yolo11.ipynb) and [fine-tuning report](docs/yolo11-finetuning-report.md)
-- [Documentation and research-paper writing guide](docs/documentation-and-paper-guide.md)
-- [Midterm report and requirement mapping](docs/midterm-report.md)
-- [Dataset card](data/public/README.md) and [current split/annotation manifest](data/public/yolo-bottle-cup-box-v2-manifest.jsonl)
-- [Original training notebook](notebooks/train_bottle_cup_box.ipynb) and [current model walkthrough](notebooks/laptop_esp32_demo.ipynb)
-- [Baseline evaluation](docs/model-report.md), [machine-readable metrics](docs/model-evaluation.json), and [training curves data](docs/training-results.csv)
-- [YOLO11n evaluation](docs/yolo11-evaluation.md), [recorded metrics](docs/yolo11-evaluation.json), and [evaluation guide](docs/evaluation-guide.md)
-- [Sample results and attribution](docs/sample-results.md)
-- [Installation, running, and Wi-Fi guide](docs/laptop-esp32.md)
-- [Hardware handoff](docs/hardware-implementation.md) and [ESP32 receiver](firmware/visiondrive_receiver/visiondrive_receiver.ino)
-
-Presentation slides and a separate submitted demo-video link have not been supplied.
-
-## Attribution
-
-Object detection uses [Ultralytics YOLO11](https://docs.ultralytics.com/models/yolo11/).
-Depth uses [Depth Anything V2 Metric Indoor Small](https://huggingface.co/depth-anything/Depth-Anything-V2-Metric-Indoor-Small-hf).
-The retained ESPDet baseline uses [Espressif ESP-Detection](https://github.com/espressif/esp-detection).
-Upstream models and libraries retain their licenses; see
-[third-party notices](THIRD_PARTY_NOTICES.md). Downloaded large weights,
-environments, source datasets, recordings, and Wi-Fi credentials stay outside Git.
+Licensing and image attribution are in [third-party notices](THIRD_PARTY_NOTICES.md) and the manifests. No project-wide redistribution license is implied.

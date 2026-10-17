@@ -39,12 +39,6 @@ Dataset annotation terms and individual image terms can differ. Preserve attribu
 
 ## Packaged fine-tuned model
 
-`weights/laptop/yolo11n-bottle-cup-box.pt` is the selected YOLO11n derivative
-fine-tuned for bottle, cup, and box. Its provenance is recorded in the adjacent
-JSON file; training/evaluation settings and measured results are in the YOLO11
-report. It retains Ultralytics' AGPL-3.0 terms, with the license text alongside
-the checkpoint. It is separate from the original ESPDet checkpoint below.
-
 `weights/obstacle/best.pt` is the selected three-class fine-tuned checkpoint. Its class mapping, initialization hash, dataset/split summary, validation-selected confidence, measured results, and artifact hash are recorded in `weights/obstacle/model.json`. The upstream AGPL-3.0 license is preserved as `weights/obstacle/LICENSE`. The upstream architecture and initialization are not original VisionDrive inventions.
 
 The model report describes the limited public-data run and weak box performance. No raw dataset images or original pretrained weights are bundled in Git. The original cat checkpoint is training initialization only and is rejected by the active demo.
@@ -69,13 +63,21 @@ original image URLs, CC BY 2.0 license links, source IDs, and modifications
 are recorded in [sample-result attribution](docs/sample-results.md).
 The group's fixed dataset annotations/splits and individual attribution records
 are published in [the manifest](data/public/bottle-cup-box-manifest.jsonl).
-The expanded 435-image YOLO fine-tuning dataset has a separate
-[version 2 manifest](data/public/yolo-bottle-cup-box-v2-manifest.jsonl), including
-33 additional Open Images box photos assigned only to project training. Each
-photo retains its author, original URL, license, and content hash.
 
 `assets/dataset-preview.png` is a contact sheet of nine annotated public images.
 Its author/source/license records are in [preview attribution](data/public/preview-sources.json).
 The dataset release includes all original image files together with their
 per-image attribution and CC BY 2.0 links. Preview images are resized and overlaid
 with annotation labels; source dataset image bytes are unchanged.
+
+## Current pretrained evaluation cohort
+
+The indoor person/chair photos retain individual CC BY 2.0 authors, original
+pages and license links in `data/public/indoor-evaluation-manifest.jsonl`.
+Open Images annotations are CC BY 4.0. Ground-truth and prediction overlays
+modify source photos only for research visualization; originals remain cached
+outside Git. Published example metadata accompanies each selected image.
+See [the dataset card](docs/dataset_card.md) for attribution, source-release
+checksums, exclusions, candidate comparisons and independence limitations.
+YOLO11n remains the original upstream checkpoint and is never fine-tuned in
+this experiment. No new YOLO training checkpoint is packaged.

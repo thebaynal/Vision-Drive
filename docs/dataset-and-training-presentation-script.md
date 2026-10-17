@@ -1,5 +1,7 @@
 # Presentation script: the dataset and model training
 
+> Historical ESPDet-Pico study. For the current unchanged YOLO11n evaluation, use [the research report](evaluation_results.md) and [notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb). No YOLO fine-tuning is part of that experiment.
+
 **Suggested duration:** approximately 8–10 minutes, depending on pace and questions.
 Read the quoted paragraphs aloud. Bracketed directions are actions for the
 presenter. The accompanying [paper section](paper-dataset-and-training.md)

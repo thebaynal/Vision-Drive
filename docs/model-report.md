@@ -44,8 +44,8 @@ Warm single-image model.predict calls over the evaluation images had median 25.9
 
 ## Reproduce and extend
 
-This is the earlier ESPDet experiment. The current presentation and paper
-describe the newer YOLO11 fine-tuning run. For ESPDet, use its notebook below;
+This is the historical ESPDet experiment. Current YOLO research evaluates the
+unchanged pretrained model separately. For ESPDet, use its notebook below;
 the [recorded training configuration](baseline-training-configuration.json) and
 [training curves](../assets/baseline-training-curves.png) support the methodology.
 

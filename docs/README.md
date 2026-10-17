@@ -1,34 +1,25 @@
 # Project materials
 
-Start with the [project README](../README.md) for group members, specialization,
-architecture, installation, and the live demonstration.
-
-## Submission materials
-
-| Material | File |
+| Material | Location |
 | --- | --- |
-| Midterm requirements and evidence | [Midterm report](midterm-report.md) |
-| Current dataset, provenance, and exact restore command | [Dataset card](../data/public/README.md) |
-| YOLO11 fine-tuning settings and measured test results | [Fine-tuning report](yolo11-finetuning-report.md) |
-| Training notebook | [YOLO11 notebook](../notebooks/train_yolo11.ipynb) |
-| Dataset/training explanation to read aloud | [Presentation script](dataset-and-training-presentation-script.md) |
-| Methodology and results text for the paper | [Paper section](paper-dataset-and-training.md) |
-| Guidance for group documentation writers | [Writing guide](documentation-and-paper-guide.md) |
-| Setup, recording, calibration, and ESP32 commands | [Run guide](laptop-esp32.md) |
-| Hardware implementation handoff | [Hardware guide](hardware-implementation.md) |
-| Actual inference examples and image attribution | [Sample results](sample-results.md) |
-| Software tests and integration scope | [Verification report](verification.md) |
-| Independent camera/course evaluation protocol | [Evaluation guide](evaluation-guide.md) |
-| Third-party licenses and source attribution | [Notices](../THIRD_PARTY_NOTICES.md) |
+| Main executable notebook | [Unchanged YOLO11n evaluation](../notebooks/yolo11n_pretrained_evaluation.ipynb) |
+| Dataset and candidate comparison | [Dataset card](dataset_card.md) |
+| Experimental protocol | [Methodology](evaluation_methodology.md) |
+| Measured results and graphs | [Results](evaluation_results.md) |
+| Independent camera/annotation workflow | [Camera evaluation](camera-evaluation.md) |
+| Installation and demo | [Run guide](laptop-esp32.md) |
+| Demo notebook | [Laptop/ESP32 demo](../notebooks/laptop_esp32_demo.ipynb) |
+| Midterm requirements | [Midterm report](midterm-report.md) |
+| Group paper guidance | [Writing guide](documentation-and-paper-guide.md) |
+| Current presentation script | [Pretrained study explanation](current-presentation-script.md) |
+| Historical training presentation | [ESPDet training explanation](dataset-and-training-presentation-script.md) |
+| Historical ESP paper methodology | [Paper section](paper-dataset-and-training.md) |
+| Historical ESP checkpoint and metrics | [Baseline report](model-report.md) |
+| Historical ESP training notebook | [Training notebook](../notebooks/train_bottle_cup_box.ipynb) |
+| Earlier exploratory bottle/cup YOLO comparison | [Exploratory report](yolo11-evaluation.md) |
+| Firmware integration | [Hardware handoff](hardware-implementation.md) |
+| Tests and constraints | [Verification](verification.md) |
+| Cleanup and recoverable checkpoint | [Ledger](repository-inventory.md) |
+| Licenses and attribution | [Notices](../THIRD_PARTY_NOTICES.md) |
 
-## Comparison experiments
-
-- [Unchanged pretrained YOLO11n](yolo11-evaluation.md): exploratory bottle/cup
-  scores, with no generic box category.
-- [ESPDet-Pico](model-report.md): earlier three-class baseline for future onboard
-  ESP32 work. Its model, notebook, training history, and provenance are retained
-  so earlier results remain reproducible. It is separate from the YOLO model.
-
-Recordings, caches, raw image downloads, virtual environments, and intermediate
-training checkpoints are excluded from Git. Selected model checkpoints and
-compact evidence files belong in the submission; generated local work does not.
+The primary YOLO study does not train a model. Historical ESP training evidence remains separate.

@@ -1,5 +1,13 @@
 # Guide for the documentation and research-paper team
 
+**Current study:** use [the unchanged pretrained YOLO11n report](evaluation_results.md),
+[methodology](evaluation_methodology.md), [dataset card](dataset_card.md),
+[presentation script](current-presentation-script.md) and
+[executed notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb).
+YOLO11n is not fine-tuned. The training procedures and 402-image counts below
+describe only the historical ESPDet-Pico study. Never substitute those scores
+for current YOLO results or claim the group collected the public photographs.
+
 Use this guide to write about **VisionDrive** accurately. Follow the instructor's
 required paper template and citation style; adapt the suggested structure below
 to chapter-based or IMRaD formats. This is a writing guide, not a completed paper.

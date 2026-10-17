@@ -1,0 +1,309 @@
+{
+  "protocol": "indoor-pretrained-v1",
+  "weights_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+  "weights_unchanged": true,
+  "model_parameters": 2616248,
+  "model_parameters_before_fusion": 2624080,
+  "git_commit": "4d1e0cf0a0c4ee00ecec3a5ca84da50e633af7fc",
+  "working_tree_dirty": true,
+  "source_sha256": {
+    "visiondrive/evaluation/data.py": "8c4d8d09e998d5b803b6d9bf7ccda7e1d7afcdda252c700e422bdaefbbfc2bca",
+    "visiondrive/evaluation/metrics.py": "c3ae48a51b570bb99f84b4c422dede334c4700a33b0eb737bc9fb72a7ea89561",
+    "visiondrive/evaluation/report.py": "ee4b01574c2587f793974049dbd13495761366db1540b89c24e2a647a4ceeb7c",
+    "visiondrive/evaluation/runner.py": "c6e057196beedca5b34f15a2deddecca68c668d7f373de463bbce9f0a9d32bc9",
+    "visiondrive/evaluation/system.py": "bdb9c5f300dd3ea243150240396fdb7b2e98342f9703eec616955126776cac54",
+    "visiondrive/evaluation/__init__.py": "32738251128d36b4f624493a269fb0a38237aeb62f2b48b3cd81789f89c975e3",
+    "scripts/benchmark_system.py": "68dc23efc67368041258b6dd2beac6c7bfcf80bfd551ac223490344b2abc96d6",
+    "scripts/build_object_dataset.py": "6d5ba384bf1c4bb5571c475b3a8bd850b5f58e1879cdf15d5e04419b4855dd01",
+    "scripts/download_dataset.py": "f5cb3917f7cc24fa5cb12625be795bc46a4cd4114219ffa2c94dbf9fc6fba6ab",
+    "scripts/evaluate_objects.py": "89c8af65037d973336305366e1fbdab7368851bac4a954a7920daa31868ac505",
+    "scripts/evaluate_pretrained.py": "0d43bae48141e2f7daf66b5851789ec52fad9713b202f8a4970546b39ba28071",
+    "scripts/evaluate_scenarios.py": "bc90a8a405522512a39ec02baacf10de8bef74db0249c8b92dba7304d92efbc7",
+    "scripts/evaluate_yolo.py": "5bc02dc1c168b2a6fc09e143312f47861fd9f36289297dcb7ee886f255165967",
+    "scripts/import_camera_dataset.py": "4b9e2ba6227ae6d6ae700f36b0319a129d3f0f59ad863145bcf0612b760485a1",
+    "scripts/package_model.py": "ee2741bc0707347d12f7d3b5f166585b52891bdf36090c71228bfe97be6c2bdb",
+    "scripts/prepare_dataset.py": "324b3ae2afb5bac31fb4c1ca3f809a99e270c720deeaa7cadd8c0a1bc4709036",
+    "scripts/restore_dataset.py": "bc76b63e240075d218ade89177da134f846a64c268e022a3deab9fb64c9f122c",
+    "scripts/setup_laptop_models.py": "d6e650f2a656caf9905c7298a3bcd5a61ede41515553cc31f7ec53a0915aa169",
+    "scripts/setup_model.py": "9de11465a26919d25599fea4428317c32c4657f9f5b6dbfe03446ca0be6311ac",
+    "scripts/train_model.py": "1bf74556d1115c6db4585a6e105ac1f4f378cfa3346d09fc206f29b23133ca1c",
+    "scripts/validate_annotations.py": "bb871d2e358b52077b034ac5fb934ee6252c407bb83b5175cff7542ed6ba8541",
+    "scripts/__init__.py": "65294950ec0807db79eecad2aac39c8cf829e45609c5603e2126730084c968d8"
+  },
+  "dataset_manifest_sha256": "61eb0fe38832ecb11e88e74eafcda79d3fedf81c2ac93918dd01498ca796cd17",
+  "test_images": 191,
+  "development_images": 58,
+  "configuration": {
+    "protocol": "indoor-pretrained-v1",
+    "dataset": "datasets/indoor-evaluation",
+    "weights": "weights/laptop/yolo11n.pt",
+    "weights_sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+    "output": "outputs/evaluation/yolo11n",
+    "class_ids": [
+      0,
+      56
+    ],
+    "class_names": [
+      "person",
+      "chair"
+    ],
+    "image_size": 640,
+    "device": "0",
+    "batch": 1,
+    "half": false,
+    "confidence": 0.35,
+    "matching_iou": 0.5,
+    "nms_iou": 0.7,
+    "ap_confidence_floor": 0.001,
+    "max_detections": 300,
+    "seed": 20261017,
+    "bootstrap_samples": 1000,
+    "benchmark_warmup": 10,
+    "benchmark_frames": 100,
+    "selection": "Human-verified person AND chair; building-family IsInside; exclude group/depiction/inside targets and ambiguous person hierarchy overlaps; official validation=dev, test=test; no training",
+    "depth_evaluation": "pending: no metric depth ground truth in selected images",
+    "camera_evaluation": "pending: no independent team recordings supplied"
+  },
+  "environment": {
+    "python": "3.13.5",
+    "os": "Windows-11-10.0.26300-SP0",
+    "cpu": "AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD",
+    "logical_cpus": 12,
+    "packages": {
+      "torch": "2.11.0+cu128",
+      "torchvision": "0.26.0+cu128",
+      "ultralytics": "8.3.112",
+      "numpy": "2.2.6",
+      "pandas": "3.0.3",
+      "matplotlib": "3.10.9",
+      "opencv-python": "4.12.0.88",
+      "transformers": "4.57.6",
+      "nbformat": "5.11.1",
+      "nbclient": "0.11.0"
+    },
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "gpu": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+    "device": "0",
+    "image_size": 640,
+    "batch": 1,
+    "half": false
+  },
+  "fixed_operating_point": {
+    "per_class": {
+      "person": {
+        "tp": 93,
+        "fp": 27,
+        "fn": 62,
+        "precision": 0.775,
+        "recall": 0.6,
+        "f1": 0.6763636363636364
+      },
+      "chair": {
+        "tp": 238,
+        "fp": 147,
+        "fn": 265,
+        "precision": 0.6181818181818182,
+        "recall": 0.4731610337972167,
+        "f1": 0.536036036036036
+      }
+    },
+    "micro": {
+      "tp": 331,
+      "fp": 174,
+      "fn": 327,
+      "precision": 0.6554455445544555,
+      "recall": 0.5030395136778115,
+      "f1": 0.5692175408426483
+    },
+    "macro": {
+      "precision": 0.696590909090909,
+      "recall": 0.5365805168986083,
+      "f1": 0.6061998361998362
+    }
+  },
+  "native_ap": {
+    "map50": 0.6022617847007004,
+    "map75": 0.4118533608714624,
+    "map50_95": 0.39424851349669615,
+    "per_class": {
+      "person": {
+        "ap50": 0.6591255606610116,
+        "ap75": 0.4343814729634178,
+        "ap50_95": 0.424838965152769
+      },
+      "chair": {
+        "ap50": 0.545398008740389,
+        "ap75": 0.38932524877950697,
+        "ap50_95": 0.3636580618406233
+      }
+    },
+    "native_validation_speed_ms": {
+      "preprocess": 0.8757476443766143,
+      "inference": 10.920161780398717,
+      "loss": 0.007291623017584896,
+      "postprocess": 2.294800523958042
+    }
+  },
+  "per_class": {
+    "person": {
+      "tp": 93,
+      "fp": 27,
+      "fn": 62,
+      "precision": 0.775,
+      "recall": 0.6,
+      "f1": 0.6763636363636364,
+      "ap50": 0.6591255606610116,
+      "ap75": 0.4343814729634178,
+      "ap50_95": 0.424838965152769,
+      "ground_truth": 155
+    },
+    "chair": {
+      "tp": 238,
+      "fp": 147,
+      "fn": 265,
+      "precision": 0.6181818181818182,
+      "recall": 0.4731610337972167,
+      "f1": 0.536036036036036,
+      "ap50": 0.545398008740389,
+      "ap75": 0.38932524877950697,
+      "ap50_95": 0.3636580618406233,
+      "ground_truth": 503
+    }
+  },
+  "bootstrap": {
+    "method": "percentile bootstrap over photographer groups (scene proxy)",
+    "groups": 184,
+    "resamples": 1000,
+    "seed": 20261017,
+    "micro_95ci": {
+      "precision": [
+        0.6012187405430686,
+        0.7095429224494265
+      ],
+      "recall": [
+        0.44966796520286223,
+        0.554636784345768
+      ],
+      "f1": [
+        0.528509432918778,
+        0.608795063230082
+      ]
+    },
+    "limitation": "Does not account for unidentified cross-photographer scene overlap or COCO pretraining overlap; no AP CI."
+  },
+  "benchmark": {
+    "preprocess": {
+      "mean_ms": 2.958892000679043,
+      "median_ms": 2.870000000257278,
+      "std_ms": 0.3992968627300555,
+      "p95_ms": 3.619269996488583,
+      "fps_from_mean": 337.96434603578217
+    },
+    "inference": {
+      "mean_ms": 9.69639000002644,
+      "median_ms": 9.015700001327787,
+      "std_ms": 1.8238302684772505,
+      "p95_ms": 12.817800002449076,
+      "fps_from_mean": 103.13116530969496
+    },
+    "postprocess": {
+      "mean_ms": 2.3561599999811733,
+      "median_ms": 1.9978999989689328,
+      "std_ms": 3.2242930332645483,
+      "p95_ms": 2.7341800043359386,
+      "fps_from_mean": 424.4193942720318
+    },
+    "predict_wall": {
+      "mean_ms": 15.456682000294677,
+      "median_ms": 14.568799997505266,
+      "std_ms": 3.9333915428649884,
+      "p95_ms": 18.74030500257504,
+      "fps_from_mean": 64.69693819028788
+    },
+    "warmup_iterations": 10,
+    "frames": 100,
+    "batch": 1,
+    "cuda_synchronized": true,
+    "image_size": 640,
+    "half": false,
+    "includes": "in-memory BGR to YOLO preprocessing, network, NMS; predict_wall adds Python overhead",
+    "excludes": "disk decode, camera, depth, display, controller and network; not complete-application FPS"
+  },
+  "condition_recall": [
+    {
+      "condition": "dark_mean_<70",
+      "tp": 27,
+      "ground_truth": 76,
+      "recall": 0.35526315789473684
+    },
+    {
+      "condition": "few_targets_<5",
+      "tp": 119,
+      "ground_truth": 196,
+      "recall": 0.6071428571428571
+    },
+    {
+      "condition": "large_>=96px",
+      "tp": 279,
+      "ground_truth": 431,
+      "recall": 0.6473317865429234
+    },
+    {
+      "condition": "many_targets_>=5",
+      "tp": 212,
+      "ground_truth": 462,
+      "recall": 0.4588744588744589
+    },
+    {
+      "condition": "medium_32-96px",
+      "tp": 52,
+      "ground_truth": 193,
+      "recall": 0.2694300518134715
+    },
+    {
+      "condition": "not_occluded",
+      "tp": 196,
+      "ground_truth": 305,
+      "recall": 0.6426229508196721
+    },
+    {
+      "condition": "not_truncated",
+      "tp": 256,
+      "ground_truth": 539,
+      "recall": 0.4749536178107607
+    },
+    {
+      "condition": "occluded",
+      "tp": 135,
+      "ground_truth": 353,
+      "recall": 0.38243626062322944
+    },
+    {
+      "condition": "other_luminance",
+      "tp": 304,
+      "ground_truth": 582,
+      "recall": 0.5223367697594502
+    },
+    {
+      "condition": "small_<32px",
+      "tp": 0,
+      "ground_truth": 34,
+      "recall": 0.0
+    },
+    {
+      "condition": "truncated",
+      "tp": 75,
+      "ground_truth": 119,
+      "recall": 0.6302521008403361
+    }
+  ],
+  "limitations": [
+    "Photographer grouping is a proxy; physical scene IDs are unavailable.",
+    "COCO pretraining overlap is not ruled out by source split or hashing within this repository.",
+    "Public photographs are not a low-mounted robot camera course; no metric depth or motion ground truth."
+  ],
+  "depth_evaluation": "pending: no metric depth ground truth in selected images",
+  "camera_evaluation": "pending: no independent team recordings supplied",
+  "status": "EXPLORATORY ONLY: Chair/Stool source taxonomy is incomplete for COCO chair. Not primary evidence."
+}
