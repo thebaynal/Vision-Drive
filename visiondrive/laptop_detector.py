@@ -34,9 +34,8 @@ class LaptopDetector:
             from .depth import MetricDepth
             torch_device = "cuda:" + device if device.isdecimal() else device
             self.depth = MetricDepth(depth_model, torch_device, depth_size, depth_scale)
-        categories = " bottle/cup/box" if list(self.names.values()) == ["bottle", "cup", "box"] else ""
-        self.label = "objects + depth" if self.depth else ("bottle/cup/box" if categories else "COCO objects")
-        self.name = f"Laptop YOLO11n{categories} 640" + (" + metric depth" if self.depth else " / image proximity")
+        self.label = "objects + depth" if self.depth else "COCO objects"
+        self.name = "Laptop YOLO11n 640" + (" + metric depth" if self.depth else " / image proximity")
 
     def warmup(self):
         self.predict(np.zeros((360, 640, 3), dtype=np.uint8))

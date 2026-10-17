@@ -1,25 +1,22 @@
 # Third-party notices and provenance
 
-This repository contains documentation, application/tooling code, tests, artwork, and the compact fine-tuned bottle/cup/box checkpoint. External source, initialization checkpoints, datasets, and full training runs remain ignored. Links identify dependencies; they do not transfer ownership to VisionDrive.
+This repository contains documentation, application/tooling code, tests and artwork for pretrained YOLO11n. External source, initialization checkpoints, datasets, and full training runs remain ignored. Links identify dependencies; they do not transfer ownership to VisionDrive.
 
 ## Upstream components
 
 | Component | Intended use | Source / license reference |
 | --- | --- | --- |
-| ESP-Detection / ESPDet-Pico | Detector architecture, custom modules, transfer-learning initialization, export workflow | [Repository](https://github.com/espressif/esp-detection), [upstream license](https://github.com/espressif/esp-detection/blob/main/LICENSE) |
-| ESP-DL | Future ESP32-S3 inference | [Repository and applicable notices](https://github.com/espressif/esp-dl) |
-| ESP-IDF | Future firmware and board integration | [Repository and applicable notices](https://github.com/espressif/esp-idf) |
-| PyTorch and torchvision | Training and desktop inference | [PyTorch](https://github.com/pytorch/pytorch), [torchvision](https://github.com/pytorch/vision) |
-| Ultralytics / YOLO11n | Pretrained laptop detector and API used by ESP-Detection | [Repository and licensing information](https://github.com/ultralytics/ultralytics) |
+| PyTorch and torchvision | Desktop inference | [PyTorch](https://github.com/pytorch/pytorch), [torchvision](https://github.com/pytorch/vision) |
+| Ultralytics / YOLO11n | Pretrained laptop detector | [Repository and licensing information](https://github.com/ultralytics/ultralytics) |
 | Depth Anything V2 Metric Indoor Small | Pretrained laptop depth model; Apache-2.0 | [Model and license](https://huggingface.co/depth-anything/Depth-Anything-V2-Metric-Indoor-Small-hf) |
 | Hugging Face Transformers | Depth preprocessing and model implementation | [Repository and license](https://github.com/huggingface/transformers) |
 | Arduino-ESP32 | Wi-Fi motor receiver firmware platform | [Repository and license](https://github.com/espressif/arduino-esp32) |
 | OpenCV | Image capture, video, and presentation overlay | [Repository and license](https://github.com/opencv/opencv) |
-| Open Images | Initial training and evaluation image sources | [Download and attribution information](https://storage.googleapis.com/openimages/web/download_v7.html) |
+| Open Images | Indoor evaluation and application example image sources | [Download and attribution information](https://storage.googleapis.com/openimages/web/download_v7.html) |
 | COCO / pycocotools | Secondary bottle/cup benchmark images, original annotations and official evaluator | [COCO downloads and terms](https://cocodataset.org/#download), [COCO API source/license](https://github.com/cocodataset/cocoapi), [per-image license metadata](data/public/coco-objects-manifest.jsonl) |
 | Shields.io | Remote README status badges | [Service](https://shields.io/) |
 
-ESP-Detection identifies its upstream license as AGPL-3.0. Retain its applicable notices and review the actual pinned dependencies and licenses when introducing code or distributing a trained application. Do not label third-party code or weights as an original VisionDrive model architecture.
+Ultralytics YOLO11n retains its upstream licensing terms. The pretrained architecture and weights are not original VisionDrive inventions.
 
 ## Provenance records
 
@@ -34,19 +31,9 @@ For every dataset image, retain:
 
 Dataset annotation terms and individual image terms can differ. Preserve attribution and validate redistribution rights before publishing images or presentation recordings. Prefer manifests and download instructions over committing the dataset.
 
-## Model setup provenance
-
-`scripts/setup_model.py` pins ESP-Detection revision `28de5902a357d99dd9a5db0f52905255641c5a78`. The upstream 224 × 224 cat checkpoint has SHA-256 `7afca1564f45c3087e39758049412337ff4cec6f63a8f7a5380d50999e4924c5`; setup calculates and records its actual hash. It is an initialization/smoke-test model, not a bottle/cup/box detector. The adapter uses the upstream registration interface without copying its model implementation into this repository.
-
-## Packaged fine-tuned model
-
-`weights/obstacle/best.pt` is the selected three-class fine-tuned checkpoint. Its class mapping, initialization hash, dataset/split summary, validation-selected confidence, measured results, and artifact hash are recorded in `weights/obstacle/model.json`. The upstream AGPL-3.0 license is preserved as `weights/obstacle/LICENSE`. The upstream architecture and initialization are not original VisionDrive inventions.
-
-The model report describes the limited public-data run and weak box performance. No raw dataset images or original pretrained weights are bundled in Git. The original cat checkpoint is training initialization only and is rejected by the active demo.
-
 ## Project licensing
 
-No project-wide redistribution license is declared. This file is an attribution inventory, not a replacement for an upstream license. Keep third-party notices and the packaged model licenses intact.
+No project-wide redistribution license is declared. This file is an attribution inventory, not a replacement for an upstream license. Keep applicable third-party notices intact.
 
 ## Laptop models and sample images
 
@@ -62,18 +49,9 @@ The actual model-output screenshots in `assets/laptop-demo.png` and
 `assets/unknown-obstacle-demo.png` include modified public images. Authors,
 original image URLs, CC BY 2.0 license links, source IDs, and modifications
 are recorded in [sample-result attribution](THIRD_PARTY_NOTICES.md#application-screenshot-attribution).
-The group's fixed dataset annotations/splits and individual attribution records
-are published in [the manifest](data/public/bottle-cup-box-manifest.jsonl).
-
-`assets/dataset-preview.png` is a contact sheet of nine annotated public images.
-Its author/source/license records are in [preview attribution](data/public/preview-sources.json).
-The dataset release includes all original image files together with their
-per-image attribution and CC BY 2.0 links. Preview images are resized and overlaid
-with annotation labels; source dataset image bytes are unchanged.
-
 ## Current pretrained evaluation cohort
 
-The indoor person/chair photos retain individual CC BY 2.0 authors, original
+The indoor person photos retain individual CC BY 2.0 authors, original
 pages and license links in `data/public/indoor-evaluation-manifest.jsonl`.
 Open Images annotations are CC BY 4.0. Ground-truth and prediction overlays
 modify source photos only for research visualization; originals remain cached
@@ -98,7 +76,7 @@ Actual bottle recognition and distance-aware continuation. A distant bottle rema
 
 Instruction in this recorded frame: **FORWARD** — No nearby center obstacle detected. Distances are learned estimates and labels may be wrong; this is an integration example, not a calibrated course test.
 
-Source image: Open Images ID `487815c82c579830`, author **Kasia**, [original image](https://farm1.staticflickr.com/2097/2258189812_98f8dcc2f1_o.jpg), [image license](https://creativecommons.org/licenses/by/2.0/). VisionDrive resized the image and added model predictions/instruction overlays. The file hash, split, and annotations are retained in the [dataset manifest](data/public/bottle-cup-box-manifest.jsonl).
+Source image: Open Images ID `487815c82c579830`, author **Kasia**, [original image](https://farm1.staticflickr.com/2097/2258189812_98f8dcc2f1_o.jpg), [image license](https://creativecommons.org/licenses/by/2.0/). VisionDrive resized the image and added model predictions/instruction overlays. The original file hash and source metadata are retained in [application image attribution](assets/application-source-attribution.json).
 
 ### Actual depth-based near surfaces on a box scene
 
@@ -108,10 +86,10 @@ Actual depth-based near surfaces on a box scene. No box class is required; the c
 
 Instruction in this recorded frame: **STOP** — All three regions blocked. Distances are learned estimates and labels may be wrong; this is an integration example, not a calibrated course test.
 
-Source image: Open Images ID `995243986ca2dd84`, author **Justin Henry**, [original image](https://farm5.staticflickr.com/2357/1940024041_e7bc88652f_o.jpg), [image license](https://creativecommons.org/licenses/by/2.0/). VisionDrive resized the image and added model predictions/instruction overlays. The file hash, split, and annotations are retained in the [dataset manifest](data/public/bottle-cup-box-manifest.jsonl).
+Source image: Open Images ID `995243986ca2dd84`, author **Justin Henry**, [original image](https://farm5.staticflickr.com/2357/1940024041_e7bc88652f_o.jpg), [image license](https://creativecommons.org/licenses/by/2.0/). VisionDrive resized the image and added model predictions/instruction overlays. The original file hash and source metadata are retained in [application image attribution](assets/application-source-attribution.json).
 
 ### Interpretation and measurement limits
 
 The six-second input produced 179 display frames and 11 unique processed observations. The application ended in STOP / VIDEO ENDED. Median combined inference time was 477 ms on this development CPU, excluding camera capture/rendering. The application drops old frames to avoid an inference backlog. These counts and timing are integration evidence, not an avoidance-accuracy score.
 
-LEFT/RIGHT behavior is covered by controller and known-depth-field tests. This particular public-image clip produced FORWARD and STOP; it is not evidence of successful physical turning. See [machine-readable smoke results](docs/laptop-smoke-results.json), [verification](docs/verification.md), and [the original detector report](docs/model-report.md). The old three-class metrics must not be attributed to the hybrid.
+LEFT/RIGHT behavior is covered by controller and known-depth-field tests. This particular public-image clip produced FORWARD and STOP; it is not evidence of successful physical turning. See [machine-readable smoke results](docs/laptop-smoke-results.json), [verification](docs/verification.md).

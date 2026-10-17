@@ -28,18 +28,7 @@ models/
 *.pt
 *.pth
 *.onnx
-*.espdl
 *.tflite
-
-# Include only selected demo models and their provenance/licenses.
-# Datasets, initialization weights, and full training runs stay ignored.
-!weights/
-weights/*
-!weights/obstacle/
-weights/obstacle/*
-!weights/obstacle/best.pt
-!weights/obstacle/model.json
-!weights/obstacle/LICENSE
 
 # Training, recordings, logs, and temporary verification output
 runs/

@@ -1,7 +1,7 @@
 """Freeze a fresh person-only indoor cohort BEFORE inference.
 
 Uses official source annotations cached/downloaded by the acquisition workflow.
-Prior inspected cohort and ESP baseline IDs are excluded. No model is imported.
+Previously inspected image IDs are excluded. No model is imported.
 The distributed manifest, not this selection script, is the normal restore input.
 """
 from collections import Counter,defaultdict
@@ -19,7 +19,8 @@ def build():
     old_manifest=ROOT/'data/public/indoor-evaluation-manifest.jsonl'
     archive=ROOT/'data/public/exploratory-indoor-manifest.jsonl'
     if not archive.exists():archive.write_bytes(old_manifest.read_bytes())
-    excluded={r['image_id'] for p in [archive,ROOT/'data/public/bottle-cup-box-manifest.jsonl'] for r in read_jsonl(p)}
+    excluded={r['image_id'] for r in read_jsonl(archive)}
+    excluded.update(json.loads((ROOT/'data/public/prior-image-exclusions.json').read_text(encoding='utf-8'))['image_ids'])
     hierarchy=CACHE/'hierarchy.json'
     fetch('https://storage.googleapis.com/openimages/2018_04/bbox_labels_600_hierarchy.json',hierarchy)
     building_ids=descendants(json.loads(hierarchy.read_text()),'/m/0cgh4')
@@ -51,7 +52,7 @@ def build():
                 if m['ImageID'] in verified:metadata[m['ImageID']]=m
         rows=[];counts=Counter()
         for image_id in sorted(inside):
-            if image_id in excluded:counts['prior_inspected_or_baseline_image']+=1;continue
+            if image_id in excluded:counts['prior_inspected_image']+=1;continue
             if image_id not in verified:counts['unverified_person_presence_absence']+=1;continue
             if image_id in bad:counts['target_attribute_exclusion']+=1;continue
             objects,collapsed=map_objects(groups[image_id])
@@ -85,7 +86,7 @@ def build():
     protocol={'protocol':'indoor-pretrained-v3-fresh-person','selection_seed':20261017,'target_images':400,
         'partitions':{'dev':80,'test':320},'positive_image_fraction':.75,'one_image_per_photographer':True,
         'prior_excluded_manifest_sha256':digest(archive),'source_files':source_files,'selection_audit':audit,
-        'test_policy':'New images not in prior inspected cohort or baseline; source-only selection, fixed person-only protocol before model predictions.',
+        'test_policy':'New images not in prior inspected data; source-only selection, fixed person-only protocol before model predictions.',
         'prior_protocol_issue':'Source Stool/Chair is not exhaustive for COCO chair; chair excluded from primary metrics.'}
     write_json(ROOT/'data/public/indoor-selection-audit.json',protocol)
     # Stage the source-only manifest before any image/model inspection. acquire

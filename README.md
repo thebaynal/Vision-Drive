@@ -25,6 +25,9 @@ YOLO11n** identifies objects, while **Depth Anything V2 Metric Indoor Small**
 estimates surface depth. The application examines the left, center and right
 regions, then explains the resulting movement recommendation.
 
+**YOLO11n is the project's only object detector.** The depth model supplements
+proximity analysis; the optional ESP32 receives movement commands from the laptop.
+
 The visualization works without an ESP32 or physical car. It is a working academic
 prototype; calibrated distance, independent vehicle-camera performance and
 physical collision avoidance remain unvalidated.
@@ -126,7 +129,7 @@ selected from Open Images.
 | **Total** | **400** | **300** | **100** | **923** |
 
 The cohort contains one image per photographer profile. Previously inspected
-pilot and historical baseline image IDs are excluded. Source-only selection,
+previously inspected image IDs are excluded. Source-only selection,
 image hashes and evaluation settings were frozen in commit
 [`8a6f52a`](https://github.com/thebaynal/Vision-Drive/commit/8a6f52a)
 before inference on the fresh test set.
@@ -144,10 +147,6 @@ coverage for the COCO chair concept. The live detector retains all 80 categories
 - [Selection audit and source checksums](data/public/indoor-selection-audit.json)
 - [Chair/Stool taxonomy audit](docs/dataset_card.md#chair-stool-taxonomy)
 
-The historical ESPDet-Pico experiment separately retains its **402-image
-training/validation/test dataset**. The unchanged YOLO study uses development/test
-partitions and introduces no unnecessary training workflow.
-
 ## Model and algorithm used
 
 | Component | Configuration |
@@ -157,11 +156,9 @@ partitions and introduces no unnecessary training workflow.
 | Navigation logic | Three-region proximity analysis and stateful confirmation |
 | Primary evaluation | Fresh indoor person study, preserving the original 80-class model |
 | Supplementary evaluation | Bottle and cup on all 5,000 COCO validation images |
-| Historical baseline | Separately trained ESPDet-Pico bottle/cup/box detector |
 
 Checkpoint hashes, class mappings, matching rules and uncertainty methods are
 documented in the [evaluation methodology](docs/dataset_card.md#evaluation-methodology).
-Historical ESP training records do not describe YOLO performance.
 
 ### Pretrained YOLO11n: origin and published metrics
 
@@ -512,12 +509,6 @@ The midterm asks **“Can the System SEE and RECOGNIZE?”** The
 [midterm report](docs/documentation-and-paper-guide.md#midterm-evidence) maps the working pipeline, datasets,
 image processing and evaluation artifacts to that requirement.
 
-The historical ESPDet-Pico study preserves its
-[training notebook](notebooks/train_bottle_cup_box.ipynb),
-[training curves](assets/baseline-training-curves.png) and
-[measured baseline report](docs/model-report.md). Its training/validation/test
-partitions are separate from the unchanged pretrained YOLO experiment.
-
 Current limitations:
 
 - The fresh indoor study scores person only; the separate COCO benchmark scores bottle and cup. The remaining 77 classes are unscored across these studies.
@@ -535,11 +526,11 @@ recordings, reviewed annotations, depth references and acceptable movement actio
 visiondrive/       Live perception, controller, visualization and communication
   evaluation/     Offline research utilities
 scripts/           Setup, dataset preparation, evaluation and camera import
-notebooks/         Executed YOLO evaluation and historical/demo notebooks
+notebooks/         Executed YOLO evaluation and demonstration notebooks
 config/            Application and evaluation settings
 data/public/       Frozen manifests, attribution and source audits
 docs/              Methodology, reports, writing guides and measured tables
-assets/            Application examples, evaluation graphs and baseline curves
+assets/            Application examples, evaluation graphs and attribution
 firmware/          ESP32 command receiver and watchdog
 tests/             Python and native firmware checks
 ```
@@ -552,9 +543,8 @@ tests/             Python and native firmware checks
 | Dataset sources and licenses | [Dataset card](docs/dataset_card.md) |
 | Methodology and measured results | [Methodology](docs/dataset_card.md#evaluation-methodology) · [Report](docs/evaluation_results.md) |
 | Presentation and paper guidance | [Presentation script](docs/documentation-and-paper-guide.md#presentation-script) · [Writing guide](docs/documentation-and-paper-guide.md) |
-| Historical dataset/training paper section | [ESPDet paper section](docs/model-report.md#historical-methodology) |
 | Hardware implementation | [Hardware handoff](docs/laptop-esp32.md#hardware-implementation) |
-| Verification | [143 Python tests and integration checks](docs/verification.md) |
+| Verification | [127 Python tests and integration checks](docs/verification.md) |
 
 ## References and attribution
 
@@ -592,7 +582,6 @@ a formal YOLO11 research paper.
 - [COCO official downloads and annotations](https://cocodataset.org/#download)
 - [Lin et al., Microsoft COCO: Common Objects in Context](https://arxiv.org/abs/1405.0312)
 - [Depth Anything V2](https://github.com/DepthAnything/Depth-Anything-V2)
-- [Espressif ESP-Detection](https://github.com/espressif/esp-detection)
 - [Open Images annotation protocol](https://storage.googleapis.com/openimages/web/factsfigures_v7.html)
 - [Open Images download specification](https://storage.googleapis.com/openimages/web/download_v7.html)
 - [The Open Images Dataset V4 paper](https://arxiv.org/abs/1811.00982)

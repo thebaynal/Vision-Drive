@@ -34,22 +34,3 @@ See the [dataset and reproduction protocol](../../docs/dataset_card.md#secondary
 Raw photos are downloaded from [COCO](https://cocodataset.org/#download) and kept
 outside Git. [COCO class counts](coco2017-class-counts.csv) describe the original
 training and validation distributions.
-
-## Historical ESPDet-Pico baseline: preview and download
-
-The original bottle/cup/box experiment retains **402 images** (280 train, 60
-validation, 62 test) and 688 object instances. Its source is Open Images, with new
-project partitions. It is separate from current pretrained YOLO evaluation.
-
-![Historical annotated training/validation/test examples](../../assets/dataset-preview.png)
-
-- [Download page](https://github.com/thebaynal/Vision-Drive/releases/tag/dataset-v1.0.0).
-- [Dataset ZIP](https://github.com/thebaynal/Vision-Drive/releases/download/dataset-v1.0.0/VisionDrive-bottle-cup-box-dataset.zip).
-- [Per-image manifest and attribution](bottle-cup-box-manifest.jsonl).
-- [Preview image credits](preview-sources.json).
-- [Original training notebook](../../notebooks/train_bottle_cup_box.ipynb).
-- [Measured ESPDet results](../../docs/model-report.md).
-
-These photos were gathered from their attributed public sources, not captured by
-the group. Keep author, original page, license and transformation notices when
-presenting them.

@@ -45,13 +45,10 @@ The PC requires the PyTorch runtime; the ESP32 requires only its receiver firmwa
 .\run_logic_demo.cmd --avoid-distance 1.5 --stop-distance 0.45
 # Explicit alternative backends:
 .\run_logic_demo.cmd --detector coco  # Known categories, image proximity only
-.\run_logic_demo.cmd --detector esp   # Original tiny bottle/cup/box model
 ```
 
 Use [the demo notebook](../notebooks/laptop_esp32_demo.ipynb) to inspect model
-setup, depth, detections, and instructions in stages. The original
-[training notebook](../notebooks/train_bottle_cup_box.ipynb) remains available
-for the earlier ESPDet experiment. The current [pretrained evaluation notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb)
+setup, depth, detections, and instructions in stages. The [pretrained evaluation notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb)
 and [research report](evaluation_results.md) evaluate unchanged YOLO11n.
 Its 80 COCO categories do not provide universal obstacle detection.
 
@@ -119,8 +116,8 @@ correction. One scale factor cannot fix all errors. Check the entire course,
 choose speed and thresholds from observed error/latency/stopping distance,
 and keep these trials supervised.
 
-With `--detector esp` or `--detector coco`, there is no depth model: the lower box
-edge is a camera-specific proximity proxy. Boxes ending above 60% of image
+With `--detector coco`, there is no depth model: the lower box edge is a
+camera-specific proximity proxy. Boxes ending above 60% of image
 height are considered distant; a center box reaching below 92% with at least
 4% of frame area is an emergency. **These percentages are not meters.**
 
@@ -174,11 +171,9 @@ allow the local private network used for the demo.
 
 > This is a camera-based obstacle-avoidance prototype. A laptop performs
 > object detection, depth estimation, and movement decisions; an ESP32 is
-> designed to receive expiring commands and control the motors. Detection is
-> broader than our initial three-object model. Hardware driving, camera-distance
+> designed to receive expiring commands and control the motors. Hardware driving, camera-distance
 > calibration, and avoidance accuracy still require course testing.
 
-The original ESPDet model remains an option for future onboard research.
 The current YOLO-plus-depth system is **not an onboard ESP32 model**. A camera
 connected to an ESP32 could stream to the laptop later; that streaming firmware
 is separate from this motor receiver and is not included here.
@@ -188,7 +183,6 @@ is separate from this motor receiver and is not included here.
 - [Ultralytics YOLO11](https://docs.ultralytics.com/models/yolo11/): pretrained category detector.
 - [Depth Anything V2 indoor metric Small](https://huggingface.co/depth-anything/Depth-Anything-V2-Metric-Indoor-Small-hf): learned indoor depth, Apache-2.0.
 - [Transformers depth model documentation](https://huggingface.co/docs/transformers/model_doc/depth_anything_v2): metric head and inference.
-- [Espressif's COCO model measurements](https://github.com/espressif/esp-dl/blob/master/models/coco_detect/README.md): optional future onboard YOLO path; published upstream timing is not a VisionDrive measurement.
 
 
 <a id="hardware-implementation"></a>
@@ -258,8 +252,3 @@ replay, malformed packets, ownership, disconnect, and timer wraparound. The UDP
 sender has localhost communication tests. **An Arduino board build, upload,
 Wi-Fi range, GPIO operation, motor response, and physical driving have not been
 validated.** Desktop/native checks do not establish those results.
-
-The retained [ESPDet training notebook](../notebooks/train_bottle_cup_box.ipynb)
-supports a separate future onboard research path. Moving inference onto an
-ESP32-S3 would additionally require export, quantization, memory/latency profiling,
-and prediction-parity checks; that work is not needed for the current split system.

@@ -21,10 +21,9 @@ it does not run those neural networks. Physical driving remains unvalidated.
 | --- | --- |
 | Current pretrained YOLO11n | 400 fresh indoor photos, 80 dev / 320 test, 923 person annotations; person-only localization score; no YOLO fine-tuning |
 | Supplementary bottle/cup benchmark | All 5,000 COCO val2017 images, 1,013 bottle and 895 cup non-crowd instances; official COCO evaluation; known upstream validation data |
-| Historical ESPDet-Pico | 402 bottle/cup/box images with 280/60/62 training/validation/test; separate training and measured baseline |
 | Hybrid demo | Real object/depth inference and displayed instructions; not an avoidance-accuracy measurement |
 
-Do not call mAP classification accuracy, attribute ESP results to YOLO, or imply
+Do not call mAP classification accuracy or imply
 that the group photographed public source images. The live detector retains 80
 classes. The primary fresh indoor score covers person only; a separate COCO validation benchmark measures bottle and cup. Source Stool/Chair
 coverage does not support a reliable COCO-chair score.
@@ -36,7 +35,6 @@ coverage does not support a reliable COCO-chair score.
 - [Measured report, graphs and failure examples](evaluation_results.md).
 - [Executed research notebook](../notebooks/yolo11n_pretrained_evaluation.ipynb).
 - [Measured JSON](results/yolo11n/metrics.json), [per-class CSV](results/yolo11n/per_class_metrics.csv) and [source attribution](results/yolo11n/dataset_provenance.csv).
-- [Historical ESP methodology and results](model-report.md).
 - [Application and hardware guide](laptop-esp32.md).
 - [Verification and remaining limitations](verification.md).
 - [Third-party sources and screenshot credits](../THIRD_PARTY_NOTICES.md).
@@ -62,10 +60,10 @@ The evaluation NMS (.70) differs from the live default (.45).
 
 | Requirement | Submission evidence | Qualification |
 | --- | --- | --- |
-| Training / validation / testing | Historical ESP 280/60/62 split and training notebook | Public source images; physical scene independence unverified |
-| Dataset appropriate to specialization | Fresh 400-image indoor person study and preserved baseline | No universal-obstacle coverage claim |
+| Training / validation / testing | Upstream COCO train2017/val2017; local 80-image development / 320-image test cohort | The group uses pretrained weights and has no local training set; confirm the instructor accepts this evaluation scope |
+| Dataset appropriate to specialization | Fresh 400-image indoor person study and supplementary 5,000-image bottle/cup benchmark | No universal-obstacle coverage claim |
 | Computer vision and image processing | Actual YOLO/depth demo, letterboxing, proximity and floor processing | Metric distance accuracy pending references |
-| Model development and evaluation | Historical ESP training; current unchanged YOLO evaluation | The current study does not retrain YOLO |
+| Model development and evaluation | Pretrained YOLO11n integration and measured person/bottle/cup localization | The current study does not retrain YOLO |
 | Unseen situations | Fresh test images excluded from prior inspected pilot, frozen before inference | Camera-domain testing and COCO overlap audit remain pending |
 | Working visual system | Demo notebook, video workflow and verification records | No physical car success rate |
 
@@ -75,16 +73,16 @@ invent field trials, dataset collection sessions, distance labels or scores.
 ## Figures and citations
 
 Use actual evaluation graphs in `assets/evaluation/`, the architecture in the
-README and historical curves only when discussing ESP training. Give each figure
+README. Give each figure
 a caption, model/configuration, dataset scope and applicable photo attribution.
 Retain the provided author/source/license records. Cite Open Images, Ultralytics,
-Depth Anything V2 and Espressif from the linked original sources; do not invent
+Depth Anything V2 and COCO from the linked original sources; do not invent
 bibliography entries or substitute published benchmarks for local measurements.
 
 ## Before submission
 
 Verify that reported values match the CSV/JSON, titles distinguish current and
-historical studies, table sample counts are correct, limitations are visible,
+supplementary studies, table sample counts are correct, limitations are visible,
 and every teammate can explain the data source and the person-only score.
 
 

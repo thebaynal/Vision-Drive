@@ -74,7 +74,7 @@ def observe(detections, config):
         box = (det.x1, det.y1, det.x2, det.y2)
         area = (det.x2 - det.x1) * (det.y2 - det.y1)
         accepted.append(det)
-        # Metric depth takes priority when supplied. ESPDet alone uses a fixed
+        # Metric depth takes priority when supplied. Object-only detection uses a fixed
         # camera's ground-contact position as a calibrated proximity proxy.
         far = (det.distance_m > config.avoid_distance_m if det.distance_m is not None
                else det.y2 < config.approach_top)

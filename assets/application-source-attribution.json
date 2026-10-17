@@ -1,0 +1,28 @@
+[
+  {
+    "asset": "laptop-demo.png",
+    "image_id": "487815c82c579830",
+    "sha256": "7e61d25ec950daa0f5af760f833878931926fc8151debd8c759cb131d48b2c75",
+    "source": {
+      "dataset": "Open Images",
+      "original_split": "validation",
+      "url": "https://farm1.staticflickr.com/2097/2258189812_98f8dcc2f1_o.jpg",
+      "license": "https://creativecommons.org/licenses/by/2.0/",
+      "author": "Kasia"
+    },
+    "modifications": "Resized and overlaid with YOLO11n/depth predictions and movement instructions"
+  },
+  {
+    "asset": "unknown-obstacle-demo.png",
+    "image_id": "995243986ca2dd84",
+    "sha256": "40236693c7713f2c572506e591c7f78e81bdf8daa491fbb9229e233bd9553231",
+    "source": {
+      "dataset": "Open Images",
+      "original_split": "validation",
+      "url": "https://farm5.staticflickr.com/2357/1940024041_e7bc88652f_o.jpg",
+      "license": "https://creativecommons.org/licenses/by/2.0/",
+      "author": "Justin Henry"
+    },
+    "modifications": "Resized and overlaid with YOLO11n/depth predictions and movement instructions"
+  }
+]

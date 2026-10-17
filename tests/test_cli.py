@@ -2,9 +2,17 @@ import subprocess
 import sys
 from pathlib import Path
 import cv2
+import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_removed_detector_backend_is_rejected():
+    from demo import parser
+    with pytest.raises(SystemExit) as error:
+        parser().parse_args(['--detector', 'esp'])
+    assert error.value.code == 2
 
 
 def test_simulation_records_and_labels_itself(tmp_path):
@@ -26,11 +34,11 @@ def test_simulation_records_and_labels_itself(tmp_path):
 
 
 def test_missing_weights_error_precedes_camera_open(tmp_path):
-    result = subprocess.run([sys.executable, str(ROOT / "demo.py"), "--detector", "esp", "--weights", str(tmp_path / "missing.pt"),
+    result = subprocess.run([sys.executable, str(ROOT / "demo.py"), "--detector", "coco", "--weights", str(tmp_path / "missing.pt"),
                              "--headless", "--max-frames", "1"], capture_output=True, text=True, timeout=30)
     assert result.returncode == 2
     assert "Checkpoint not found" in result.stderr
-    assert "requires training" in result.stderr
+    assert "setup_laptop_models.py" in result.stderr
 
 
 def test_headless_requires_limit_for_infinite_input():

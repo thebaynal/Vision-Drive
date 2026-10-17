@@ -138,7 +138,7 @@ def acquire(output=ROOT / 'datasets/indoor-person-evaluation', public_manifest=R
         fetch('https://storage.googleapis.com/openimages/2018_04/bbox_labels_600_hierarchy.json', hierarchy_path)
         building_ids = descendants(json.loads(hierarchy_path.read_text()), '/m/0cgh4')
         records, exclusions, source_files = [], Counter(), []
-        baseline_ids = {r['image_id'] for r in read_jsonl(ROOT / 'data/public/bottle-cup-box-manifest.jsonl')}
+        prior_image_ids = set(json.loads((ROOT / 'data/public/prior-image-exclusions.json').read_text(encoding='utf-8'))['image_ids'])
         for split, partition, existing in [('validation', 'dev', 'openimages-objects'), ('test', 'test', 'openimages-test-supplement')]:
             paths = {}
             urls = {'boxes.csv': f'https://storage.googleapis.com/openimages/v5/{split}-annotations-bbox.csv',
@@ -175,8 +175,8 @@ def acquire(output=ROOT / 'datasets/indoor-person-evaluation', public_manifest=R
                     if meta['ImageID'] in verified:
                         metadata[meta['ImageID']] = meta
             for image_id in sorted(inside):
-                if image_id in baseline_ids:
-                    exclusions['prior_baseline_image'] += 1
+                if image_id in prior_image_ids:
+                    exclusions['prior_inspected_image'] += 1
                     continue
                 labels = verified[image_id]
                 if not all(mid in labels for mid in PARENTS.values()):

@@ -14,7 +14,7 @@ are outside the primary numerical score; the live model keeps all 80 categories.
 | Total | Both | 400 | 300 | 100 | 923 |
 
 One photo per photographer is retained; all 400 groups are distinct. All prior
-inspected pilot and ESP baseline image IDs are excluded. The source-only
+inspected previously inspected image IDs are excluded. The source-only
 protocol and complete image hashes were committed as **`8a6f52a` before first
 inference on this fresh test set**. No threshold or image selection was adjusted
 using the final test results. The 300–500-image planning target is met, but it is
@@ -33,7 +33,6 @@ is deliberate; precision depends on this sample prevalence.
 | [Roboflow-100 furniture](https://universe.roboflow.com/roboflow-100/furniture-ngpea) | CC BY 4.0; Chair/Table/Sofa. Generic Table is not automatically COCO dining table; completeness/upstream overlap unresolved. No export restriction bypassed. |
 | [Mendeley indoor v2](https://doi.org/10.17632/3ggxwf2vpr.2), Nafiz Fahad | CC BY 4.0; seven classes, VOC archive. Official file metadata obtained: 453,984,831 bytes, SHA-256 3d5a25726f045f230eccbabfc9e3ef4db3916464dcda4d7f48102e7a9ababd20. Archive download returned an access challenge and was stopped. No successful image acquisition or completeness claim. |
 | [NYU Depth V2](https://cs.nyu.edu/~fergus/datasets/nyu_depth_v2.html) | Relevant dense indoor instance labels/depth. Named redistribution terms were not established from the author page. Not downloaded or assigned a guessed license. |
-| Existing Open Images bottle/cup/box | Genuine historical baseline but narrow labels and incomplete coverage of other COCO classes. Preserved separately; original baseline image IDs excluded from the new cohort. |
 | Open Images indoor Person | Selected for documented exhaustive person-positive boxes, verified negatives, explicit interior attributes and reproducible licensed access. The initial chair pilot exposed a taxonomy defect and was excluded from primary evidence. Public-photo viewpoint remains a limitation. |
 
 Selection favors coverage and provenance over recycling convenient images. No synthetic images or augmentation are included.
@@ -132,7 +131,7 @@ Ultralytics' required `train` YAML key aliases development and is unused.
 
 ## Evaluation methodology
 
-The protocol evaluates unchanged original YOLO11n. It never trains or fine-tunes YOLO11n. Historical ESP results and earlier bottle/cup exploration remain separate.
+The protocol evaluates unchanged original YOLO11n. It never trains or fine-tunes YOLO11n.
 
 ### Reproducible inputs
 

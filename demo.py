@@ -20,8 +20,8 @@ ROOT = Path(__file__).resolve().parent
 def parser():
     cli = argparse.ArgumentParser(description=__doc__)
     cli.add_argument("--source", default="0", help="Camera index or video file")
-    cli.add_argument("--detector", choices=["hybrid", "coco", "esp"], default="hybrid",
-                     help="hybrid: laptop YOLO + depth; coco: YOLO only; esp: original tiny three-class model")
+    cli.add_argument("--detector", choices=["hybrid", "coco"], default="hybrid",
+                     help="hybrid: YOLO11n + depth; coco: YOLO11n only")
     cli.add_argument("--weights", type=Path, help="Override checkpoint for the selected detector")
     cli.add_argument("--depth-model", type=Path, default=ROOT / "weights/laptop/depth-indoor")
     cli.add_argument("--depth-size", type=int, default=392, help="Depth input size, divisible by 14")
@@ -33,11 +33,9 @@ def parser():
     cli.add_argument("--command-ttl-ms", type=int, default=350)
     cli.add_argument("--preview-timeout-ms", type=int, default=5000,
                      help="Hold the visual interpretation for up to this frame age while analyzing (1000-10000 ms); motor expiry is unchanged")
-    cli.add_argument("--esp-repo", type=Path, default=ROOT / "external/esp-detection")
     cli.add_argument("--config", type=Path, default=ROOT / "config/default.json")
     cli.add_argument("--device", default="cpu", help="cpu or CUDA device, e.g. 0")
     cli.add_argument("--cpu-threads", type=int, default=2, help="CPU inference threads; default 2")
-    cli.add_argument("--expected-label", default="obstacle", choices=["obstacle"], help="Legacy merged-class label; bottle/cup/box models are recognized automatically")
     cli.add_argument("--simulate", action="store_true", help="Synthetic controller preview, NOT object detection")
     cli.add_argument("--explain", action="store_true", help="Show model detections -> region overlap -> rule -> instruction")
     cli.add_argument("--save-video", type=Path, help="Opt-in annotated MP4 plus timestamp/decision JSONL")
@@ -83,15 +81,10 @@ def run(args):
     try:
         if not args.simulate:
             # Fail model preflight before opening a camera.
-            if args.detector == "esp":
-                from visiondrive.detector import ESPDetector
-                detector = ESPDetector(args.weights or ROOT / "weights/obstacle/best.pt", args.esp_repo,
-                                       config, args.device, args.expected_label, args.cpu_threads)
-            else:
-                from visiondrive.laptop_detector import LaptopDetector
-                detector = LaptopDetector(args.weights or ROOT / "weights/laptop/yolo11n.pt", config,
-                    args.depth_model if args.detector == "hybrid" else None, args.device,
-                    args.cpu_threads, args.depth_size, args.depth_scale)
+            from visiondrive.laptop_detector import LaptopDetector
+            detector = LaptopDetector(args.weights or ROOT / "weights/laptop/yolo11n.pt", config,
+                args.depth_model if args.detector == "hybrid" else None, args.device,
+                args.cpu_threads, args.depth_size, args.depth_scale)
             model_name, label = detector.name, detector.label
             if not camera and not Path(args.source).is_file():
                 raise ValueError(f"Video not found: {args.source}")
