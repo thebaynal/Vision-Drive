@@ -63,3 +63,9 @@ original image URLs, CC BY 2.0 license links, source IDs, and modifications
 are recorded in [sample-result attribution](docs/sample-results.md).
 The group's fixed dataset annotations/splits and individual attribution records
 are published in [the manifest](data/public/bottle-cup-box-manifest.jsonl).
+
+`assets/dataset-preview.png` is a contact sheet of nine annotated public images.
+Its author/source/license records are in [preview attribution](data/public/preview-sources.json).
+The dataset release includes all original image files together with their
+per-image attribution and CC BY 2.0 links. Preview images are resized and overlaid
+with annotation labels; source dataset image bytes are unchanged.

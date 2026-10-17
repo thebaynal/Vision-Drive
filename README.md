@@ -170,6 +170,8 @@ A moving prototype needs a rigid forward camera and a live video path to the lap
 
 ## Dataset overview
 
+[**View annotated examples and download the dataset**](data/public/README.md#preview-and-download)
+
 The group's prepared **baseline dataset** contains 402 public Open Images images
 and 688 labeled bottle/cup/box instances. Bounding boxes are normalized to YOLO
 format. Content hashes are unique across splits, with source URLs, authors,

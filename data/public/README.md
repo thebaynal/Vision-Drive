@@ -4,6 +4,24 @@ The group prepared **402 images / 688 annotated instances** for the original
 bottle/cup/box ESPDet experiment. The current YOLO-plus-depth laptop demo uses
 upstream pretrained models; this card does not describe their full training data.
 
+## Preview and download
+
+![Actual dataset images and bounding-box annotations](../../assets/dataset-preview.png)
+
+These are actual annotated examples from the training, validation, and testing
+sets, not predictions or generated images. The preview resizes source images
+and adds label overlays. Image authors, original URLs, CC BY 2.0 license links,
+and source IDs are retained in [preview attribution](preview-sources.json).
+
+- [Download the complete dataset ZIP (about 100 MB)](https://github.com/thebaynal/Vision-Drive/releases/download/dataset-v1.0.0/VisionDrive-bottle-cup-box-dataset.zip)
+- [Dataset release page and checksum](https://github.com/thebaynal/Vision-Drive/releases/tag/dataset-v1.0.0)
+
+The ZIP contains all 402 original images, 402 corresponding YOLO label files,
+a portable `dataset.yaml`, the fixed source/split manifest, a preview,
+per-image attribution, and usage instructions. Extract it before using it
+with a trainer. The original image hashes, annotation pairs, and ZIP contents
+were verified during packaging.
+
 | Split | Images | Bottle instances | Cup instances | Box instances |
 | --- | ---: | ---: | ---: | ---: |
 | Training | 280 | 294 | 136 | 73 |
