@@ -12,6 +12,14 @@ from visiondrive.evaluation.data import ROOT, digest, read_jsonl, write_json
 from visiondrive.evaluation.metrics import aggregate, match
 
 
+def retain_supplementary_report(report, previous):
+    """Re-exporting person results must retain the separate object benchmark."""
+    marker = '## Bottle and cup detection: additional measured benchmark'
+    if marker in previous and marker not in report:
+        report = report.rstrip() + '\n\n' + marker + previous.split(marker, 1)[1]
+    return report
+
+
 def export():
     source=ROOT/'outputs/evaluation/yolo11n'
     metrics=json.loads((source/'metrics.json').read_text())
@@ -48,7 +56,9 @@ def export():
     if system.exists():
         value=json.loads(system.read_text())
         report+=f'\n## Separate hybrid processing benchmark\n\nOver {value["frames"]} images, serial decode + YOLO11n + depth + controller + render averaged {value["mean_ms"]:.2f} ms ({value["fps_from_mean"]:.2f} FPS). This excludes camera, async scheduling, GUI and motors. It is separate from person-only YOLO timing.\n'
-    (ROOT/'docs/evaluation_results.md').write_text(report,encoding='utf-8')
+    published = ROOT/'docs/evaluation_results.md'
+    previous = published.read_text(encoding='utf-8') if published.exists() else ''
+    published.write_text(retain_supplementary_report(report, previous),encoding='utf-8')
     exploratory=ROOT/'outputs/evaluation/exploratory-person-chair'
     if (exploratory/'metrics.json').exists():
         dest=ROOT/'docs/results/exploratory-person-chair';dest.mkdir(parents=True,exist_ok=True)

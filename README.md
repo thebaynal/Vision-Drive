@@ -129,7 +129,7 @@ selected from Open Images.
 | **Total** | **400** | **300** | **100** | **923** |
 
 The cohort contains one image per photographer profile. Previously inspected
-previously inspected image IDs are excluded. Source-only selection,
+image IDs are excluded. Source-only selection,
 image hashes and evaluation settings were frozen in commit
 [`8a6f52a`](https://github.com/thebaynal/Vision-Drive/commit/8a6f52a)
 before inference on the fresh test set.
@@ -325,6 +325,13 @@ Depth Anything V2 has separate provenance.
 
 Run the following from the repository root in **Windows PowerShell**.
 
+For a fresh checkout:
+
+```powershell
+git clone https://github.com/thebaynal/Vision-Drive.git
+cd Vision-Drive
+```
+
 ### NVIDIA GPU setup
 
 ```powershell
@@ -364,6 +371,13 @@ python -m venv .venv-cpu
 
 Without `--esp-host`, the application is visualization-only. The explicitly
 synthetic `--simulate` mode illustrates logic and cannot issue motor commands.
+
+To preview the logic without model downloads:
+
+```powershell
+python -m pip install -r requirements.txt
+python logic_demo.py --simulate
+```
 
 See the [run guide](docs/laptop-esp32.md) for camera selection, recording, OBS
 capture, calibration and ESP32 connection instructions.
@@ -511,6 +525,7 @@ image processing and evaluation artifacts to that requirement.
 
 Current limitations:
 
+- The group uses pretrained weights and prepared development/test data, with no local training set. The midterm explicitly asks for training/validation/testing partitions; instructor acceptance of the pretrained-evaluation scope still needs confirmation.
 - The fresh indoor study scores person only; the separate COCO benchmark scores bottle and cup. The remaining 77 classes are unscored across these studies.
 - Public interior photographs differ from a camera mounted on a mini car.
 - Hash and photographer checks do not prove physical-scene independence or absence from COCO pretraining.
@@ -521,6 +536,19 @@ The [independent camera protocol](docs/dataset_card.md#independent-camera-evalua
 recordings, reviewed annotations, depth references and acceptable movement actions.
 
 ## Repository guide
+
+### Check a checkout without downloading models
+
+```powershell
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+python scripts/check_submission.py
+```
+
+The submission check validates local documentation files and heading links,
+notebook Python syntax and saved research executions, and agreement between
+published metric CSV/JSON files. CI runs these checks and native firmware tests.
+The tests use fixtures; actual model evaluations are documented separately above.
 
 ```text
 visiondrive/       Live perception, controller, visualization and communication
@@ -544,7 +572,7 @@ tests/             Python and native firmware checks
 | Methodology and measured results | [Methodology](docs/dataset_card.md#evaluation-methodology) · [Report](docs/evaluation_results.md) |
 | Presentation and paper guidance | [Presentation script](docs/documentation-and-paper-guide.md#presentation-script) · [Writing guide](docs/documentation-and-paper-guide.md) |
 | Hardware implementation | [Hardware handoff](docs/laptop-esp32.md#hardware-implementation) |
-| Verification | [127 Python tests and integration checks](docs/verification.md) |
+| Verification | [130 Python tests and integration checks](docs/verification.md) |
 
 ## References and attribution
 
